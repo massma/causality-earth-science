@@ -1,0 +1,46 @@
+* Causal inference in earth science
+
+
+** Introduction
+
+questions: where/if discuss causal discorvery (may be necessary for
+terminology, discovery papers like runge review use "causal inference"
+terminology)?
+
+questions: discuss hannart attribtion and counterfactuual paper?
+
+*** Causal inference is tool to estimate effects that cannot be detemined by experiments or numerical modeling
+
+*** For many problems in earth science, we cannot experiment and modelling is flawed, so causal inference is an alternative approach that can provide answers
+
+*** Given potential applications of causal inference, is it necessary to understand when causal inference is (or is not) theoretically justified
+
+    we will explore some generic scnarios under which causal inference
+    is (or is not justified), and some possible benefits and pitfalls
+    of causal inference in earth science
+
+
+** Using data to estimating the response to an intervention: Pearl's do calculus
+
+** Causal graphs: a tool for communicating assumptions and avoiding flawed experiments
+*** A tool for communicating assumptions
+
+*** Avoiding flawed experiment designs
+
+** Applications in earth science: pitfalls and justified approaches for generic scenarios
+
+*** Earth science as a dynamical system with partial observations of the state space
+
+*** Tractable approach: the human-climate interface
+
+*** Tractable approach: estimating the state space with Takens' theorem, and speparating it from the cause and effect
+
+** Discussion
+
+   discuss transportability?
+
+   discuss relationship of these ideas to causal discovery (critique
+   causal discovery)?
+
+   discuss issues with data available and observed range
+   (e.g. generalization for cliamte research)?
