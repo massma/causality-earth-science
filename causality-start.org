@@ -5,22 +5,88 @@
 
 questions: where/if discuss causal discorvery (may be necessary for
 terminology, discovery papers like runge review use "causal inference"
-terminology)?
+terminology)? - think should have separate section for this.
 
 questions: discuss hannart attribtion and counterfactuual paper?
 
-*** Causal inference is tool to estimate effects that cannot be detemined by experiments or numerical modeling
-
-*** For many problems in earth science, we cannot experiment and modelling is flawed, so causal inference is an alternative approach that can provide answers
-
-*** Given potential applications of causal inference, is it necessary to understand when causal inference is (or is not) theoretically justified
-
-    we will explore some generic scnarios under which causal inference
-    is (or is not justified), and some possible benefits and pitfalls
-    of causal inference in earth science
+*** usefullness causal inference e.s.
 
 
-** Using data to estimating the response to an intervention: Pearl's do calculus
+    Causal inference is the estimation of effects (e.g. temperature)
+    in response to changes in causes (e.g. green house gas
+    concentration) using observational data from a system. Causal
+    inference is an alternative path towards scientific discovery,
+    which traditionally relies on experimentation (e.g. numerical,
+    lab, or real world) to determine the effect of varying causes. In
+    earth sciences in particular it may be impossible or unethical to
+    execute real world experiments, and numerical experiments may rely
+    on approximations that bias causal estimates relative to the real
+    world. Given these challenges in earth science, causal inference
+    from data is a tantilizing tool that allows for robust
+    estimatation of causal effects that may be otherwise impossible
+    using traditoinal tools.
+
+    However, causal inference from data presents its own challenges. A
+    necessary conditon for calculating a causal effect is that the
+    causal effect must be identifiable from the set of observable
+    variables. Whether or not a causal effect is identifiable is
+    determined from our assumptions about how a system behaves and
+    which variables we can obtain observations for. If an effect is
+    determined to be unidentifable, then it is impossible to calculate
+    the causal effect of interest, even with an infitinte sample of
+    data. Specific to problems in earth science, the identification of
+    causal effects is challenging given two fundamental properties of
+    many generic earth science problems: the system evolves through
+    time according to an underlying dynamical system, and we only ever
+    partially observe the state space of that dynamical system. Using
+    graph theory developed in \citep{pearl-1995} we determine the
+    generic problems causal inference is justified for, and the
+    necesarry assumptions for applyign causal inference. The theory
+    suggest there is the potential for applying causal inference at
+    the human-climate interface (e.g. anthropogenic green house gas
+    emission, land use change) (Secion xx), as well as for
+    understanding the behavior of the natural system if we can
+    estimate the state space of the system from observations and
+    assume that our causes and effects have a negligble effect on the
+    evolution of the larger state space (Section xx). Along the way,
+    we introduce causal inference theory, causal graphs, and do
+    calculus for the unfamiliar reader (Section xx), and compare with
+    recent earth science literature on the related field of Causal
+    Discovery. Causal graphs are also a useful general research tool
+    for communicating assumptions, whether or not causal inference is
+    actually used (Section xx).
+
+
+** Causal graphs and Pearl's do calculus
+
+   Causal graphs, introduced in citep{pearl-1995}, are directed
+   acyclic graphs (DAGs) that encode our assumptions about the causal
+   dependencies of a system.
+
+*** intro causal graphs
+
+*** intro identification
+
+*** backdoor path
+
+*** other identification strategies
+
+*** justify focusing on backdoor path
+
+** Clarification on terminology and relationship to literature on causal discovery
+
+*** causal discovery = infering causal graph from data
+
+*** often times we know causal graph (can write down equations)
+
+*** resulting causal graph will be function of significance paramters
+
+*** many pitfalls of causal discovery same as for causal inference
+
+*** we can also test our causal graph assumptions with data (is it better to start a priori with an idea and test it)?
+
+*** discuss usefulness of causal discovery as a tool to filter out links we don't care about??
+
 
 ** Causal graphs: a tool for communicating assumptions and avoiding flawed experiments
 *** A tool for communicating assumptions
@@ -33,7 +99,7 @@ questions: discuss hannart attribtion and counterfactuual paper?
 
 *** Tractable approach: the human-climate interface
 
-*** Tractable approach: estimating the state space with Takens' theorem, and speparating it from the cause and effect
+*** Tractable approach: estimating the state space with Takens' theorem, and separating it from the cause and effect
 
 ** Discussion
 
