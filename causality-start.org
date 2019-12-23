@@ -11,7 +11,6 @@ questions: discuss hannart attribtion and counterfactuual paper?
 
 *** usefullness causal inference e.s.
 
-
     Causal inference is the estimation of effects (e.g. temperature)
     in response to changes in causes (e.g. green house gas
     concentration) using observational data from a system. Causal
@@ -43,21 +42,24 @@ questions: discuss hannart attribtion and counterfactuual paper?
     partially observe the state space of that dynamical system. Using
     graph theory developed in \citep{pearl-1995} we determine the
     generic problems causal inference is justified for, and the
-    necesarry assumptions for applyign causal inference. The theory
-    suggest there is the potential for applying causal inference at
-    the human-climate interface (e.g. anthropogenic green house gas
-    emission, land use change) (Secion xx), as well as for
-    understanding the behavior of the natural system if we can
-    estimate the state space of the system from observations and
-    assume that our causes and effects have a negligble effect on the
-    evolution of the larger state space (Section xx). Along the way,
-    we introduce causal inference theory, causal graphs, and do
-    calculus for the unfamiliar reader (Section xx), and compare with
-    recent earth science literature on the related field of Causal
-    Discovery. Causal graphs are also a useful general research tool
-    for communicating assumptions, whether or not causal inference is
-    actually used (Section xx).
+    necesarry assumptions for applyign causal inference. There is the
+    potential for applying causal inference in two scenarios: (1)
+    under an assumption that the cause is independent of the (cliamte)
+    system's state space (e.g. at the human-climate interface,
+    anthropogenic green house gas emission, land use change) (Secion
+    xx); and (2) when we can estimate the state space of the system
+    from observations and we can assume that our causes and effects
+    have a negligble effect on the evolution of the larger state space
+    (Section xx). Our theoretical results identifying tractable
+    problems in earth science require a few fundamentals from the
+    causal inference literature, so we introduce causal inference
+    theory, causal graphs, and do calculus for the unfamiliar reader
+    (Section xx), and compare with recent earth science literature on
+    the related field of causal discovery.
 
+    # Causal graphs are also a
+    # useful general research tool for communicating assumptions,
+    # whether or not causal inference is actually used (Section xx).
 
 ** Causal graphs and Pearl's do calculus
 
@@ -69,12 +71,12 @@ questions: discuss hannart attribtion and counterfactuual paper?
    simplified toy example examing clouds, aerosols, and surface solar
    radiation, we would draw (Figure xx):
 
-   1. An arrow from aerosols to clouds because aerosols serve as cloud
+   1. An edge from aerosols to clouds because aerosols serve as cloud
       condensation nuclei.
-   2. An arrow from aerosols to surface solar radiation, because
+   2. An edge from aerosols to surface solar radiation, because
       aerosols can reflect sunlight back to space and reduce sunlight
       at the surface.
-   3. An arrow from clouds to surface solar ratiation, because clouds
+   3. An edge from clouds to surface solar ratiation, because clouds
       also reflect sunlight back to space and can reduce sunlight at
       the surface.
 
@@ -83,15 +85,15 @@ questions: discuss hannart attribtion and counterfactuual paper?
    represent strong assumptions about how the system works. For
    example, in the cloud-aerosol-sunlight example, clouds also affect
    aerosols by increasing the likelihood that aerosol will be scoured
-   from the atmosphere as precipitatation. By not including an edge
-   from cloud to aerosol, we are making a strong assumption that we
-   are ignoring this effect of clouds on aerosols. Cosidering this
-   example isintended to be pedagocical for introducing causal theory to the
-   readers, we will continue with the graph as drawn in Figure
+   from the atmosphere during precipitatation. By not including an
+   edge from cloud to aerosol, we are making a strong assumption that
+   we are ignoring this effect of clouds on aerosols. Cosidering this
+   example is intended to be pedagocical for introducing causal theory
+   to the readers, we will continue with the graph as drawn in Figure
    xx. Causal graphs are very useful tools because they can be drawn
    by any domain expert with no required knowledge of math or
    probability, but they also represent formal mathetmical objects
-   with very sepcific meanings (discuss factorization of joint?)
+   with very sepcific meanings (discuss factorization of joint?).
 
 *** intro identification
 
@@ -100,54 +102,53 @@ questions: discuss hannart attribtion and counterfactuual paper?
     to calcualte a causal effect of itnerest. This process of
     identifying the necessary distributions is formally termed
     /causal indentification/. If a causal effect is not
-    identifiable (/un/-identifiable), for example if
+    identifiable (/un/identifiable), for example if
     calculating a causal effect requires distributions of variables
     that we do not observe, then we cannot use causal inference to
     caluclate a causal effect, even with an infinite sample of data.
 
 *** backdoor path
 
-    One necessary condition for un-identifablility is the presence of
-    an unblockable backdoor path from cause to effect. This led to the
-    early and well studied sufficient condition for identificatication
-    called the /backdoor criterion/. The backdoor criterion
-    states that if we can observe variables such that the backdoor
-    paths from cause to effect are blocked, then a causal effect is
-    identified. Backdoor paths are any paths going through parents of
-    the cause, to the effect. We can block these paths by selectively
-    observing observing cariables such that no information passes
-    along them. Perhaps a mor eintuitive explanation is if we remove
-    all edges from the cause to the cause's children, and then ask the
-    question, "is the cause independent of the effect?". If the answer
-    is yes, then calcuating our causal effect is identified. If the
-    answer is no, then we must observe some variables such that the
-    cause becomes independent of the effect, in the mutilated
-    graph. This matches intuition: we only want to calculate the
-    co-variability of our cause and effect due to information
-    travelling fromt he cause to the effect along directed causal
-    pathways, not due to parent processes inducing covariability in
-    both the cause and effect. In other words, in the absence of
-    backdoor paths, correltion is causation.
+    An early, well studied and relevant (to climate science)
+    sufficient condition for identificatication is called the
+    /backdoor criterion/. The backdoor criterion states that if we can
+    observe variables such that the backdoor paths from cause to
+    effect are blocked, then a causal effect is identified. Backdoor
+    paths are any paths going through parents of the cause, to the
+    effect. We can block these paths by selectively observing
+    variables such that no information passes through them. Perhaps
+    more intuition can be gained by considering a mutilated causal
+    graph where we remove all edges from the cause to the cause's
+    children, and then ask the question, "is the cause independent of
+    the effect?" in the mutilated graph. If the answer is yes, then
+    calcuating our causal effect is identified. If the answer is no,
+    then we must observe some variables such that the cause becomes
+    independent of the effect, in the mutilated graph. This matches
+    intuition: we only want to calculate the co-variability of our
+    cause and effect due to information travelling from the cause to
+    the effect along directed causal pathways, not due to the cause's
+    parent processes inducing covariability in both the cause and
+    effect. In other words, in the absence of backdoor paths,
+    correltion is causation.
 
 *** backdoor path with example
 
-    Perhaps backdoor paths and the backdoor criterion are better introduced with an
-    example. Returning to out toy example Figure xx, we will attempt
-    to calcualte the causal effect of clouds on sunlight. In
-    otherwords, we want to isolate the variability of sunlight due to
-    the causal link from cloud to sunight. However, aerosols both
-    effect cloud (edge from aerosol to cloud), and sunlight, so if we
-    naively were to calculate a causal effect for example by just
-    regressing sunlight on cloud, we would get a biased estimate of
-    the mean causal effect of cloud on sunlight. This can be shown
-    graphically if we remove all edges from our cause (cloud) to
-    children of our cause (in this case sunlight) (Figure xx). We see
-    that cloud is not indepednent fo aerosol in the mutilated
-    graph. How would we make cloud and sunlgith independent in this
+    Perhaps backdoor paths and the backdoor criterion are better
+    introduced with an example. Returning to out toy example Figure
+    xx, we will attempt to calcualte the causal effect of clouds on
+    sunlight. In otherwords, we want to isolate the variability of
+    sunlight due to the causal link from cloud to sunight. However,
+    aerosols both effect cloud (edge from aerosol to cloud), and
+    sunlight, so if we naively calculate a causal effect, for example
+    by just regressing sunlight on cloud, we would get a biased
+    estimate of the mean causal effect of cloud on sunlight. This can
+    be shown graphically if we remove all edges from our cause (cloud)
+    to children of our cause (in this case sunlight) (Figure xx). We
+    see that cloud is not indepednent of aerosol in the mutilated
+    graph. How would we make cloud and sunlight independent in this
     mutiliated graph? In this case, by observing
-    aerosol. Mathematically, the
-    identification of the causal effect of cloud and aerosol accoridng
-    to the backdoor criterion is:
+    aerosol. Mathematically, the identification of the causal effect
+    of cloud and aerosol accoridng to the backdoor criterion is:
 
     \begin{equation}
       P(sunlight | do(cloud) = c) = \Int_{aerosol} p(sunlight| cloud = c,
@@ -157,75 +158,80 @@ questions: discuss hannart attribtion and counterfactuual paper?
     % introduce ATE?
 
     where we have implicitly introduced Pearl's "do" calculus, which
-    just means we want to calculate the effect of intervene on our
-    cause and setting it to some value of our choosing. In the case
-    that observations of aerosols are not available, our causal effect
-    is not identifiable and we cannot use causal effect no matter how
+    just means we want to calculate the effect of ("doing") an
+    intervention on the cause (in this case cloud) and setting it to
+    some value of our choosing (in this cas $c$). In the case that
+    observations of aerosols are not available, our causal effect is
+    not identifiable and we cannot use causal inference no matter how
     large the sampel sizes of clouds and aerosols. This theory is an
     elegant tool: without having to touch data or estimate marginal or
-    conditional distribution, we can determine whether it is possible
-    to calcualte a causal effect of intereste. We later use this
-    thoery to theoretically assess which problems are tractable in
-    earth science using causal inference.
+    conditional distributions, we can determine whether it is possible
+    to calculate a causal effect of interest. We later use this thoery
+    to theoretically assess which problems are tractable in earth
+    science using causal inference.
 
 *** other identification strategies focusing on backdoor path
 
     Here we focus on the backdoor criterion. However, other
     identification stregies exist, primarily the front-door criterion
-    and instrument variables. Given the timeseries nature of our
-    problems (Section XX), front-door criterion and instrument varialbes
-    are less likely to be useful for identification in earth science,
-    so we will primarily use the backdoor criterion in our subsequent
-    theoretical analysis. However please consult citeXX and cite XXX
-    for more information on the front-door criterion and instrument
-    variables.
+    and instrument variables. Given that the front-door criterion can
+    be reformulated as a specific case of the back-door criterion
+    (cite XX?), and that applying instrument variables to a system
+    with an evolving state space is challenging (cite XX?). However
+    please consult citeXX and cite XXX for more information on the
+    front-door criterion and instrument variables.
 
 ** Clarification on terminology and relationship to literature on causal discovery
 
 *** causal discovery = infering causal graph from data
 
     In this paper we discuss causal inference, and define it as
-    estimating the induced effect of intervening on a cause and
-    setting it or changing it to some value. However "causal
-    inference" has also been used previously to describe the process
-    of inferring /the edges in a causal graph/ from data. To be
-    consisstent with previous literature in the causal community, we
-    call this technique of of infering the graph structure from data
-    /causal discovery/, whiel calculating causal effects given a graph
-    and data is /causal inference/. There has been cosiderable  recent
-    focus on /causal discovery/ in earth science, so it is worth it to
-    discuss a little more on the relationship between causal inference
-    and causal discovery and how it relates to earth science.
+    estimating the induced effect of intervening on a cause (setting
+    it or changing it to some value). However "causal inference" has
+    also been used previously to describe the process of inferring the
+    graph strucutre of a causal graph from data. To be consisstent
+    with previous literature in the causal community, we call this
+    technique of of infering the graph structure from data /causal
+    structure discovery/, whiel calculating causal effects given a
+    graph and data is /causal inference/. There has been cosiderable
+    recent focus on /causal structure discovery/ in earth science, so
+    it is worthwhile to discuss the relationship between causal
+    inference and causal discovery and how it relates to earth science.
 
 *** often times we know causal graph (can write down equations)
 
-    Often in earth science we know, or have a strong a priori belief,
-    about what the causal graph of our system most likely looks
-    like. For example, in the climate system we know the dependencies
-    of variables, even if we cannot write down the exact functional
-    forms of these dependencies (especially for processes like
-    trubulence and clouds). So, we can write down a causal graph and
-    do not need to infer the dependenceies from data. Given these
-    observations one might question why the itnerest in causal
-    discovery for earth science. One possible explanation is the
-    causal discovery may be useful to remove edges that have a small
-    or negligble effect. For example, a prior we may know that some
-    process is a function of three other processes, and perhaps in
-    reality one o these processes negligbly effects the
-    fucntion. Causal discovery would remove that edge.
+    Often in earth science we know or have a strong a priori belief
+    about the causal graph of our system. For example, in the climate
+    system we can identify the state variables and we know that the
+    state at time $t$ determnines the state at time $t+1$, even if we
+    might not be able to write down the exact functional form of this
+    state evolution. Therefor, we can write down a causal graph and do
+    not need to infer graph structrue from data.  So, why the itnerest
+    in causal discovery for earth science? One possible explanation is
+    that causal discovery may be useful to remove edges that have a
+    small or negligble effect. Some portions of the climate state at
+    time $t$ may have a negligble effect on other portions of the
+    climate state at time $t+1$, and causal discovery could eliminate
+    edges between these portions of the state space.  Additionally,
+    while we can usually derive a causal graph of an earth science
+    system using expert knowledge for physical variables, we may not
+    be able to do so for transformed or reduced-dimension derived
+    quantities. Causal discovery methods can be applied to identify
+    causal dependencies between between these derived variables.
 
 *** resulting causal graph will be function of significance paramters
 
-    However, the inferred graph in  causal discovery will be a
-    function of the significance parameters used to determine
-    conditoinal independence between variables upon which the
-    algorithms rely on to determine edges and directions of edges in
-    the graph. So, given that causal discovery algorhtms can produce
-    potentially arbitraty results as a function of hyperparameters of
-    the method, it may be methodloically safter to build a causal
-    graph using expert knowledge. Especially when it is still possible
-    to test if the causal graph is consistent with observations using
-    conditional independence tests.
+    However, causal discovery algorithms rely on significance
+    parameters used to determine conditoinal independence between
+    variables. Because causal discovery algorhtms can produce
+    potentially arbitraty results as a function of hyperparameters
+    (significance levels) of the method, it may be methodloically
+    safer to build a causal graph using expert knowledge, even if this
+    limits us to scenarios where we know the causal structure (in
+    physical sciences this may not be so limiting). It is still
+    possible to test that the causal graph is consistent with
+    observations using conditional independence tests, so we can still
+    verify some of the assumptions in a causal graph.
 
 *** many pitfalls of causal discovery same as for causal inference
 
