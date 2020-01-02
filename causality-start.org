@@ -319,12 +319,12 @@ questions: discuss hannart attribtion and counterfactuual paper?
 
     Fortunately, in earth system obsevations we know the temporal
     ordering of events, and we also generally know how quickly
-    information at a given location can move to effect a processes at
+    information at a given location can move to affect a process at
     another location and time. For example in for a general physics
     scenario infomration travels at the spped of light, but for the
-    atmosphere a more conservative propagation speed would be the
+    atmosphere a very conservative propagation speed would be the
     speed of sound. If we wish to ignore the effect of sound waves, we
-    could alternatively use a less conservative porpataion speed such
+    could alternatively use a less conservative propagtion speed such
     as a gravity wave phase speed or advection (wind) speed. In either
     case, if we know the timing and location of our cause, and the
     timing and location of our effect, then we can know the spatial
@@ -333,47 +333,49 @@ questions: discuss hannart attribtion and counterfactuual paper?
     example may help. Say we are interested in the effect of soil
     moisture ($SM$) at time ($t=0$ hr) and location ($x=0$ m, $y=0$ m)
     on average evapotranspiration (ET) over the next hour (from $t=0$
-    /introduce "lightcone" idea from shalizi?/ hr to $t=1$ hr and over
-    the location $x=0$ m, $y = 0$ m. We pick this example because is
-    inlcudes a unique scenario where the observation technique is only
-    capable of estimating averages of a temporal extent ( eddy
-    covariance). Soil moisture can effect the state, so we do not want
-    to condition on any oveservations after time $t=0$. However, if we
-    take a coservative approach assume that the maximum speed of
+    /introduce "lightcone" idea from shalizi?/ hr to $t=1$ hr and at
+    the location $x=0$ m, $y = 0$ m. Soil moisture can effect the
+    state, so we do not want to condition on any oveservations after
+    time $t=0$. But, if we know the relevant state space at time $t=0$
+    which affects both soil moisture and ET, we can block back door
+    paths by conditionin gon that state space.  However, as previously
+    recognized, we never fully observe the state space of the system,
+    so we must use Takens' theorem and statistical tools to "fill in"
+    unobserved portions of the state space with lagged
+    observations. This makes the problem harder: we must use
+    observations over a larger temporal and spatial extent than if we
+    fully observed the state space, in order to estimate the state
+    space and block backdoor paths. In the soil moisture example, let
+    us say that with the observations abailable, 3 instances of hourly
+    observations (e.g. ($t-2$, $t-1$, and $t$) is enough to
+    reconstruct the state space at time $t$.  However, if we take a
+    coservative approach and assume that the maximum speed of
     propagation through the atomosphere is the speed of sound
-    ($\approx 340 m s^{-1}$), then we must estimate the state space at
-    time $t=0$ over an area from with a radius of 1224 m, centered at
-    $x=0$ and $y=0$. If we ignore sound waves, in many conditions it
-    may be safe to assume a slower propagation speed of, for example
-    $50 m s^{-1}$, which would require the state space to be estimated
-    over a radius of $180 km$. Fotunately, much historical work in
+    ($\approx 340 m s^{-1}$), then we would need to use observations
+    over a radius of 2248 km radius at time $t-2$, a 1224 km at time
+    $t-1$, and at $(x=0, y=0)$ at time $t$. This is a much bigger
+    (statistical) problem. Fotunately, much historical work in
     atmospheric science has defined relevant time, space, and speed
     scales over which perturbations propagate vertically and
     horizonatally (e.g. rossby deformation radius, burger's number,
     group/phase velocity of gravity waves, etc.). We can use this work
     to define less conservative, but still resonable assumptions about
     the area over which we must calculate the state space which makes
-    the problem more computationally tractable.
-
-    However, as previously recognized, we never fully observe the
-    state space of the system, so we must use Takens' theorem and
-    statistical tools to "fill in" unobserved portions of the state
-    space with lagged obsercations. This makes the problem harder: we
-    must use observations over an even temporal and spatial extent
-    than if we fully observed the state space, in order to block
-    backdoor paths. Returning to our soil moisture example, let say
-    that with the observations abailable, 3 instances of hourly
-    observations (e.g. ($t-2$, $t-1$, and $t$) is enough to
-    reconstruct the state space at time $t$. If we assume aproagation
-    speed of $50 m s^{-1}$, then we would need to use observations
-    over a radius of 540 km at time $t-2$, 360 km at time $t-1$, and
-    $180 km$ at time $t$. This is a much bigger (statistical)
-    problem. Here we are focusing on just a simple radius based
-    approach with a fixed propagation speed for ease of
-    interpretation, but the size of the problem could perhaps be
-    reduced by looking more thoughtfully at the data, and including
-    advecion directions and sppeds to reduce the area from the naive
-    radius-based approach.
+    the problem more computationally tractable.  For example, if we
+    assume taht the speed or propagation is $50 m s^{-1}$, then we
+    would need to use observations over a radius of 360 km at time
+    $t-2$, and 180 km at time $t-1$. Also, here we are focusing on
+    just a simple radius based approach with a fixed propagation speed
+    for ease of interpretation, but the size of the problem could
+    perhaps be reduced by looking more thoughtfully at the data, and
+    including advecion directions and sppeds to reduce the area from
+    the naive radius-based approach. /this could be a little more
+    complicated and relies on an assumption that air does not
+    circulate back to a location e.g. at time t+1 (end of average),
+    soil moisture is affected by a radius of 180 km, but there are no
+    gaurantees that that area did not affect soil moisture at time t,
+    and also *is* included in the state at time t, x=0, y=0./ /aslo
+    think about how to handle SM with large "memory"/.
 
     So far we have assumed that we know how many lagged samples of
     observations are necessary to reconstruct the observed state
