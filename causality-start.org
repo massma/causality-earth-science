@@ -314,7 +314,7 @@ questions: discuss hannart attribtion and counterfactuual paper?
     1. Not lie on the directed causal path from the cause to the
        effect.
 
-    2. Must represent all portions of the statespace that effect both
+    2. Must represent all portions of the statespace that affect both
        the cause and the effect.
 
     Fortunately, in earth system obsevations we know the temporal
@@ -355,7 +355,6 @@ questions: discuss hannart attribtion and counterfactuual paper?
     the area over which we must calculate the state space which makes
     the problem more computationally tractable.
 
-
     However, as previously recognized, we never fully observe the
     state space of the system, so we must use Takens' theorem and
     statistical tools to "fill in" unobserved portions of the state
@@ -392,7 +391,9 @@ questions: discuss hannart attribtion and counterfactuual paper?
     propagation speed and a radius (lightcone?) of influence, ad any
     advection direction and speeds vary though time, so we can not
     determine the necessary number of lags using a timeseries of
-    obsercations, as detailed above.
+    obsercations, as detailed above. /review and tie back to shalizi
+    light cone?/ /think about and include importance of including
+    effect in regression tests/.
 
 ** Discussion
 
