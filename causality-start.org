@@ -255,9 +255,14 @@ questions: discuss hannart attribtion and counterfactuual paper?
 # *** Avoiding flawed experiment designs
 
 ** Applications in earth science: pitfalls and justified approaches for generic scenarios
+    # reorganize as: what does it take to block backdoor paths. okay,
+    # what about the fact that we partially observe state space?
+
+    # also, start with discussing internal to the system, then bring
+    # up how we might be able to get away with assuming soem pieces
+    # are external to the system
 
 *** Earth science as a dynamical system with partial observations of the state space
-
     Earth science systems can be viewed as a dynamical system evolving
     through time according to an underlying state stace. However, in
     the earth system we only every partially observe this state
@@ -276,10 +281,10 @@ questions: discuss hannart attribtion and counterfactuual paper?
 
     One tractable approach is when our causes of interest are
     independent from the evolution of the state space. While the earth
-    system certainly effects all object living on earth, in some cases
-    this may be a reasonable assumption. For example, it is tragic but
-    unfortunately recent human history has demonstrated that our
-    global actions are relatively independent of the climate
+    system certainly affects all objects living on earth, in some
+    cases this may be a reasonable assumption. For example, it is
+    tragic but unfortunately recent human history has demonstrated
+    that our global actions are relatively independent of the climate
     state. That is, we have failed to reduce green house gas emissions
     even as global temperature increased. When global green house gas
     emissions have risen less sharply, it is usually due to global
@@ -289,8 +294,8 @@ questions: discuss hannart attribtion and counterfactuual paper?
     system may effect this forces, the historical evedence suggests
     that an assumption that global green house gas emission is
     independent fo the climate may be reasonable, at least for the
-    present and near future /discuss data problem - we know don't observe
-    the future of green house gas emissions/.
+    present and near future /discuss data problem - we know don't
+    observe the future of green house gas emissions/.
 
     Generally this logic applies to many scenarios on the
     "human-climate" interface. For example, land-use land-cover change
@@ -303,13 +308,16 @@ questions: discuss hannart attribtion and counterfactuual paper?
 
 *** Tractable approach: thoughtfull estimation of the state space with Takens' theorem
 
-    A second causal scenario, more applicable for studying behaviro
+
+
+    A second causal scenario, more applicable for studying behavior
     within the earth system, is when we can estimate the state space
-    using statistical tools and Takens' theorem. Then, if we are
-    interested in calculating a an effect, we can block backdoor paths
-    from the cause to the effect with the unobserved portion of the
-    state space. However, care must be taken when estimating our state
-    space. The obsercations we use to estimate our state space must:
+    using statistical tools and Takens' theorem. In this case, if we
+    are interested in calculating a an effect, we can block backdoor
+    paths from the cause to the effect with the unobserved portion of
+    the state space. However, care must be taken when estimating our
+    state space. The observations we use to estimate our state space
+    must:
 
     1. Not lie on the directed causal path from the cause to the
        effect.
@@ -321,35 +329,35 @@ questions: discuss hannart attribtion and counterfactuual paper?
     ordering of events, and we also generally know how quickly
     information at a given location can move to affect a process at
     another location and time. For example in for a general physics
-    scenario infomration travels at the spped of light, but for the
+    scenario information travels at the speed of light, but for the
     atmosphere a very conservative propagation speed would be the
     speed of sound. If we wish to ignore the effect of sound waves, we
     could alternatively use a less conservative propagtion speed such
-    as a gravity wave phase speed or advection (wind) speed. In either
-    case, if we know the timing and location of our cause, and the
-    timing and location of our effect, then we can know the spatial
-    extent over which we need to estimate our state space so that
-    backdoor paths form our cause and our effect are blocked. An
-    example may help. Say we are interested in the effect of soil
-    moisture ($SM$) at time ($t=0$ hr) and location ($x=0$ m, $y=0$ m)
-    on average evapotranspiration (ET) over the next hour (from $t=0$
-    /introduce "lightcone" idea from shalizi?/ hr to $t=1$ hr and at
-    the location $x=0$ m, $y = 0$ m. Soil moisture can effect the
-    state, so we do not want to condition on any oveservations after
-    time $t=0$. But, if we know the relevant state space at time $t=0$
-    which affects both soil moisture and ET, we can block back door
-    paths by conditionin gon that state space.  However, as previously
-    recognized, we never fully observe the state space of the system,
-    so we must use Takens' theorem and statistical tools to "fill in"
-    unobserved portions of the state space with lagged
-    observations. This makes the problem harder: we must use
-    observations over a larger temporal and spatial extent than if we
-    fully observed the state space, in order to estimate the state
-    space and block backdoor paths. In the soil moisture example, let
-    us say that with the observations abailable, 3 instances of hourly
-    observations (e.g. ($t-2$, $t-1$, and $t$) is enough to
-    reconstruct the state space at time $t$.  However, if we take a
-    coservative approach and assume that the maximum speed of
+    as a maximum bound on gravity wave phase/group speed or advection
+    (wind) speed. In either case, if we know the timing and location
+    of our cause, and the timing and location of our effect, then we
+    know the spatial extent over which we need to estimate our state
+    space so that backdoor paths form our cause and our effect are
+    blocked. An example may help. Say we are interested in the effect
+    of soil moisture ($SM$) at time ($t=0$ hr) and location ($x=0$ m,
+    $y=0$ m) on average evapotranspiration (ET) over the next hour
+    (from $t=0$ /introduce "lightcone" idea from shalizi?/ hr to $t=1$
+    hr and at the location $x=0$ m, $y = 0$ m. Soil moisture can
+    effect the state, so we do not want to condition on any
+    oveservations after time $t=0$. But, if we know the relevant state
+    space at time $t=0$ which affects both soil moisture and ET, we
+    can block back door paths by conditionin gon that state space.
+    However, as previously recognized, we never fully observe the
+    state space of the system, so we must use Takens' theorem and
+    statistical tools to "fill in" unobserved portions of the state
+    space with lagged observations. This makes the problem harder: we
+    must use observations over a larger temporal and spatial extent
+    than if we fully observed the state space, in order to estimate
+    the state space and block backdoor paths. In the soil moisture
+    example, let us say that with the observations abailable, 3
+    instances of hourly observations (e.g. ($t-2$, $t-1$, and $t$) is
+    enough to reconstruct the state space at time $t$.  However, if we
+    take a coservative approach and assume that the maximum speed of
     propagation through the atomosphere is the speed of sound
     ($\approx 340 m s^{-1}$), then we would need to use observations
     over a radius of 2248 km radius at time $t-2$, a 1224 km at time
@@ -375,7 +383,8 @@ questions: discuss hannart attribtion and counterfactuual paper?
     soil moisture is affected by a radius of 180 km, but there are no
     gaurantees that that area did not affect soil moisture at time t,
     and also *is* included in the state at time t, x=0, y=0./ /aslo
-    think about how to handle SM with large "memory"/.
+    think about how to handle SM with large "memory"/. /what about
+    plants- healtha nd adaptation (unobserved)?/
 
     So far we have assumed that we know how many lagged samples of
     observations are necessary to reconstruct the observed state
