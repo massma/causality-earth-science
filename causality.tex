@@ -5,9 +5,7 @@
 
 \title{Causal inference in earth science}
 
-\author[1]{Adam Massmann\thanks{Corresponding author: akm2203@columbia.edu}}
-
-\affil[1]{Department of Earth and Environmental Engineering, Columbia University, New York, NY 10027}
+\author{Adam Massmann\thanks{Corresponding author: akm2203@columbia.edu}}
 
 \maketitle
 
@@ -26,10 +24,421 @@
 
 \end{abstract}
 
-\onehalfspacing
-
 \section{Introduction}
 
-\acknowledgments acknowledge
+% usefullness causal inference e.s.
+
+Causal inference is the estimation of effects (e.g. temperature)
+in response to changes in causes (e.g. green house gas
+concentration) using observational data from a system. Causal
+inference is an alternative path towards scientific discovery,
+which traditionally relies on experimentation (e.g. numerical,
+lab, or real world) to determine the effect of varying causes. In
+earth sciences in particular it may be impossible or unethical to
+execute real world experiments, and numerical experiments may rely
+on approximations that bias causal estimates relative to the real
+world. Given these challenges in earth science, causal inference
+from data is a tantilizing tool that allows for robust
+estimatation of causal effects that may be otherwise impossible
+using traditoinal tools.
+
+
+% challenges of ci in e.s.}
+
+However, causal inference from data presents its own challenges. A
+necessary conditon for calculating a causal effect is that the
+causal effect must be identifiable from the set of observable
+variables. Whether or not a causal effect is identifiable is
+determined from our assumptions about how a system behaves and
+which variables we can obtain observations for. If an effect is
+determined to be unidentifable, then it is impossible to calculate
+the causal effect of interest, even with an infitinte sample of
+data. Specific to problems in earth science, the identification of
+causal effects is challenging given two fundamental properties of
+many generic earth science problems: the system evolves through
+time according to an underlying dynamical system, and we only ever
+partially observe the state space of that dynamical system. Using
+graph theory developed in \citep{pearl-1995} we determine the
+generic problems causal inference is justified for, and the
+necesarry assumptions for applyign causal inference. There is the
+potential for applying causal inference in two scenarios: (1)
+under an assumption that the cause is independent of the (cliamte)
+system's state space (e.g. at the human-climate interface,
+anthropogenic green house gas emission, land use change) (Secion
+xx); and (2) under certain conditions where we can estimate the
+state space of the system from using carefully selected time
+lagged observations (Section xx).  \emph{discuss relationship to
+boundary condition experiments?} Our theoretical results
+identifying tractable problems in earth science require a few
+fundamentals from the causal inference literature, so we introduce
+causal inference theory, causal graphs, and do calculus for the
+unfamiliar reader (Section xx), and compare with recent earth
+science literature on the related field of causal discovery.
+
+% include this?
+% Causal graphs are also a useful general research tool for
+% communicating assumptions, whether or not causal inference is actually
+% used (Section xx).
+
+\section{Causal graphs and Pearl's do calculus}
+
+% intro causal graphs}
+
+Causal graphs, introduced in \citep{pearl-1995}, are directed
+acyclic graphs (DAGs) that encode our assumptions about the causal
+dependencies of a system. One draws directed edges (e.g. arrows)
+from variables that are causes to effects. To illustrate, in a
+simplified toy example examing clouds, aerosols, and surface solar
+radiation, we would draw (Figure xx):
+
+\begin{enumerate}
+\item An edge from aerosols to clouds because aerosols serve as cloud
+condensation nuclei.
+\item An edge from aerosols to surface solar radiation, because
+aerosols can reflect sunlight back to space and reduce sunlight
+at the surface.
+\item An edge from clouds to surface solar ratiation, because clouds
+also reflect sunlight back to space and can reduce sunlight at
+the surface.
+\end{enumerate}
+
+Causal graphs encode our assumptions about how the system behaves,
+and the nodes and edges that are missing from the graph often
+represent strong assumptions about how the system works. For
+example, in the cloud-aerosol-sunlight example, clouds also affect
+aerosols by increasing the likelihood that aerosol will be scoured
+from the atmosphere during precipitatation. By not including an
+edge from cloud to aerosol, we are making a strong assumption that
+we are ignoring this effect of clouds on aerosols. Cosidering this
+example is intended to be pedagocical for introducing causal theory
+to the readers, we will continue with the graph as drawn in Figure
+xx. Causal graphs are very useful tools because they can be drawn
+by any domain expert with no required knowledge of math or
+probability, but they also represent formal mathetmical objects
+with very sepcific meanings (discuss factorization of joint?).
+
+% intro identification}
+
+Given their mathematical meaning, we can use causal graphs to
+identifiy which distributions we must estimate from data in order
+to calcualte a causal effect of itnerest. This process of
+identifying the necessary distributions is formally termed
+\emph{causal indentification}. If a causal effect is not
+identifiable (/un/identifiable), for example if
+calculating a causal effect requires distributions of variables
+that we do not observe, then we cannot use causal inference to
+caluclate a causal effect, even with an infinite sample of data.
+
+% backdoor path}
+
+An early, well studied and relevant (to climate science)
+sufficient condition for identificatication is called the
+\emph{backdoor criterion}. The backdoor criterion states that if we can
+observe variables such that the backdoor paths from cause to
+effect are blocked, then a causal effect is identified. Backdoor
+paths are any paths going through parents of the cause, to the
+effect. We can block these paths by selectively observing
+variables such that no information passes through them. Perhaps
+more intuition can be gained by considering a mutilated causal
+graph where we remove all edges from the cause to the cause's
+children, and then ask the question, "is the cause independent of
+the effect?" in the mutilated graph. If the answer is yes, then
+calcuating our causal effect is identified. If the answer is no,
+then we must observe some variables such that the cause becomes
+independent of the effect, in the mutilated graph. This matches
+intuition: we only want to calculate the co-variability of our
+cause and effect due to information travelling from the cause to
+the effect along directed causal pathways, not due to the cause's
+parent processes inducing covariability in both the cause and
+effect. In other words, in the absence of backdoor paths,
+correltion is causation.
+
+% backdoor path with example}
+
+Perhaps backdoor paths and the backdoor criterion are better
+introduced with an example. Returning to out toy example Figure
+xx, we will attempt to calcualte the causal effect of clouds on
+sunlight. In otherwords, we want to isolate the variability of
+sunlight due to the causal link from cloud to sunight. However,
+aerosols both effect cloud (edge from aerosol to cloud), and
+sunlight, so if we naively calculate a causal effect, for example
+by just regressing sunlight on cloud, we would get a biased
+estimate of the mean causal effect of cloud on sunlight. This can
+be shown graphically if we remove all edges from our cause (cloud)
+to children of our cause (in this case sunlight) (Figure xx). We
+see that cloud is not indepednent of aerosol in the mutilated
+graph. How would we make cloud and sunlight independent in this
+mutiliated graph? In this case, by observing
+aerosol. Mathematically, the identification of the causal effect
+of cloud and aerosol accoridng to the backdoor criterion is:
+
+\begin{equation}
+  P(sunlight | do(cloud) = c) = \int_{aerosol} p(sunlight| cloud = c,
+  aerosol) p(aerosol)),
+\end{equation}
+
+\emph{introduce ATE?}
+
+where we have implicitly introduced Pearl's "do" calculus, which
+just means we want to calculate the effect of ("doing") an
+intervention on the cause (in this case cloud) and setting it to
+some value of our choosing (in this cas \(c\)). In the case that
+observations of aerosols are not available, our causal effect is
+not identifiable and we cannot use causal inference no matter how
+large the sampel sizes of clouds and aerosols. This theory is an
+elegant tool: without having to touch data or estimate marginal or
+conditional distributions, we can determine whether it is possible
+to calculate a causal effect of interest. We later use this thoery
+to theoretically assess which general problems are tractable in
+earth science using causal inference.
+
+% other identification strategies focusing on backdoor path}
+
+Here we focus on the backdoor criterion. However, other
+identification stregies exist, primarily the front-door criterion
+and instrument variables. Given that the front-door criterion can
+be reformulated as a specific case of the back-door criterion
+(cite XX?), and that applying instrument variables to a system
+with an evolving state space is challenging (cite XX? - also
+discuss how in practice intrument variables can introduce
+biases? - see sSHalizi). However please consult citeXX and cite
+XXX for more information on the front-door criterion and
+instrument variables.
+
+\subsection{Clarification on terminology and relationship to literature on causal discovery}
+
+% causal discovery = infering causal graph from data}
+
+In this paper we discuss causal inference, and define it as
+estimating the induced effect of intervening on a cause (setting
+it or changing it to some value). However "causal inference" has
+also been used previously to describe the process of inferring the
+graph strucutre of a causal graph from data. To be consisstent
+with previous literature in the causal community, we call this
+technique of of infering the graph structure from data \emph{causal
+structure discovery}, whiel calculating causal effects given a
+graph and data is \emph{causal inference}. There has been cosiderable
+recent focus on \emph{causal structure discovery} in earth science, so
+it is worthwhile to discuss the relationship between causal
+inference and causal discovery and how it relates to earth science.
+
+% often times we know causal graph (can write down equations)}
+
+Often in earth science we know or have a strong a priori belief
+about the causal graph of our system. For example, in the climate
+system we can identify the state variables and we know that the
+state at time \(t\) determnines the state at time \(t+1\), even if we
+might not be able to write down the exact functional form of this
+state evolution. Therefor, we can write down a causal graph and do
+not need to infer graph structrue from data.  So, why the itnerest
+in causal discovery for earth science? One possible explanation is
+that causal discovery may be useful to remove edges that have a
+small or negligble effect. Some portions of the climate state at
+time \(t\) may have a negligble effect on other portions of the
+climate state at time \(t+1\), and causal discovery could eliminate
+edges between these portions of the state space.  Additionally,
+while we can usually derive a causal graph of an earth science
+system using expert knowledge for physical variables, we may not
+be able to do so for transformed or reduced-dimension derived
+quantities. Causal discovery methods can be applied to identify
+causal dependencies between between these derived variables.
+
+% resulting causal graph will be function of significance paramters}
+
+However, causal discovery algorithms rely on significance
+parameters used to determine conditoinal independence between
+variables. Because causal discovery algorhtms can produce
+potentially arbitraty results as a function of hyperparameters
+(significance levels) of the method, it may be methodloically
+safer to build a causal graph using expert knowledge, even if this
+limits us to scenarios where we know the causal structure (in
+physical sciences this may not be so limiting). It is still
+possible to test that the causal sgraph is consistent with
+observations using conditional independence tests, so we can still
+verify some of the assumptions in a causal graph.
+
+% many pitfalls of causal discovery same as for causal inference}
+
+Finally, many pitfalls of causal discovery are similiar for causal
+inference. In particular, applying causal discovery algorithms on
+a system with only partial overservations of the presents
+significant unresolved problems and challenges (cite XX). Given
+that we often know the causal structure of our system through well
+studied physics and dynamics, we believe there is a lot of
+potential for using causal inference. Given this motivation we
+focus the rest of our discussion on the problems for which causal
+inference is tractable in earth science.
+
+ % put in this section? think important to discuss regression and
+ % problems of conditioning on variables that are in the causal path.
+ % ** Causal graphs: a tool for communicating assumptions and avoiding flawed experiments
+ % *** A tool for communicating assumptions
+ % *** Avoiding flawed experiment designs
+
+\subsection{Applications in earth science: pitfalls and justified
+  approaches for generic scena
+  rios}
+
+% reorganize as: what does it take to block backdoor paths. okay, what
+% about the fact that we partially observe state space?
+
+% also, start with discussing internal to the system, then bring up how
+% we might be able to get away with assuming soem pieces are external to
+% the system
+
+% Earth science as a dynamical system with partial observations of the state space}
+
+Earth science systems can be viewed as a dynamical system evolving
+through time according to an underlying state stace. However, in
+the earth system we only every partially observe this state
+space. When encoded in a generical causal graph (Figure XX), we
+can see that there will always be open backdoor paths from a cause
+in any part of the state sapce, to an effect in andy part of the
+state space, through the unobserved portions of the state
+space. So, in this general earth science scenario, causal
+inference is unidentifiable, and thereofor impossible even with an
+infitie amount of data. However, are there some additional
+assumptions that are consistent with common and relevant scenarios
+under which causal inference is tractable for a partially observed
+state space?
+
+% Tractable approach: causes are independent if the state space}
+
+One tractable approach is when our causes of interest are
+independent from the evolution of the state space. While the earth
+system certainly affects all objects living on earth, in some
+cases this may be a reasonable assumption. For example, it is
+tragic but unfortunately recent human history has demonstrated
+that our global actions are relatively independent of the climate
+state. That is, we have failed to reduce green house gas emissions
+even as global temperature increased. When global green house gas
+emissions have risen less sharply, it is usually due to global
+economic recession (cite xx, 2008). In this case it appears that
+the many global social, policital and economic factors are primary
+causes of global green house gas emission, and while the climate
+system may effect this forces, the historical evedence suggests
+that an assumption that global green house gas emission is
+independent fo the climate may be reasonable, at least for the
+present and near future \emph{discuss data problem - we know don't
+observe the future of green house gas emissions}.
+
+Generally this logic applies to many scenarios on the
+"human-climate" interface. For example, land-use land-cover change
+can be viewed in many scnearios independent of the climate system,
+as in urban centers where urban planning is relatively independent
+fo recent climate history. We encode a general graph of the
+assumption that causes are independent of the state space,
+reflecting our general suggestion that the human-climate interface
+may be a particularly common example of this scenario.
+
+% Tractable approach: thoughtfull estimation of the state space with Takens' theorem}
+
+A second causal scenario, more applicable for studying behavior
+within the earth system, is when we can estimate the state space
+using statistical tools and Takens' theorem. In this case, if we
+are interested in calculating a an effect, we can block backdoor
+paths from the cause to the effect with the unobserved portion of
+the state space. However, care must be taken when estimating our
+state space. The observations we use to estimate our state space
+must:
+
+\begin{enumerate}
+\item Not lie on the directed causal path from the cause to the
+effect.
+
+\item Must represent all portions of the statespace that affect both
+the cause and the effect.
+\end{enumerate}
+
+Fortunately, in earth system obsevations we know the temporal
+ordering of events, and we also generally know how quickly
+information at a given location can move to affect a process at
+another location and time. For example in for a general physics
+scenario information travels at the speed of light, but for the
+atmosphere a very conservative propagation speed would be the
+speed of sound. If we wish to ignore the effect of sound waves, we
+could alternatively use a less conservative propagtion speed such
+as a maximum bound on gravity wave phase/group speed or advection
+(wind) speed. In either case, if we know the timing and location
+of our cause, and the timing and location of our effect, then we
+know the spatial extent over which we need to estimate our state
+space so that backdoor paths form our cause and our effect are
+blocked. An example may help. Say we are interested in the effect
+of soil moisture (\(SM\)) at time (\(t=0\) hr) and location (\(x=0\) m,
+\(y=0\) m) on average evapotranspiration (ET) over the next hour
+(from \(t=0\) \emph{introduce "lightcone" idea from shalizi?} hr to \(t=1\)
+hr and at the location \(x=0\) m, \(y = 0\) m. Soil moisture can
+effect the state, so we do not want to condition on any
+oveservations after time \(t=0\). But, if we know the relevant state
+space at time \(t=0\) which affects both soil moisture and ET, we
+can block back door paths by conditionin gon that state space.
+However, as previously recognized, we never fully observe the
+state space of the system, so we must use Takens' theorem and
+statistical tools to "fill in" unobserved portions of the state
+space with lagged observations. This makes the problem harder: we
+must use observations over a larger temporal and spatial extent
+than if we fully observed the state space, in order to estimate
+the state space and block backdoor paths. In the soil moisture
+example, let us say that with the observations abailable, 3
+instances of hourly observations (e.g. (\(t-2\), \(t-1\), and \(t\)) is
+enough to reconstruct the state space at time \(t\).  However, if we
+take a coservative approach and assume that the maximum speed of
+propagation through the atomosphere is the speed of sound
+(\(\approx 340 m s^{-1}\)), then we would need to use observations
+over a radius of 2248 km radius at time \(t-2\), a 1224 km at time
+\(t-1\), and at \((x=0, y=0)\) at time \(t\). This is a much bigger
+(statistical) problem. Fotunately, much historical work in
+atmospheric science has defined relevant time, space, and speed
+scales over which perturbations propagate vertically and
+horizonatally (e.g. rossby deformation radius, burger's number,
+group/phase velocity of gravity waves, etc.). We can use this work
+to define less conservative, but still resonable assumptions about
+the area over which we must calculate the state space which makes
+the problem more computationally tractable.  For example, if we
+assume taht the speed or propagation is \(50 m s^{-1}\), then we
+would need to use observations over a radius of 360 km at time
+\(t-2\), and 180 km at time \(t-1\). Also, here we are focusing on
+just a simple radius based approach with a fixed propagation speed
+for ease of interpretation, but the size of the problem could
+perhaps be reduced by looking more thoughtfully at the data, and
+including advecion directions and sppeds to reduce the area from
+the naive radius-based approach. /this could be a little more
+complicated and relies on an assumption that air does not
+circulate back to a location e.g. at time t+1 (end of average),
+soil moisture is affected by a radius of 180 km, but there are no
+gaurantees that that area did not affect soil moisture at time t,
+and also \textbf{is} included in the state at time t, x=0, y=0./ \emph{aslo
+think about how to handle SM with large "memory"}. \emph{what about
+plants- healtha nd adaptation (unobserved)?}
+
+So far we have assumed that we know how many lagged samples of
+observations are necessary to reconstruct the observed state
+space, but in practice we do not know how much we need. One
+possible approach is to use the data for guidance: we will have
+fully reconstructed the state space when the addition of
+more time lags does not imporve our prediciton of our effect at
+time \(t+1\). Returning to the soil moisture example, we could
+determine the number of time lags by calculating predictions base
+on different set of lagged observations (e.g. \({t}\), \([t, t-1]\),
+\({t, t-1, t-2}\), etc.). We select the number of time lagged
+obsercations necessary to reconstruct the state space relcant for
+soil moisutre as the set that maximizes the predicitive
+skill. This approach also favors our simple method of assuming a
+propagation speed and a radius (lightcone?) of influence, ad any
+advection direction and speeds vary though time, so we can not
+determine the necessary number of lags using a timeseries of
+obsercations, as detailed above. \emph{review and tie back to shalizi
+light cone?} \emph{think about and include importance of including
+effect in regression tests}.
+
+\subsection{Discussion}
+
+discuss transportability?
+
+discuss relationship of these ideas to causal discovery (critique
+causal discovery)?
+
+discuss issues with data available and observed range
+(e.g. generalization for cliamte research)?
 
 \end{document}
