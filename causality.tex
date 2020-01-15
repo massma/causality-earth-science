@@ -375,133 +375,35 @@ the more lags are required to estimate are state space. If the number
 of lags in inversly proportional to the obsevational coverage of the
 state space, this motivates more observations of the earth system!
 
-Fortunately, in earth system obsevations we know the temporal
-ordering of events, and we also generally know how quickly
-information at a given location can move to affect a process at
-another location and time. For example in for a general physics
-scenario information travels at the speed of light, but for the
-atmosphere a very conservative propagation speed would be the
-speed of sound. If we wish to ignore the effect of sound waves, we
-could alternatively use a less conservative propagtion speed such
-as a maximum bound on gravity wave phase/group speed or advection
-(wind) speed. In either case, if we know the timing and location
-of our cause, and the timing and location of our effect, then we
-know the spatial extent over which we need to estimate our state
-space so that backdoor paths form our cause and our effect are
-blocked. An example may help. Say we are interested in the effect
-of soil moisture (\(SM\)) at time (\(t=0\) hr) and location (\(x=0\) m,
-\(y=0\) m) on average evapotranspiration (ET) over the next hour
-(from \(t=0\) \emph{introduce "lightcone" idea from shalizi?} hr to \(t=1\)
-hr and at the location \(x=0\) m, \(y = 0\) m. Soil moisture can
-effect the state, so we do not want to condition on any
-oveservations after time \(t=0\). But, if we know the relevant state
-space at time \(t=0\) which affects both soil moisture and ET, we
-can block back door paths by conditionin gon that state space.
-However, as previously recognized, we never fully observe the
-state space of the system, so we must use Takens' theorem and
-statistical tools to "fill in" unobserved portions of the state
-space with lagged observations. This makes the problem harder: we
-must use observations over a larger temporal and spatial extent
-than if we fully observed the state space, in order to estimate
-the state space and block backdoor paths. In the soil moisture
-example, let us say that with the observations abailable, 3
-instances of hourly observations (e.g. (\(t-2\), \(t-1\), and \(t\)) is
-enough to reconstruct the state space at time \(t\).  However, if we
-take a coservative approach and assume that the maximum speed of
-propagation through the atomosphere is the speed of sound
-(\(\approx 340 m s^{-1}\)), then we would need to use observations
-over a radius of 2248 km radius at time \(t-2\), a 1224 km at time
-\(t-1\), and at \((x=0, y=0)\) at time \(t\). This is a much bigger
-(statistical) problem. Fotunately, much historical work in
-atmospheric science has defined relevant time, space, and speed
-scales over which perturbations propagate vertically and
-horizonatally (e.g. rossby deformation radius, burger's number,
-group/phase velocity of gravity waves, etc.). We can use this work
-to define less conservative, but still resonable assumptions about
-the area over which we must calculate the state space which makes
-the problem more computationally tractable.  For example, if we
-assume taht the speed or propagation is \(50 m s^{-1}\), then we
-would need to use observations over a radius of 360 km at time
-\(t-2\), and 180 km at time \(t-1\). Also,
+/where to put stuff about software I wrote?/
 
-
-So far we have assumed that we know how many lagged samples of
-observations are necessary to reconstruct the observed state
-space, but in practice we do not know how much we need. One
-possible approach is to use the data for guidance: we will have
-fully reconstructed the state space when the addition of
-more time lags does not imporve our prediciton of our effect at
-time \(t+1\). Returning to the soil moisture example, we could
-determine the number of time lags by calculating predictions base
-on different set of lagged observations (e.g. \({t}\), \([t, t-1]\),
-\({t, t-1, t-2}\), etc.). We select the number of time lagged
-obsercations necessary to reconstruct the state space relcant for
-soil moisutre as the set that maximizes the predicitive
-skill. This approach also favors our simple method of assuming a
-propagation speed and a radius (lightcone?) of influence, ad any
-advection direction and speeds vary though time, so we can not
-determine the necessary number of lags using a timeseries of
-obsercations, as detailed above. \emph{review and tie back to shalizi
-light cone?} \emph{think about and include importance of including
-effect in regression tests}.
-
-
-\subsubsection{We do not generally observe the state space}
-
-However, in
-the earth system we only every partially observe this state
-space. When encoded in a generical causal graph (Figure XX), we
-can see that there will always be open backdoor paths from a cause
-in any part of the state sapce, to an effect in andy part of the
-state space, through the unobserved portions of the state
-space. So, in this general earth science scenario, causal
-inference is unidentifiable, and thereofor impossible even with an
-infitie amount of data. However, are there some additional
-assumptions that are consistent with common and relevant scenarios
-under which causal inference is tractable for a partially observed
-state space?
-
-
-A second causal scenario, more applicable for studying behavior
-within the earth system, is when we can estimate the state space
-using statistical tools and Takens' theorem. In this case, if we
-are interested in calculating a an effect, we can block backdoor
-paths from the cause to the effect with the unobserved portion of
-the state space.
-
-The observations we use to estimate our state space
-must:
-
-\begin{enumerate}
-\item Not lie on the directed causal path from the cause to the
-effect.
-
-\item Must represent all portions of the statespace that affect both
-the cause and the effect.
-\end{enumerate}
+In practice we do not know how many lagged observations of the state
+space we need to reconstruct it at time $t-1$. One possible approach
+is to use the data for guidance: we will have fully reconstructed the
+state space when the addition of more time lags does not imporve our
+prediciton of our effect at time \(t+1\) (or cause at time $t$).
 
 
 \paragraph{Applications on the human-earth system interface}
 
-
-
-One tractable approach is when our causes of interest are independent
-from the evolution of the state space. While the earth system
-certainly affects all objects living on earth, in some cases this may
-be a reasonable assumption. For example, it is tragic but
-unfortunately recent human history has demonstrated that our global
-actions are relatively independent of the climate state. That is, we
-have failed to reduce green house gas emissions even as global
-temperature increased. When global green house gas emissions have
-risen less sharply, it is usually due to global economic recession
-(cite xx, 2008). In this case it appears that the many global social,
-policital and economic factors are primary causes of global green
-house gas emission, and while the climate system may effect this
-forces, the historical evedence suggests that an assumption that
-global green house gas emission is independent fo the climate may be
-reasonable, at least for the present and near future \emph{discuss
-  data problem - we know don't observe the future of green house gas
-  emissions}.
+One particularly tractable approach that avoids estimating the full
+state space of our system at a given time, is when our causes of
+interest are independent from the evolution of the state space. While
+the earth system certainly affects all objects living on earth, in
+some cases this may be a reasonable assumption. For example, it is
+tragic but unfortunately recent human history has demonstrated that
+our global actions are relatively independent of the climate
+state. That is, we have failed to reduce green house gas emissions
+even as global temperature increased. When global green house gas
+emissions have risen less sharply, it is usually due to global
+economic recession (cite xx, 2008). In this case it appears that the
+many global social, policital and economic factors are primary causes
+of global green house gas emission, and while the climate system may
+effect this forces, the historical evedence suggests that an
+assumption that global green house gas emission is independent fo the
+climate may be reasonable, at least for the present and near future
+\emph{discuss data problem - we know don't observe the future of green
+  house gas emissions}.
 
 Generally this logic applies to many scenarios on the
 "human-climate" interface. For example, land-use land-cover change
