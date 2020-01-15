@@ -1,5 +1,5 @@
 \documentclass[12pt]{article}
-\input{def.tex}
+\input{def}
 
 \begin{document}
 
@@ -58,7 +58,7 @@ causal effects is challenging given two fundamental properties of
 many generic earth science problems: the system evolves through
 time according to an underlying dynamical system, and we only ever
 partially observe the state space of that dynamical system. Using
-graph theory developed in \citep{pearl-1995} we determine the
+graph theory developed in \citep{pearl1995causal} we determine the
 generic problems causal inference is justified for, and the
 necesarry assumptions for applyign causal inference. There is the
 potential for applying causal inference in two scenarios: (1)
@@ -84,7 +84,7 @@ science literature on the related field of causal discovery.
 
 % intro causal graphs}
 
-Causal graphs, introduced in \citep{pearl-1995}, are directed
+Causal graphs, introduced in \citep{pearl1995causal}, are directed
 acyclic graphs (DAGs) that encode our assumptions about the causal
 dependencies of a system. One draws directed edges (e.g. arrows)
 from variables that are causes to effects. To illustrate, in a
@@ -276,9 +276,10 @@ inference is tractable in earth science.
  % *** Avoiding flawed experiment designs
 
 \subsection{Applications in earth science: pitfalls and justified
-  approaches for generic scena
-  rios}
+  approaches for generic scenarios}
 
+
+\subsubsection{Causal identification when the state space is known}
 % reorganize as: what does it take to block backdoor paths. okay, what
 % about the fact that we partially observe state space?
 
@@ -288,67 +289,91 @@ inference is tractable in earth science.
 
 % Earth science as a dynamical system with partial observations of the state space}
 
-Earth science systems can be viewed as a dynamical system evolving
-through time according to an underlying state stace. However, in
-the earth system we only every partially observe this state
-space. When encoded in a generical causal graph (Figure XX), we
-can see that there will always be open backdoor paths from a cause
-in any part of the state sapce, to an effect in andy part of the
-state space, through the unobserved portions of the state
-space. So, in this general earth science scenario, causal
-inference is unidentifiable, and thereofor impossible even with an
-infitie amount of data. However, are there some additional
-assumptions that are consistent with common and relevant scenarios
-under which causal inference is tractable for a partially observed
-state space?
+Earth science systems can be viewed as a stochastic dynamical system
+evolving through time according to an underlying state stace. This
+offers both advantages and challenges for causal inference. Challenges
+involve estimating the state space from observations, while advantages
+include the temporal ordering of events; we know that future events
+can have no causal effect on the past.
 
-% Tractable approach: causes are independent if the state space}
+Fist we conisder a generic scenario in a simple temporal system with
+no spatial comonent, where we are interested in the causal effect of
+$C(t)$ on $E(t+1)$, where $C$ and $E$ are processes within the larger
+system's state $S$. We denote the portion of the state space excluding
+$C$ and $E$ as $S'$. $C(t)$, $E(t)$, and $S'(t)$ all affect $C(t+1)$,
+$E(t+1)$ and $S'(t+1)$ (figure XX). In order to calculate the causal
+effect of $C(t)$ on $E(t+1)$, we must block all back door paths from
+$C(t)$ to $E(t+1)$. In this generic scenario, this involves
+conditioning on $S'(t)$ and $E(t)$:
 
-One tractable approach is when our causes of interest are
-independent from the evolution of the state space. While the earth
-system certainly affects all objects living on earth, in some
-cases this may be a reasonable assumption. For example, it is
-tragic but unfortunately recent human history has demonstrated
-that our global actions are relatively independent of the climate
-state. That is, we have failed to reduce green house gas emissions
-even as global temperature increased. When global green house gas
-emissions have risen less sharply, it is usually due to global
-economic recession (cite xx, 2008). In this case it appears that
-the many global social, policital and economic factors are primary
-causes of global green house gas emission, and while the climate
-system may effect this forces, the historical evedence suggests
-that an assumption that global green house gas emission is
-independent fo the climate may be reasonable, at least for the
-present and near future \emph{discuss data problem - we know don't
-observe the future of green house gas emissions}.
+\begin{equation}
+  \label{naive}
+  P(E(t+1)| do(C(t))) = \int_{S'(t)} \int_{E(t)} p(E(t+1) | C(t), S'(t),
+  E(t)) \; p(E(t)) \; p(S'(t))
+\end{equation}
 
-Generally this logic applies to many scenarios on the
-"human-climate" interface. For example, land-use land-cover change
-can be viewed in many scnearios independent of the climate system,
-as in urban centers where urban planning is relatively independent
-fo recent climate history. We encode a general graph of the
-assumption that causes are independent of the state space,
-reflecting our general suggestion that the human-climate interface
-may be a particularly common example of this scenario.
+However, we never fully observe the state of the system. So, $S'(t)$
+is is not directly observed. We may, however, be able to estimate
+$S'(t)$ by leveraging Takens's theorem and using lagged observations
+of the partial state space, going back in time (e.g. $S(t-1)$,
+$S(t-2)$, etc.). In this application, this approach presents
+problems. The reconstruction will estimate $S$ rather than $S'$, which
+inlcudes $C(t)$ because $C$ is a part of the state space. Fortunately,
+we can also block backdoor paths by conditioning on $S(t-1)$. If we
+reconstruct $S(t-1)$ using lagged observations before $t-1$, we can
+block backdoor paths and calculate a causal effect. So, the more
+tractable approach to blocking backdoor paths in the earth system,
+where we only ever partially observe the state space, is:
 
-% Tractable approach: thoughtfull estimation of the state space with Takens' theorem}
+\begin{equation}
+  \label{ce}
+  P(E(t+1)| do(C(t))) = \int_{S(t-1)} \int_{E(t)} p(E(t+1) | C(t), S(t-1),
+  E(t)) \; p(E(t)) \; p(S(t-1)),
+\end{equation}
 
-A second causal scenario, more applicable for studying behavior
-within the earth system, is when we can estimate the state space
-using statistical tools and Takens' theorem. In this case, if we
-are interested in calculating a an effect, we can block backdoor
-paths from the cause to the effect with the unobserved portion of
-the state space. However, care must be taken when estimating our
-state space. The observations we use to estimate our state space
-must:
+where $S(t-1)$ is statistically reconstructed using lagged
+observations of the partial state space (justified by Takens's
+theorem).
 
-\begin{enumerate}
-\item Not lie on the directed causal path from the cause to the
-effect.
+To extend this result on a purely temporal dyanmical system to a
+spatio-temporal system, we use the idea of lightcones
+\citep{PhysRevLett.84.1890,
+  montanez2015licors,doi:10.1063/1.5021130}. Lightcones leverage our
+general knowledge or assumptions about the speed with with the
+influence of events can propagate through the system. For a general
+physical system, an upper limit on the propagation speed is the speed
+of light. For that atmosphere, a useful upper limit is the speed of
+sound. However, in many scenarios (e.g. if we do not care about the
+effect of soundwaves), we can use a more reasonalbe speed of
+propagation like the advection (wind) speed, or the phase/group speed
+of gravity waves. We can use the propagation speed of the system to
+analyze what portions of the state space can or cannot affect an event
+at a given time and spatial extent. The past lightcones are the set of
+all events in a spatiotemporal system that can \textit{affect} a
+single event at a given location and time. The future lightcones are
+the set of all events in a sptiotemporal system that are
+\textit{affected by} an event at a given location and time. We can use
+the past lightcones of our cause and out effect to determine the
+spatio-temporal locations we must use to estimate $S(t-1)$ and block
+backdoor paths.
 
-\item Must represent all portions of the statespace that affect both
-the cause and the effect.
-\end{enumerate}
+An example will help. Consider a scenario where half-hourly
+observations are available, we assume the propagation speed is
+$25 m/s$, and that we are interested in the affect of
+$C(x=0 m, y=0 m, t=0 hr)$ on $E(x=0, y=0, t=0.5 hr)$. In this case, we
+would need to estimate $S(t=-1 hr)$, over all locations that could
+affect \emph{both} $C(0,0,0)$ and $E(0,0,0.5)$.  For a propagation
+speed of $25 m/s$, this requires esimating the state over a circular
+area centered at $x=0$, $y=0$, and with a radius
+$25 \, m/s \cdot 1800 \, s = 45 km$. However, becuse we only partially
+observe the state space, we must use lagged observations going back in
+time, inlcluding all observations of events within the past lightcone
+of the system. For example, at $-1$ hours our circular radius would be
+90 km, at $-1.5$ hr: 135 km, and at $-2$ hr: 180 km. As one can
+observe, the problem because stastically and computationally harder
+the more lags are required to estimate are state space. If the number
+of lags in inversly proportional to the obsevational coverage of the
+state space, this motivates more observations of the earth system!
 
 Fortunately, in earth system obsevations we know the temporal
 ordering of events, and we also generally know how quickly
@@ -397,19 +422,8 @@ the area over which we must calculate the state space which makes
 the problem more computationally tractable.  For example, if we
 assume taht the speed or propagation is \(50 m s^{-1}\), then we
 would need to use observations over a radius of 360 km at time
-\(t-2\), and 180 km at time \(t-1\). Also, here we are focusing on
-just a simple radius based approach with a fixed propagation speed
-for ease of interpretation, but the size of the problem could
-perhaps be reduced by looking more thoughtfully at the data, and
-including advecion directions and sppeds to reduce the area from
-the naive radius-based approach. /this could be a little more
-complicated and relies on an assumption that air does not
-circulate back to a location e.g. at time t+1 (end of average),
-soil moisture is affected by a radius of 180 km, but there are no
-gaurantees that that area did not affect soil moisture at time t,
-and also \textbf{is} included in the state at time t, x=0, y=0./ \emph{aslo
-think about how to handle SM with large "memory"}. \emph{what about
-plants- healtha nd adaptation (unobserved)?}
+\(t-2\), and 180 km at time \(t-1\). Also,
+
 
 So far we have assumed that we know how many lagged samples of
 observations are necessary to reconstruct the observed state
@@ -431,6 +445,75 @@ obsercations, as detailed above. \emph{review and tie back to shalizi
 light cone?} \emph{think about and include importance of including
 effect in regression tests}.
 
+
+\subsubsection{We do not generally observe the state space}
+
+However, in
+the earth system we only every partially observe this state
+space. When encoded in a generical causal graph (Figure XX), we
+can see that there will always be open backdoor paths from a cause
+in any part of the state sapce, to an effect in andy part of the
+state space, through the unobserved portions of the state
+space. So, in this general earth science scenario, causal
+inference is unidentifiable, and thereofor impossible even with an
+infitie amount of data. However, are there some additional
+assumptions that are consistent with common and relevant scenarios
+under which causal inference is tractable for a partially observed
+state space?
+
+
+A second causal scenario, more applicable for studying behavior
+within the earth system, is when we can estimate the state space
+using statistical tools and Takens' theorem. In this case, if we
+are interested in calculating a an effect, we can block backdoor
+paths from the cause to the effect with the unobserved portion of
+the state space.
+
+The observations we use to estimate our state space
+must:
+
+\begin{enumerate}
+\item Not lie on the directed causal path from the cause to the
+effect.
+
+\item Must represent all portions of the statespace that affect both
+the cause and the effect.
+\end{enumerate}
+
+
+\paragraph{Applications on the human-earth system interface}
+
+
+
+One tractable approach is when our causes of interest are independent
+from the evolution of the state space. While the earth system
+certainly affects all objects living on earth, in some cases this may
+be a reasonable assumption. For example, it is tragic but
+unfortunately recent human history has demonstrated that our global
+actions are relatively independent of the climate state. That is, we
+have failed to reduce green house gas emissions even as global
+temperature increased. When global green house gas emissions have
+risen less sharply, it is usually due to global economic recession
+(cite xx, 2008). In this case it appears that the many global social,
+policital and economic factors are primary causes of global green
+house gas emission, and while the climate system may effect this
+forces, the historical evedence suggests that an assumption that
+global green house gas emission is independent fo the climate may be
+reasonable, at least for the present and near future \emph{discuss
+  data problem - we know don't observe the future of green house gas
+  emissions}.
+
+Generally this logic applies to many scenarios on the
+"human-climate" interface. For example, land-use land-cover change
+can be viewed in many scnearios independent of the climate system,
+as in urban centers where urban planning is relatively independent
+fo recent climate history. We encode a general graph of the
+assumption that causes are independent of the state space,
+reflecting our general suggestion that the human-climate interface
+may be a particularly common example of this scenario.
+
+
+
 \subsection{Discussion}
 
 discuss transportability?
@@ -440,5 +523,7 @@ causal discovery)?
 
 discuss issues with data available and observed range
 (e.g. generalization for cliamte research)?
+
+\bibliography{references.bib}
 
 \end{document}
