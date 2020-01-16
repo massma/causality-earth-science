@@ -28,20 +28,18 @@
 
 % usefullness causal inference e.s.
 
-Causal inference is the estimation of effects (e.g. temperature)
-in response to changes in causes (e.g. green house gas
-concentration) using observational data from a system. Causal
-inference is an alternative path towards scientific discovery,
-which traditionally relies on experimentation (e.g. numerical,
-lab, or real world) to determine the effect of varying causes. In
-earth sciences in particular it may be impossible or unethical to
-execute real world experiments, and numerical experiments may rely
-on approximations that bias causal estimates relative to the real
-world. Given these challenges in earth science, causal inference
-from data is a tantilizing tool that allows for robust
-estimatation of causal effects that may be otherwise impossible
-using traditoinal tools.
-
+Causal inference is the estimation of effects (e.g. ) in response to
+changes in causes (e.g. green house gas concentration) using
+observational data from a system. Causal inference is an alternative
+path towards scientific discovery, which traditionally relies on
+experimentation (e.g. numerical, lab, or real world) to determine the
+effect of varying causes. In earth sciences in particular it may be
+impossible or unethical to execute real world experiments, and
+numerical experiments may rely on approximations that bias causal
+estimates relative to the real world. Given these challenges in earth
+science, causal inference from data is a tantilizing tool that allows
+for robust estimatation of causal effects that may be otherwise
+impossible using traditoinal tools.
 
 % challenges of ci in e.s.}
 
@@ -414,17 +412,39 @@ assumption that causes are independent of the state space,
 reflecting our general suggestion that the human-climate interface
 may be a particularly common example of this scenario.
 
-
-
 \subsection{Discussion}
 
-discuss transportability?
+\begin{itemize}
+\item Causal inference from data is a new tool that can traditional
+  scientific methods, incluidng numerical and real world
+  experimentation. In earth science, numerical models rely on
+  approximations that deviate their behavior from reality, and real
+  world experimentation may be intractable or unethical. Causal
+  inference is a third tool to calculate the effects of physical
+  processes that has a differerent set of advantages and
+  disadvantages, and is a powerful complement to numerical dn real
+  world experimentation.
+\item The characteristics of earth science systems offer advantages
+  for causal ifnerence: the temporal ordering of events and bounds on
+  the propagations speed of information in the system allows us to
+  filter which events that can affect a process, and identify the
+  necessary portions of the state space we must condition on to block
+  backdoor paths.
+\item Applying causal inference to earth science systems also presents
+  challenges: we only ever partially observe the state space of the
+  system, so we must reconstruct the full state space using time
+  lagged observations. This increases the computational and
+  statistical complexity of the problem, and can make some application
+  untractable.
+\end{itemize}
 
-discuss relationship of these ideas to causal discovery (critique
-causal discovery)?
+/discuss transportability?/
 
-discuss issues with data available and observed range
-(e.g. generalization for cliamte research)?
+/discuss relationship of these ideas to causal discovery (critique
+causal discovery)?/
+
+/discuss issues with data available and observed range
+(e.g. generalization for cliamte research)?/
 
 \bibliography{references.bib}
 
