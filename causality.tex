@@ -100,7 +100,8 @@ simplified toy example examing clouds, aerosols, and surface solar
 radiation, we would draw (Figure \ref{fig:toy}):
 
 \begin{figure}
- \noindent\includegraphics[width=0.75\textwidth]{./cloud-aerosol.pdf}\\
+ % consider \noindent\include... [width=0.75\textwidth]...
+ \includegraphics[]{./cloud-aerosol.pdf}\\
  \caption{A relatable toy example to demonstrate basic causal theory.}
  \label{fig:toy}
 \end{figure}
@@ -181,7 +182,7 @@ effect along directed causal pathways, not due to the cause's parent
 processes inducing covariability in both the cause and effect.
 
 \begin{figure}
- \noindent\includegraphics[width=0.75\textwidth]{./mutilated-cloud-aerosol.pdf}\\
+ \noindent\includegraphics[]{./mutilated-cloud-aerosol.pdf}\\
  \caption{A mutilation of Figure \ref{fig:toy}, where we have removed
    directed causal paths from the cause (cloud) to the effect (surface
    solar radiation). We can see that there is covariability between
@@ -323,15 +324,6 @@ inference is tractable in earth science.
 \subsection{Causal identification when the state space estimable}
 \label{state-space}
 
-% reorganize as: what does it take to block backdoor paths. okay, what
-% about the fact that we partially observe state space?
-
-% also, start with discussing internal to the system, then bring up how
-% we might be able to get away with assuming soem pieces are external to
-% the system
-
-% Earth science as a dynamical system with partial observations of the state space}
-
 Earth science systems can be viewed as a stochastic dynamical system
 evolving through time according to an underlying state stace. This
 offers both advantages and challenges for causal inference. Challenges
@@ -344,10 +336,21 @@ no spatial comonent, where we are interested in the causal effect of
 $C(t)$ on $E(t+1)$, where $C$ and $E$ are processes within the larger
 system's state $S$. We denote the portion of the state space excluding
 $C$ and $E$ as $S'$. $C(t)$, $E(t)$, and $S'(t)$ all affect $C(t+1)$,
-$E(t+1)$ and $S'(t+1)$ (figure XX). In order to calculate the causal
-effect of $C(t)$ on $E(t+1)$, we must block all back door paths from
-$C(t)$ to $E(t+1)$. In this generic scenario, this involves
-conditioning on $S'(t)$ and $E(t)$:
+$E(t+1)$ and $S'(t+1)$ (Figure \ref{fig:generic}). In order to
+calculate the causal effect of $C(t)$ on $E(t+1)$, we must block all
+back door paths from $C(t)$ to $E(t+1)$. In this generic scenario,
+this involves conditioning on $S'(t)$ and $E(t)$:
+
+\begin{figure}
+  \includegraphics[]{./generic-graph.pdf}
+  \caption{A generic graph of the earth system sequence, limited to a
+    3 time sequence subset of the infinite sequence. At time steps $t$
+    and $t+1$ the state space is broken up into three events: $C$,
+    $E$, and $S'(t)$, which is all parts of $S$ excluding $C$ and $E$,
+    which are generic processes that are subset sof the full state
+    space $S$.}
+  \label{fig:generic}
+\end{figure}
 
 \begin{equation}
   \label{naive}
