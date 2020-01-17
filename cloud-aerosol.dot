@@ -1,0 +1,10 @@
+digraph G {
+	c[label="cloud"];
+	a[label="aerosol"];
+	s[label="sfc solar rad"];
+
+	a -> c;
+	c -> s;
+	a -> s;
+
+}

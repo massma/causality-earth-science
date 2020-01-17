@@ -1,0 +1,26 @@
+* Reproduce the manuscript "Causal Inference in Earth Science" by Adam Massmann
+
+** Requirements
+
+   - [[https://www.tug.org/texlive/][texlive]] (tested on 2019)
+   - [[https://docs.haskellstack.org/en/stable/README/][Haskell Stack]]
+   - [[https://shakebuild.com/][Shake]] (installable with Stack)
+   - [[https://www.graphviz.org/][Graphviz]]
+
+** Windows instructions (untested)
+
+   Clone this repository, enter directory, and run:
+
+#+BEGIN_SRC bash
+  stack exec ./build.bat
+#+END_SRC
+
+** GNU/Linux instructions
+
+   Clone this repository, enter directory, and run:
+
+#+BEGIN_SRC bash
+  stack exec ./build.sh
+#+END_SRC
+
+   This should also probably work on OSX, but I haven't tested it.
