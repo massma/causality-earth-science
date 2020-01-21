@@ -1,8 +1,21 @@
+# emacs
 *~
-causality.log
-causality.aux
-causality.out
-causality.pdf
-causality.synctex.gz
 
-./
+# latex
+*.log
+*.aug
+*.out
+*.bbl
+*.blg
+*.aux
+*.synctex.gz
+ltximg
+auto
+
+# build
+_build
+_shake
+
+# figs and derived stuff
+*.pdf
+*.png

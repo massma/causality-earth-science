@@ -1,28 +1,45 @@
 digraph G {
-	sminus1[label="S(t-1)"];
+	sMinus1[label="S(t-1)"];
+	uMinus1[label="U(t-1)"];
 
 	c[label="C(t)"];
 	e[label="E(t)"];
 	sPrime[label="S'(t)"];
+	u[label="U(t)"];
 
 	c1[label="C(t+1)"];
 	e1[label="E(t+1)"];
 	sPrime1[label="S'(t+1)"];
+	u1[label="U(t+1)"];
 
-	sminus1 -> c;
-	sminus1 -> e;
-	sminus1 -> sPrime;
+	sMinus1 -> c;
+	sMinus1 -> e;
+	sMinus1 -> sPrime;
+	sMinus1 -> u;
+
+	uMinus1 -> c;
+	uMinus1 -> e;
+	uMinus1 -> sPrime;
+	uMinus1 -> u;
 
 	c -> c1;
 	c -> e1;
 	c -> sPrime1;
+	c -> u1;
 
 	e -> c1;
 	e -> e1;
 	e -> sPrime1;
+	e -> u1;
 
 	sPrime -> c1;
 	sPrime -> e1;
 	sPrime -> sPrime1;
+	sPrime -> u1;
+
+	u -> c1;
+	u -> e1;
+	u -> sPrime1;
+	u -> u1;
 
 }

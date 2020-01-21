@@ -213,7 +213,7 @@ criterion is:
 
 \begin{equation}
   P(sunlight | do(cloud) = c) = \int_{aerosol} p(sunlight| cloud = c,
-  aerosol) p(aerosol),
+  aerosol) p(aerosols),
 \end{equation}
 
 \emph{introduce ATE?}
@@ -237,86 +237,74 @@ condition for un-intentifiability; however, it is not sufficient
 (e.g. there are other identification strategies like the front door
 criterion, and instrumental variables). For a complete discussion of
 sufficient conditions for un-identifiability we refer you to
-\citet{shpitser2006}. However, for the purpose of identifying
-general tractable causal inference approaches in earth science
-(Section \ref{sec:necess-cond-caus}) , we
-will focus on blocking backdoor paths. However given the continously
-evolving (though time) nature of earth science systems, and that we
-only partially observe the state space of the system (Section
-\ref{state-space}), these other identification strategies are not
-applicable, and an unblockable backdoor path is a sufficent condition
-for un-idenfiability in the types of graphs that are representative of
-earth science systems (Figure XX).
+\citet{shpitser2006}. However, for the purpose of identifying general
+tractable causal inference approaches in earth science (Section
+\ref{sec:necess-cond-caus}) , we will focus on blocking backdoor
+paths. Given the continously evolving (though time) nature of earth
+science systems, and that we only partially observe the state space of
+the system (Section \ref{state-space}), these other identification
+strategies are not applicable, and an unblockable backdoor path is a
+sufficent condition for un-idenfiability in the types of graphs that
+are representative of earth science systems (Figure XX) /TODO: need to
+confirm/prove this/.
 
 \subsection{Clarification on terminology and relationship to literature on causal discovery}
 
 % causal discovery = infering causal graph from data}
+The term ``causal inference'' has been used to describe two
+techniques:
 
-In this paper we discuss causal inference, and define it as
-estimating the induced effect of intervening on a cause (setting
-it or changing it to some value). However "causal inference" has
-also been used previously to describe the process of inferring the
-graph strucutre of a causal graph from data. To be consisstent
-with previous literature in the causal community, we call this
-technique of of infering the graph structure from data \emph{causal
-structure discovery}, whiel calculating causal effects given a
-graph and data is \emph{causal inference}. There has been cosiderable
-recent focus on \emph{causal structure discovery} in earth science, so
-it is worthwhile to discuss the relationship between causal
-inference and causal discovery and how it relates to earth science.
+\begin{enumerate}
+\item \textbf{Causal effect inference}: Calculating the causal effect
+  of some processes on other, given data and assumptions about the
+  causal structure of the system.
+\item \textbf{Causal structure discovery}: Inferring the causal
+  structure (e.g. the causal graph) of the system using data.
+\end{enumerate}
 
-% often times we know causal graph (can write down equations)}
+This paper focuses on causal inference as (1); calculating causal
+effects from data. Inferring the causal structure of the system (2),
+is generally much more difficult and requires more
+assumptions. However, there are other reasos to focus on (1) rather
+than (2) in earth science: often in earth science we know or have a
+strong a priori belief about the causal graph of our system. For
+example, in the climate system we can identify the state variables and
+we know that the state at time \(t\) determnines the state at time
+\(t+1\), even if we might not be able to write down the exact
+functional form of this state evolution. Therefore, we can write down
+a causal graph and do not need to infer graph structrue from data
+(Section \ref{sec:necess-cond-caus}).
 
-Often in earth science we know or have a strong a priori belief
-about the causal graph of our system. For example, in the climate
-system we can identify the state variables and we know that the
-state at time \(t\) determnines the state at time \(t+1\), even if we
-might not be able to write down the exact functional form of this
-state evolution. Therefor, we can write down a causal graph and do
-not need to infer graph structrue from data.  So, why the itnerest
-in causal discovery for earth science? One possible explanation is
-that causal discovery may be useful to remove edges that have a
-small or negligble effect. Some portions of the climate state at
-time \(t\) may have a negligble effect on other portions of the
-climate state at time \(t+1\), and causal discovery could eliminate
-edges between these portions of the state space.  Additionally,
-while we can usually derive a causal graph of an earth science
-system using expert knowledge for physical variables, we may not
-be able to do so for transformed or reduced-dimension derived
-quantities. Causal discovery methods can be applied to identify
-causal dependencies between between these derived variables.
-
-% resulting causal graph will be function of significance paramters}
-
-However, causal discovery algorithms rely on significance
-parameters used to determine conditoinal independence between
-variables. Because causal discovery algorhtms can produce
-potentially arbitraty results as a function of hyperparameters
-(significance levels) of the method, it may be methodloically
-safer to build a causal graph using expert knowledge, even if this
-limits us to scenarios where we know the causal structure (in
-physical sciences this may not be so limiting). It is still
-possible to test that the causal sgraph is consistent with
-observations using conditional independence tests, so we can still
-verify some of the assumptions in a causal graph.
-
-% many pitfalls of causal discovery same as for causal inference}
-
-Finally, many pitfalls of causal discovery are similiar for causal
-inference. In particular, applying causal discovery algorithms on
-a system with only partial overservations of the presents
-significant unresolved problems and challenges (cite XX). Given
-that we often know the causal structure of our system through well
-studied physics and dynamics, we believe there is a lot of
-potential for using causal inference. Given this motivation we
-focus the rest of our discussion on the problems for which causal
-inference is tractable in earth science.
-
- % put in this section? think important to discuss regression and
- % problems of conditioning on variables that are in the causal path.
- % ** Causal graphs: a tool for communicating assumptions and avoiding flawed experiments
- % *** A tool for communicating assumptions
- % *** Avoiding flawed experiment designs
+However, there has been considerable work and effort in applying
+causal structure discovery (2) in earth science
+\citep[e.g.,][]{ebert-uphoff2012,
+  samarasinghe-casuality,runge-causal-timeseries,runge2019inferring}. A
+common application and motivation of these efforts is to filter and
+ignore causal links in the system through structure discovery, which
+is a function of the significance parameters used in the causal
+discovery algorithms. Causal inference of effects, as we expolore
+here, represents a different approach where we do not rely on
+assumptions about the significance of effects, but instead make
+explicit assumptions about the causal structure of the system. To
+reiterate, given our domain knowledge of the earth science system we
+generally have high confidence about the causal structure of the
+system, and as we will see (Section \ref{sec:necess-cond-caus}) we can
+construct quite general graphs that are faithful to our knowledge
+about how dynamical systems evolve. It is possible some links in these
+graphs correspond to small effects, and these links would be removed
+through causal structure discovery. However, directly interpretting
+what constitues a ``negligibly small'' effect calculation presented in
+physical units and probabilities, as calculated with causal effect
+inference, may be more transparent than intepreting missing links
+derived from causal structure discovery significance parameters. In
+other words, direct calculation of effects may be more transparent and
+interpretable for many readers, relative to a causal graph derived
+from significance parameters with more abstract meaning. We hope to
+motivate further research effort in causal effect inference to match
+recent efforts in causal structure discovery. Ideally causal effect
+inference and causal structure discovery will co-evolve as
+complementary abstractions for causal intepretation; researchers and
+readers can choose the method that suits their assumptions and needs.
 
 \section{Necessary conditions for causal identification in the earth
   systems}
@@ -344,11 +332,13 @@ this involves conditioning on $S'(t)$ and $E(t)$:
 \begin{figure}
   \includegraphics[]{./generic-graph.pdf}
   \caption{A generic graph of the earth system sequence, limited to a
-    3 time sequence subset of the infinite sequence. At time steps $t$
-    and $t+1$ the state space is broken up into three events: $C$,
-    $E$, and $S'(t)$, which is all parts of $S$ excluding $C$ and $E$,
-    which are generic processes that are subset sof the full state
-    space $S$.}
+    3 time sequence subset of the infinite sequence. $S$ and $U$ refer
+    to the observed and unobserved portions of the state space,
+    respectively.  At time steps $t$ and $t+1$ the observedn portion
+    of the state space is broken up into three events: $C$, $E$, and
+    $S'(t)$, which is all parts of $S$ excluding $C$ and $E$. $C$ is a
+    generic portion of the state space we are intested in as a cause, and $E$ is
+    a generic portion of the state space we are interested in as an effect.}
   \label{fig:generic}
 \end{figure}
 
