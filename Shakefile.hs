@@ -35,10 +35,11 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   "lightcone.pdf" %> \out -> do
     need ["spacetime-causality/spacetime-cause.cabal"]
+    cmd_ (Cwd "spacetime-causality") "stack" ["build"]
     cmd_ (Cwd "spacetime-causality") "stack" ["exec", "spacetime-cause-exe"]
 
   ("spacetime-causality" </> "spacetime-cause.cabal") %> \out -> do
-    cmd_ "git" ["submodule", "init"]
-    cmd_ "git" ["submodule", "update"]
+    cmd_ Shell "git" ["submodule", "init"]
+    cmd_ Shell "git" ["submodule", "update"]
 
   mapM_ genDot dotfigs
