@@ -14,21 +14,31 @@ genDot pat = pat %> \out -> do
 
 main :: IO ()
 main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
-  let figs =
+  let dotfigs =
         [ "cloud-aerosol.pdf"
         , "mutilated-cloud-aerosol.pdf"
         , "generic-graph.pdf"
         ]
+  let figs = ["lightcone.pdf"]
+
   want ["causality.pdf"]
 
   "causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
     let s = out -<.> "tex"
-    need ([b, s] <> figs)
+    need ([b, s] <> dotfigs <> figs)
     cmd_ "pdflatex" s
 
   "causality.bbl" %> \out -> do
     need ["references.bib"]
     cmd_ "bibtex" $ out -<.> ""
 
-  mapM_ genDot figs
+  "lightcone.pdf" %> \out -> do
+    need ["spacetime-causality/spacetime-cause.cabal"]
+    cmd_ (Cwd "spacetime-causality") "stack" ["exec", "spacetime-cause-exe"]
+
+  ("spacetime-causality" </> "spacetime-cause.cabal") %> \out -> do
+    cmd_ "git" ["submodule", "init"]
+    cmd_ "git" ["submodule", "update"]
+
+  mapM_ genDot dotfigs
