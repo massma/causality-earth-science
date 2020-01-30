@@ -14,7 +14,7 @@
   complementing numerical and real world experimentation. We examine
   the necessary assumptions and theoretical justification for applying
   causal inference methods to generic earth system scenarios. The
-  primary challenge in using causal inference in earth science is that
+  primary challenge of using causal inference in earth science is that
   we generally only partially observe the state space of the earth
   science system. However an advantage of earth science systems is
   that we generally know the temporal ordering of events and the speed
@@ -245,8 +245,8 @@ science systems, and that we only partially observe the state space of
 the system (Section \ref{state-space}), these other identification
 strategies are not applicable, and an unblockable backdoor path is a
 sufficent condition for un-idenfiability in the types of graphs that
-are representative of earth science systems (Figure XX) /TODO: need to
-confirm/prove this/.
+are representative of earth science systems (Figure \ref{fig:generic})
+/TODO: need to confirm/prove this/.
 
 \subsection{Clarification on terminology and relationship to literature on causal discovery}
 
@@ -319,15 +319,18 @@ involve estimating the state space from observations, while advantages
 include the temporal ordering of events; we know that future events
 can have no causal effect on the past.
 
-Fist we conisder a generic scenario in a simple temporal system with
+First we consider a generic scenario in a simple temporal system with
 no spatial comonent, where we are interested in the causal effect of
 $C(t)$ on $E(t+1)$, where $C$ and $E$ are processes within the larger
-system's state $S$. We denote the portion of the state space excluding
-$C$ and $E$ as $S'$. $C(t)$, $E(t)$, and $S'(t)$ all affect $C(t+1)$,
-$E(t+1)$ and $S'(t+1)$ (Figure \ref{fig:generic}). In order to
-calculate the causal effect of $C(t)$ on $E(t+1)$, we must block all
-back door paths from $C(t)$ to $E(t+1)$. In this generic scenario,
-this involves conditioning on $S'(t)$ and $E(t)$:
+system's \textit{observed} state $S$. Note that in general we do not
+fully observe the state of the system, so there will also be an
+unobserved portion of the state space $U$. We denote the portion of
+the observed state space excluding $C$ and $E$ as $S'$. $S'(t)$,
+$U(t)$, $C(t)$ and $E(t)$ all affect $S'(t+1)$, $U(t+1)$, $C(t+1)$,
+and $E(t)$ (Figure \ref{fig:generic}). In order to calculate the
+causal effect of $C(t)$ on $E(t+1)$, we must block all back door paths
+from $C(t)$ to $E(t+1)$. In this generic scenario, this involves
+conditioning on $S'(t)$, $U(t)$, and $E(t)$:
 
 \begin{figure}
   \includegraphics[]{./generic-graph.pdf}
@@ -344,32 +347,32 @@ this involves conditioning on $S'(t)$ and $E(t)$:
 
 \begin{equation}
   \label{naive}
-  P(E(t+1)| do(C(t))) = \int_{S'(t)} \int_{E(t)} p(E(t+1) | C(t), S'(t),
-  E(t)) \; p(E(t)) \; p(S'(t))
+  P(E(t+1)| do(C(t))) = \int_{S'(t)} \int_{U(t)} \int_{E(t)}  p(E(t+1) | C(t), S'(t),
+  U(t), E(t)) \; p(E(t)) \; p(U(t)) \; p(S'(t))
 \end{equation}
 
-However, we never fully observe the state of the system. So, $S'(t)$
-is is not directly observed. We may, however, be able to estimate
-$S'(t)$ by leveraging Takens's theorem and using lagged observations
-of the partial state space, going back in time (e.g. $S(t-1)$,
-$S(t-2)$, etc.). In this application, this approach presents
-problems. The reconstruction will estimate $S$ rather than $S'$, which
-inlcudes $C(t)$ because $C$ is a part of the state space. Fortunately,
-we can also block backdoor paths by conditioning on $S(t-1)$. If we
-reconstruct $S(t-1)$ using lagged observations before $t-1$, we can
-block backdoor paths and calculate a causal effect. So, the more
-tractable approach to blocking backdoor paths in the earth system,
-where we only ever partially observe the state space, is:
+However, we do not observe $U(t)$, and cannot block this path. We may,
+however, be able to estimate $U(t)$ by leveraging Takens's theorem and
+using lagged observations of the partial state space, going back in
+time (e.g. $S(t-1)$, $S(t-2)$, etc.). In this application, this
+approach presents problems. The reconstruction will estimate $S$
+rather than $S'$, which includes $C(t)$ because $C$ is a part of the
+state space. Fortunately, we can also block backdoor paths by
+conditioning on $S(t-1)$ and $U(t-1)$. If we reconstruct $U(t-1)$
+using lagged observations of $S$ before $t-1$, we can block backdoor
+paths and calculate a causal effect. So, the more tractable approach
+to blocking backdoor paths in the earth system, where we only ever
+partially observe the state space, is:
 
 \begin{equation}
   \label{ce}
-  P(E(t+1)| do(C(t))) = \int_{S(t-1)} \int_{E(t)} p(E(t+1) | C(t), S(t-1),
-  E(t)) \; p(E(t)) \; p(S(t-1)),
+  P(E(t+1)| do(C(t))) = \int_{S(t-1)} \int_{U(t-1)} p(E(t+1) | C(t), S(t-1),
+  U(t-1)) \; p(U(t-1)) \; p(S(t-1)),
 \end{equation}
 
-where $S(t-1)$ is statistically reconstructed using lagged
-observations of the partial state space (justified by Takens's
-theorem).
+where $U(t-1)$ is statistically reconstructed using lagged
+observations of the state space $S(t')$, where
+$t' \in \{-\infty, t-2\}$ (justified by Takens's theorem).
 
 To extend this result on a purely temporal dyanmical system to a
 spatio-temporal system, we use the idea of lightcones
@@ -378,7 +381,7 @@ spatio-temporal system, we use the idea of lightcones
 general knowledge or assumptions about the speed with with the
 influence of events can propagate through the system. For a general
 physical system, an upper limit on the propagation speed is the speed
-of light. For that atmosphere, a useful upper limit is the speed of
+of light. For the atmosphere, a useful upper limit is the speed of
 sound. However, in many scenarios (e.g. if we do not care about the
 effect of soundwaves), we can use a more reasonalbe speed of
 propagation like the advection (wind) speed, or the phase/group speed
@@ -388,28 +391,44 @@ at a given time and spatial extent. The past lightcones are the set of
 all events in a spatiotemporal system that can \textit{affect} a
 single event at a given location and time. The future lightcones are
 the set of all events in a sptiotemporal system that are
-\textit{affected by} an event at a given location and time. We can use
-the past lightcones of our cause and out effect to determine the
-spatio-temporal locations we must use to estimate $S(t-1)$ and block
-backdoor paths.
+\textit{affected by} an event at a given location and time. Formally,
+the past lightcone ($L^-$) is the set fo all events defined by:
 
-An example will help. Consider a scenario where half-hourly
-observations are available, we assume the propagation speed is
-$25 m/s$, and that we are interested in the affect of
-$C(x=0 m, y=0 m, t=0 hr)$ on $E(x=0, y=0, t=0.5 hr)$. In this case, we
-would need to estimate $S(t=-1 hr)$, over all locations that could
-affect \emph{both} $C(0,0,0)$ and $E(0,0,0.5)$.  For a propagation
-speed of $25 m/s$, this requires esimating the state over a circular
-area centered at $x=0$, $y=0$, and with a radius
-$25 \, m/s \cdot 1800 \, s = 45 km$. However, becuse we only partially
-observe the state space, we must use lagged observations going back in
-time, inlcluding all observations of events within the past lightcone
-of the system. For example, at $-1$ hours our circular radius would be
-90 km, at $-1.5$ hr: 135 km, and at $-2$ hr: 180 km. As one can
-observe, the problem because stastically and computationally harder
-the more lags are required to estimate are state space. If the number
-of lags in inversly proportional to the obsevational coverage of the
-state space, this motivates more observations of the earth system!
+\begin{equation}
+  L^-(r,t) \equiv \left\{ X_{t'}^{r'} \, : \, t' \leq t \text{ and }
+      ||r'-r|| \leq c(t-t')\right\},
+\end{equation},
+
+where $c$ is the propagation spped. The future lightcone is defined
+similarly:
+
+\begin{equation}
+  L^+(r,t) \equiv \left\{ X_{t'}^{r'} \, : \, t' \geq t \text{ and }
+      ||r'-r|| \leq c(t'-t) \right\}
+\end{equation}.
+
+We can use the past lightcones of our cause and out effect to
+determine the spatio-temporal locations we must use to estimate
+$S(t-1)$ and block backdoor paths.
+
+An example will aid visualizing lightcones, and their consequences for
+causal inference. Consider a scenario where half-hourly observations
+are available, we assume the propagation speed is $25 m/s$, and that
+we are interested in the affect of $C(x=0 m, y=0 m, t=0 hr)$ on
+$E(x=0, y=0, t=0.5 hr)$. In this case, we would need to estimate
+$S(t=-0.5 hr)$, over all locations that could affect \emph{both}
+$C(0,0,0)$ and $E(0,0,0.5)$.  For a propagation speed of $25 m/s$,
+this requires esimating the state over a circular area centered at
+$x=0$, $y=0$, and with a radius $25 \, m/s \cdot 1800 \, s = 45
+km$. However, becuse we only partially observe the state space, we
+must use lagged observations going back in time, inlcluding all
+observations of events within the past lightcone of the system. For
+example, at $-1$ hours our circular radius would be 90 km, at $-1.5$
+hr: 135 km, and at $-2$ hr: 180 km. As one can observe, the problem
+because stastically and computationally harder the more lags are
+required to estimate are state space. If the number of lags in
+inversly proportional to the obsevational coverage of the state space,
+this motivates more observations of the earth system!
 
 /where to put stuff about software I wrote?/
 
@@ -417,7 +436,10 @@ In practice we do not know how many lagged observations of the state
 space we need to reconstruct it at time $t-1$. One possible approach
 is to use the data for guidance: we will have fully reconstructed the
 state space when the addition of more time lags does not imporve our
-prediciton of our effect at time \(t+1\) (or cause at time $t$).
+prediciton of our effect at time \(t+1\) (or cause at time
+$t$). /think about this prediction of cause and effect, in terms of
+``predictively important variables may have limited causal meanings''
+in my notes/. goal should be
 
 
 \subsection{Applications at the human-earth system interface: when the
