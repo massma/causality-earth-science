@@ -3,6 +3,7 @@ import           Development.Shake.Command
 import           Development.Shake.FilePath
 import           Development.Shake.Util
 import qualified Data.ByteString               as BS
+import           Data.List                      ( isInfixOf )
 
 genDot :: FilePath -> Rules ()
 genDot pat = pat %> \out -> do
@@ -26,7 +27,10 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
   "causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
     need [b]
-    cmd_ "pdflatex" (b -<.> "tex")
+    Stdout o <- cmd "pdflatex" (b -<.> "tex")
+    if isInfixOf "Rerun to get citations correct." o
+      then cmd_ "pdflatex" (b -<.> "tex")
+      else return ()
 
   "causality.bbl" %> \out -> do
     need ["references.bib", out -<.> "aux"]
