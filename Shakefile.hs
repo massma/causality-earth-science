@@ -25,11 +25,8 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   "causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
-    let s = out -<.> "aux"
-    need [b, s]
-    cmd_ "pdflatex" (s -<.> "tex")
-    -- this is a hack:sometimes have to rerun to get references right
-    -- cmd_ "pdflatex" (s -<.> "tex")
+    need [b]
+    cmd_ "pdflatex" (b -<.> "tex")
 
   "causality.bbl" %> \out -> do
     need ["references.bib", out -<.> "aux"]
