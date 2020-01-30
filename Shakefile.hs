@@ -25,13 +25,18 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   "causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
-    let s = out -<.> "tex"
-    need ([b, s] <> dotfigs <> figs)
-    cmd_ "pdflatex" s
+    let s = out -<.> "aux"
+    need [b, s]
+    cmd_ "pdflatex" (s <.> "tex")
 
   "causality.bbl" %> \out -> do
-    need ["references.bib"]
+    need ["references.bib", out -<.> "aux"]
     cmd_ "bibtex" $ out -<.> ""
+
+  "causality.aux" %> \out -> do
+    let s = out -<.> "tex"
+    need ([s] <> dotfigs <> figs)
+    cmd_ "pdflatex" $ s
 
   "lightcone.pdf" %> \out -> do
     need ["spacetime-causality/spacetime-cause.cabal"]
