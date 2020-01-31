@@ -78,15 +78,14 @@ estimate the state space of the system from using carefully selected
 time lagged observations (Section \ref{state-space}).  Our theoretical
 results identifying tractable problems in earth science require a few
 fundamentals from the causal inference literature, so we introduce
-causal inference theory, causal graphs, and do calculus for the
-unfamiliar reader (Section \ref{sec:causal-graphs-pearls}), and
-compare with recent earth science literature on the related field of
-causal discovery.
+causal inference theory, causal graphs, and \citet{pearl2009}'s
+\textit{do-}calculus for the unfamiliar reader (Section
+\ref{sec:causal-graphs-pearls}), and compare with recent earth science
+literature on the related field of causal discovery (Section
+\ref{sec:discovery}).
 
-% include this?
-% Causal graphs are also a useful general research tool for
-% communicating assumptions, whether or not causal inference is actually
-% used (Section xx).
+\textit{/add section discussing usefulness of causal graphs as general
+  research tool for communicating assumptions?/}
 
 \section{Causal graphs and Pearl's do calculus}
 \label{sec:causal-graphs-pearls}
@@ -100,21 +99,21 @@ simplified toy example examing clouds, aerosols, and surface solar
 radiation, we would draw (Figure \ref{fig:toy}):
 
 \begin{figure}
- % consider \noindent\include... [width=0.75\textwidth]...
- \includegraphics[height=0.4\textheight]{./cloud-aerosol.pdf}\\
- \caption{A relatable toy example to demonstrate basic causal theory.}
- \label{fig:toy}
+  % consider \noindent\include... [width=0.75\textwidth]...
+  \includegraphics[height=0.4\textheight]{./cloud-aerosol.pdf}\\
+  \caption{A relatable toy example to demonstrate basic causal theory.}
+  \label{fig:toy}
 \end{figure}
 
 \begin{enumerate}
 \item An edge from aerosols to clouds because aerosols serve as cloud
-condensation nuclei.
+  condensation nuclei.
 \item An edge from aerosols to surface solar radiation, because
-aerosols can reflect sunlight back to space and reduce sunlight
-at the surface.
+  aerosols can reflect sunlight back to space and reduce sunlight
+  at the surface.
 \item An edge from clouds to surface solar ratiation, because clouds
-also reflect sunlight back to space and can reduce sunlight at
-the surface.
+  also reflect sunlight back to space and can reduce sunlight at
+  the surface.
 \end{enumerate}
 
 Causal graphs encode our assumptions about how the system behaves, and
@@ -182,15 +181,15 @@ effect along directed causal pathways, not due to the cause's parent
 processes inducing covariability in both the cause and effect.
 
 \begin{figure}
- \noindent\includegraphics[]{./mutilated-cloud-aerosol.pdf}\\
- \caption{A mutilation of Figure \ref{fig:toy}, where we have removed
-   directed causal paths from the cause (cloud) to the effect (surface
-   solar radiation). We can see that there is covariability between
-   cloud and surface solar radiation in the data, that is not
-   explained by a causal connection between cloud and surface solar
-   radiation, but instead is because of induced co-vaiability caused
-   by aerosol.}
- \label{fig:mutilated-toy}
+  \noindent\includegraphics[]{./mutilated-cloud-aerosol.pdf}\\
+  \caption{A mutilation of Figure \ref{fig:toy}, where we have removed
+    directed causal paths from the cause (cloud) to the effect (surface
+    solar radiation). We can see that there is covariability between
+    cloud and surface solar radiation in the data, that is not
+    explained by a causal connection between cloud and surface solar
+    radiation, but instead is because of induced co-vaiability caused
+    by aerosol.}
+  \label{fig:mutilated-toy}
 \end{figure}
 
 % backdoor path with example}
@@ -249,7 +248,7 @@ are representative of earth science systems (Figure \ref{fig:generic})
 /TODO: need to confirm/prove this/.
 
 \subsection{Clarification on terminology and relationship to literature on causal discovery}
-
+\label{sec:discovery}
 % causal discovery = infering causal graph from data}
 The term ``causal inference'' has been used to describe two
 techniques:
@@ -309,7 +308,7 @@ readers can choose the method that suits their assumptions and needs.
 \section{Necessary conditions for causal identification in the earth
   systems}
 \label{sec:necess-cond-caus}
-\subsection{Causal identification when the state space estimable}
+\subsection{Causal identification when the state space is estimable}
 \label{state-space}
 
 Earth science systems can be viewed as a stochastic dynamical system
@@ -375,28 +374,28 @@ observations of the state space $S(t')$, where
 $t' \in \{-\infty, t-2\}$ (justified by Takens's theorem).
 
 To extend this result on a purely temporal dyanmical system to a
-spatio-temporal system, we use the idea of lightcones
+spatio-temporal system, we apply the concept of lightcones
 \citep{PhysRevLett.84.1890,
   montanez2015licors,doi:10.1063/1.5021130}. Lightcones leverage our
-general knowledge or assumptions about the speed with with the
-influence of events can propagate through the system. For a general
-physical system, an upper limit on the propagation speed is the speed
-of light. For the atmosphere, a useful upper limit is the speed of
+general knowledge or assumptions about the speed with the influence of
+events can propagate through the system. For a general physical
+system, an upper limit on the propagation speed is the speed of
+light. For the atmosphere, a useful upper limit is the speed of
 sound. However, in many scenarios (e.g. if we do not care about the
 effect of soundwaves), we can use a more reasonalbe speed of
 propagation like the advection (wind) speed, or the phase/group speed
-of gravity waves. We can use the propagation speed of the system to
-analyze what portions of the state space can or cannot affect an event
-at a given time and spatial extent. The past lightcones are the set of
-all events in a spatiotemporal system that can \textit{affect} a
-single event at a given location and time. The future lightcones are
-the set of all events in a sptiotemporal system that are
-\textit{affected by} an event at a given location and time. Formally,
-the past lightcone ($L^-$) is the set fo all events defined by:
+of gravity waves. The propagation speed of the system constrains
+portions of the state space that can affect an event at a given time
+and spatial extent. The past lightcones are the set of all events in a
+spatiotemporal system that can \textit{affect} a single event at a
+given location and time. The future lightcones are the set of all
+events in a sptiotemporal system that are \textit{affected by} an
+event at a given location and time. Formally, the past lightcone
+($L^-$) is the set fo all events defined by:
 
 \begin{equation}
   L^-(r,t) \equiv \left\{ X_{t'}^{r'} \, : \, t' \leq t \text{ and }
-      ||r'-r|| \leq c(t-t')\right\},
+    ||r'-r|| \leq c(t-t')\right\},
 \end{equation},
 
 where $c$ is the propagation spped. The future lightcone is defined
@@ -404,80 +403,78 @@ similarly:
 
 \begin{equation}
   L^+(r,t) \equiv \left\{ X_{t'}^{r'} \, : \, t' \geq t \text{ and }
-      ||r'-r|| \leq c(t'-t) \right\}
+    ||r'-r|| \leq c(t'-t) \right\}
 \end{equation}.
 
 We can use the past lightcones of our cause and out effect to
-determine the spatio-temporal locations we must use to estimate
-$S(t-1)$ and block backdoor paths.
+determine the spatio-temporal locations over which we must $S(t-1)$ to
+block backdoor paths.
 
 An example will aid visualizing lightcones, and their consequences for
 causal inference. Consider a scenario where half-hourly observations
 are available, we assume the propagation speed is $25 m/s$, and that
-we are interested in the affect of $C(x=0 m, y=0 m, t=0 hr)$ on
-$E(x=0, y=0, t=0.5 hr)$. In this case, we would need to estimate
-$S(t=-0.5 hr)$, over all locations that could affect \emph{both}
-$C(0,0,0)$ and $E(0,0,0.5)$.  For a propagation speed of $25 m/s$,
-this requires esimating the state over a circular area centered at
-$x=0$, $y=0$, and with a radius $25 \, m/s \cdot 1800 \, s = 45 km$
-(Figure \ref{fig:lightcone}). However, becuse we only partially
-observe the state space, we must use lagged observations going back in
-time, inlcluding all observations of events within the past lightcone
-of the system. For example, at $-1$ hours our circular radius would be
-90 km, at $-1.5$ hr: 135 km (Figure \ref{fig:lightcone}), and at $-2$
-hr: 180 km. As one can observe, the problem because stastically and
-computationally harder the more lags are required to estimate are
+we are interested in the affect of $C(x=0 \, m, y=0 \, m, t=0 \, hr)$
+on $E(x=0 \, m, y=0 \, m , t=0.5 \, hr)$. In this case, we would need
+to estimate $S(t=-0.5 \, hr)$, over all locations that could affect
+\emph{both} $C(0,0,0)$ and $E(0,0,0.5)$.  For a propagation speed of
+$25 m/s$, this requires esimating the state over a circular area
+centered at $x=0$, $y=0$, and with a radius
+$25 \, m/s \cdot 1800 \, s = $ 45 \, km (Figure
+\ref{fig:lightcone}). However, becuse we only partially observe the
+state space, we must use lagged observations going back in time,
+inlcluding all observations of events within the past lightcone of the
+system. For example, at $-1$ hours our circular radius would be 90 km,
+at $-1.5$ hr: 135 km (Figure \ref{fig:lightcone}), and at $-2$ hr: 180
+km. As one can observe, the problem because statistically and
+computationally harder the more lags that are required to estimate are
 state space. If the number of lags in inversly proportional to the
-obsevational coverage of the state space, this motivates more
-observations of the earth system!
+obsevational coverage of the state space, the value of earth system
+observations becomes apparent. A software package that automatically
+identifies the spatiotemporal extent overwhich the state space must be
+estimated to block backdoor paths for a given spatiotemporal extent of
+cause and effect is available at
+\url{https://github.com/massma/spacetime-causality}.
 
 \begin{figure}
   \includegraphics[width=0.75\textwidth]{./lightcone.pdf}
   \caption{A graphical aid to understanding lightcones in a two
     dimensional system. Given a maximum propagation speed in our
     system of 25 m/s, the circles depict the areas that may affect
-    both the cause and the effect at time $t=-0.5 h$, $t=-1.0 h$, and
-    $t=-1.0 h$. In order to block back door paths in a spatiotemporal
-    system, we would need to condition on the state space over these
-    areas.}
+    both the cause and the effect at time $t=-0.5 \, hr$,
+    $t=-1.0 \, hr$, and $t=-1.5 \, hr$. In order to block back door
+    paths in a spatiotemporal system, we would need to condition on
+    the state space over these areas.}
   \label{fig:lightcone}
 \end{figure}
 
-
-/where to put stuff about software I wrote?/
-
 In practice we do not know how many lagged observations of the state
-space we need to reconstruct it at time $t-1$. One possible approach
+space are required for reconstruction it at time $t-1$. One approach
 is to use the data for guidance: we will have fully reconstructed the
-state space when the addition of more time lags does not imporve our
-prediciton of our effect at time \(t+1\) (or cause at time
-$t$). /think about this prediction of cause and effect, in terms of
-``predictively important variables may have limited causal meanings''
-in my notes/. goal should be
-
+relevant portions of the state space when the addition of more time
+lags does not improve our prediciton of our effect at time \(t+1\) and
+cause at time $t$.
 
 \subsection{Applications at the human-earth system interface: when the
-cause is approximately independent of the system}
+  cause is approximately independent of the system}
 \label{human}
 
-One particularly tractable approach that avoids estimating the full
-state space of our system at a given time, is when our causes of
-interest are independent from the evolution of the state space (Figure
-\ref{fig:forcing}. While the earth system certainly affects all
-objects living on earth, in some cases this may be a reasonable
-assumption. For example, it is tragic but unfortunately recent human
-history has demonstrated that our global actions are relatively
+Causal inference becomes substantially more tractable under an
+asuunmption that our causes of interest are independent from the
+evolution of the state space (Figure \ref{fig:forcing}). While the
+earth system certainly affects all objects on earth, in some cases
+this may still be a reasonable assumption. For example, recent human
+history has demonstrated that global human actions are relatively
 independent of the climate state. That is, we have failed to reduce
 green house gas emissions even as global temperature increased. When
 global green house gas emissions have risen less sharply, it is
-usually due to global economic recession (cite xx, 2008). In this case
-it appears that the many global social, policital and economic factors
-are primary causes of global green house gas emission, and while the
-climate system may effect this forces, the historical evedence
-suggests that an assumption that global green house gas emission is
-independent fo the climate may be reasonable, at least for the present
-and near future \emph{discuss data problem - we know don't observe the
-  future of green house gas emissions}.
+usually due to global economic recession rather than factors direcly
+tied to the climate state (cite xx, 2008). In this example it appears
+that many global social, policital and economic factors are the primary
+causes of global green house gas emission, and while the climate
+system may effect these factors, the historical evedence suggests that
+the climate system exerts a relatively small impact (with tragic
+consequences). \emph{/discuss data problem? - we know don't observe the future
+  of green house gas emissions/}.
 
 \begin{figure}
   \includegraphics[]{./forcing-graph.pdf}
@@ -486,28 +483,32 @@ and near future \emph{discuss data problem - we know don't observe the
   \label{fig:forcing}
 \end{figure}
 
-
-
-Generally this logic applies to many scenarios on the
-"human-climate" interface. For example, land-use land-cover change
-can be viewed in many scnearios independent of the climate system,
-as in urban centers where urban planning is relatively independent
-fo recent climate history. We encode a general graph of the
-assumption that causes are independent of the state space,
-reflecting our general suggestion that the human-climate interface
-may be a particularly common example of this scenario.
+Generally this logic applies to many scenarios on the "human-climate"
+interface. For example, for land-use land-cover change in urban
+centers where urban planning is relatively independent fo recent
+climate history. The general graph in Figure \ref{fig:forcing} is
+representitive of many such scenarios at the human-cliamte interface,
+and because the state space does not affect the cause, there are no
+unblocked backdoor paths through the unobserved portions of the state
+space. Causal inference is particularly tractable for this class of
+problems.
 
 \section{Discussion}
 
+\emph{TODO: expand these bullets into a full section}.
+
+\emph{/and add discussion of the role of randomness vs predictive
+  power, causes vs effects in an evolving state space system?/}
+
 \begin{itemize}
-\item Causal inference from data is a new tool that can traditional
-  scientific methods, incluidng numerical and real world
-  experimentation. In earth science, numerical models rely on
-  approximations that deviate their behavior from reality, and real
+\item Causal inference from data is a new tool with the potential to
+  complement traditional scientific methods, incluidng numerical and
+  real world experimentation. In earth science, numerical models rely
+  on approximations that deviate their behavior from reality, and real
   world experimentation may be intractable or unethical. Causal
   inference is a third tool to calculate the effects of physical
   processes that has a differerent set of advantages and
-  disadvantages, and is a powerful complement to numerical dn real
+  disadvantages, and is a powerful complement to numerical and real
   world experimentation.
 \item The characteristics of earth science systems offer advantages
   for causal ifnerence: the temporal ordering of events and bounds on
@@ -521,15 +522,26 @@ may be a particularly common example of this scenario.
   lagged observations. This increases the computational and
   statistical complexity of the problem, and can make some application
   untractable.
+\item Given these generic characteristics of earth science systems, we
+  have identified two scenarios that meet the necessary condtions for
+  applying causal inference:
+  \begin{enumerate}
+  \item The state space of the system is reconstructable
+    from lagged observations of the system, as allowed by
+    Takens's theorem, or
+  \item The cause of interest can be assumed to be
+    independent of the evolution of the system's state
+    (e.g. forcing).
+  \end{enumerate}
 \end{itemize}
 
-/discuss transportability?/
+% /discuss transportability?/
 
-/discuss relationship of these ideas to causal discovery (critique
-causal discovery)?/
+% /discuss relationship of these ideas to causal discovery (critique
+% causal discovery)?/
 
-/discuss issues with data available and observed range
-(e.g. generalization for cliamte research)?/
+% /discuss issues with data available and observed range
+% (e.g. generalization for cliamte research)?/
 
 \bibliography{references.bib}
 
