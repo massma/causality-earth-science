@@ -1,3 +1,4 @@
 [submodule "spacetime-causality"]
 	path = spacetime-causality
 	url = git@github.com:massma/spacetime-causality.git
+	master = master
