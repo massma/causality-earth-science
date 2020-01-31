@@ -1,0 +1,27 @@
+digraph G {
+	sMinus1[label="S(t-1)"];
+	uMinus1[label="U(t-1)"];
+
+	f[label="External\nForcing"];
+	s[label="S(t)"];
+	u[label="U(t)"];
+
+	s1[label="S(t+1)"];
+	u1[label="U(t+1)"];
+
+	sMinus1 -> s;
+	sMinus1 -> u;
+
+	uMinus1 -> s;
+	uMinus1 -> u;
+
+	f -> s;
+	f -> u;
+
+	s -> s1;
+	s -> u1;
+
+	u -> s1;
+	u -> u1;
+
+}

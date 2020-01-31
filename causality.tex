@@ -101,7 +101,7 @@ radiation, we would draw (Figure \ref{fig:toy}):
 
 \begin{figure}
  % consider \noindent\include... [width=0.75\textwidth]...
- \includegraphics[width=0.75\textwidth]{./cloud-aerosol.pdf}\\
+ \includegraphics[height=0.4\textheight]{./cloud-aerosol.pdf}\\
  \caption{A relatable toy example to demonstrate basic causal theory.}
  \label{fig:toy}
 \end{figure}
@@ -419,16 +419,30 @@ $E(x=0, y=0, t=0.5 hr)$. In this case, we would need to estimate
 $S(t=-0.5 hr)$, over all locations that could affect \emph{both}
 $C(0,0,0)$ and $E(0,0,0.5)$.  For a propagation speed of $25 m/s$,
 this requires esimating the state over a circular area centered at
-$x=0$, $y=0$, and with a radius $25 \, m/s \cdot 1800 \, s = 45
-km$. However, becuse we only partially observe the state space, we
-must use lagged observations going back in time, inlcluding all
-observations of events within the past lightcone of the system. For
-example, at $-1$ hours our circular radius would be 90 km, at $-1.5$
-hr: 135 km, and at $-2$ hr: 180 km. As one can observe, the problem
-because stastically and computationally harder the more lags are
-required to estimate are state space. If the number of lags in
-inversly proportional to the obsevational coverage of the state space,
-this motivates more observations of the earth system!
+$x=0$, $y=0$, and with a radius $25 \, m/s \cdot 1800 \, s = 45 km$
+(Figure \ref{fig:lightcone}). However, becuse we only partially
+observe the state space, we must use lagged observations going back in
+time, inlcluding all observations of events within the past lightcone
+of the system. For example, at $-1$ hours our circular radius would be
+90 km, at $-1.5$ hr: 135 km (Figure \ref{fig:lightcone}), and at $-2$
+hr: 180 km. As one can observe, the problem because stastically and
+computationally harder the more lags are required to estimate are
+state space. If the number of lags in inversly proportional to the
+obsevational coverage of the state space, this motivates more
+observations of the earth system!
+
+\begin{figure}
+  \includegraphics[width=0.75\textwidth]{./lightcone.pdf}
+  \caption{A graphical aid to understanding lightcones in a two
+    dimensional system. Given a maximum propagation speed in our
+    system of 25 m/s, the circles depict the areas that may affect
+    both the cause and the effect at time $t=-0.5 h$, $t=-1.0 h$, and
+    $t=-1.0 h$. In order to block back door paths in a spatiotemporal
+    system, we would need to condition on the state space over these
+    areas.}
+  \label{fig:lightcone}
+\end{figure}
+
 
 /where to put stuff about software I wrote?/
 
@@ -448,22 +462,31 @@ cause is approximately independent of the system}
 
 One particularly tractable approach that avoids estimating the full
 state space of our system at a given time, is when our causes of
-interest are independent from the evolution of the state space. While
-the earth system certainly affects all objects living on earth, in
-some cases this may be a reasonable assumption. For example, it is
-tragic but unfortunately recent human history has demonstrated that
-our global actions are relatively independent of the climate
-state. That is, we have failed to reduce green house gas emissions
-even as global temperature increased. When global green house gas
-emissions have risen less sharply, it is usually due to global
-economic recession (cite xx, 2008). In this case it appears that the
-many global social, policital and economic factors are primary causes
-of global green house gas emission, and while the climate system may
-effect this forces, the historical evedence suggests that an
-assumption that global green house gas emission is independent fo the
-climate may be reasonable, at least for the present and near future
-\emph{discuss data problem - we know don't observe the future of green
-  house gas emissions}.
+interest are independent from the evolution of the state space (Figure
+\ref{fig:forcing}. While the earth system certainly affects all
+objects living on earth, in some cases this may be a reasonable
+assumption. For example, it is tragic but unfortunately recent human
+history has demonstrated that our global actions are relatively
+independent of the climate state. That is, we have failed to reduce
+green house gas emissions even as global temperature increased. When
+global green house gas emissions have risen less sharply, it is
+usually due to global economic recession (cite xx, 2008). In this case
+it appears that the many global social, policital and economic factors
+are primary causes of global green house gas emission, and while the
+climate system may effect this forces, the historical evedence
+suggests that an assumption that global green house gas emission is
+independent fo the climate may be reasonable, at least for the present
+and near future \emph{discuss data problem - we know don't observe the
+  future of green house gas emissions}.
+
+\begin{figure}
+  \includegraphics[]{./forcing-graph.pdf}
+  \caption{A generic graph asserting an asumption that there are
+    forcing external to the evolution of the statespace}
+  \label{fig:forcing}
+\end{figure}
+
+
 
 Generally this logic applies to many scenarios on the
 "human-climate" interface. For example, land-use land-cover change

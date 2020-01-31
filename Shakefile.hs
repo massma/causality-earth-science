@@ -19,6 +19,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         [ "cloud-aerosol.pdf"
         , "mutilated-cloud-aerosol.pdf"
         , "generic-graph.pdf"
+        , "forcing-graph.pdf"
         ]
   let figs = ["lightcone.pdf"]
 
