@@ -2,3 +2,6 @@
 
 all :
 	stack exec ./build.sh -- # --lint --progress
+
+clean :
+	stack exec ./build.sh -- clean

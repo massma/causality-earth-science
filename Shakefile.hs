@@ -22,6 +22,17 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         , "forcing-graph.pdf"
         ]
   let figs = ["lightcone.pdf"]
+  let srcFiles = fmap
+        ("spacetime-causality" </>)
+        [ "spacetime-cause.cabal"
+        , "app" </> "Main.hs"
+        , "src" </> "Display.hs"
+        , "src" </> "Lib.hs"
+        ]
+
+  phony "clean" $ do
+    liftIO $ putStrLn "Cleaning files in _build"
+    removeFilesAfter "_build" ["//*"]
 
   want ["causality.pdf"]
 
@@ -43,9 +54,11 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     cmd_ "bibtex" $ out -<.> ""
 
   "lightcone.pdf" %> \out -> do
-    need ["spacetime-causality/spacetime-cause.cabal"]
+    need srcFiles
     cmd_ (Cwd "spacetime-causality") "stack" ["build"]
-    cmd_ (Cwd "spacetime-causality") "stack" ["exec", "spacetime-cause-exe"]
+    cmd_ (Cwd "spacetime-causality")
+         "stack"
+         ["exec", "spacetime-cause-exe", "--", ".." </> out]
 
   ("spacetime-causality" </> "spacetime-cause.cabal") %> \out -> do
     cmd_ Shell "git" ["submodule", "init"]
