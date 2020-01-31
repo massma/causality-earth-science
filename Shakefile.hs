@@ -62,6 +62,6 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   ("spacetime-causality" </> "spacetime-cause.cabal") %> \out -> do
     cmd_ Shell "git" ["submodule", "init"]
-    cmd_ Shell "git" ["submodule", "update"]
+    cmd_ Shell "git" ["submodule", "update", "--merge"]
 
   mapM_ genDot dotfigs
