@@ -27,7 +27,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
   "causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
     let s = out -<.> "tex"
-    need [b, s]
+    need ([b, s] <> dotfigs <> figs)
     Stdout o <- cmd "pdflatex" (b -<.> "tex")
     if isInfixOf "Rerun to get citations correct." o
       then cmd_ "pdflatex" (b -<.> "tex")
@@ -35,7 +35,9 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   "causality.bbl" %> \out -> do
     aux <- doesFileExist (out -<.> "aux")
-    if not aux then cmd_ "pdflatex" (out -<.> "tex") else return ()
+    if not aux
+      then need (dotfigs <> figs) >> cmd_ "pdflatex" (out -<.> "tex")
+      else return ()
     need ["references.bib"]
     cmd_ "bibtex" $ out -<.> ""
 
