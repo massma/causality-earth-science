@@ -6,6 +6,7 @@
    - [[https://docs.haskellstack.org/en/stable/README/][Haskell Stack]]
    - [[https://shakebuild.com/][Shake]] (installable with Stack)
    - [[https://www.graphviz.org/][Graphviz]]
+   - all requirements from [[https://github.com/massma/spacetime-causality][spacetime-causality]]
 
 ** Windows instructions (untested)
 

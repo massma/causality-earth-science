@@ -26,20 +26,18 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   "causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
-    need [b]
+    let s = out -<.> "tex"
+    need [b, s]
     Stdout o <- cmd "pdflatex" (b -<.> "tex")
     if isInfixOf "Rerun to get citations correct." o
       then cmd_ "pdflatex" (b -<.> "tex")
       else return ()
 
   "causality.bbl" %> \out -> do
-    need ["references.bib", out -<.> "aux"]
+    aux <- doesFileExist (out -<.> "aux")
+    if not aux then cmd_ "pdflatex" (out -<.> "tex") else return ()
+    need ["references.bib"]
     cmd_ "bibtex" $ out -<.> ""
-
-  "causality.aux" %> \out -> do
-    let s = out -<.> "tex"
-    need ([s] <> dotfigs <> figs)
-    cmd_ "pdflatex" $ s
 
   "lightcone.pdf" %> \out -> do
     need ["spacetime-causality/spacetime-cause.cabal"]
