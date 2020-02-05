@@ -1,7 +1,7 @@
 # just a dummy makefile to call shake
 
 all :
-	stack exec ./build.sh -- # --lint --progress
+	stack build && stack exec build -- # --lint --progress
 
 clean :
-	stack exec ./build.sh -- clean
+	stack build && stack exec build -- clean
