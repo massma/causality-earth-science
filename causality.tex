@@ -9,79 +9,58 @@
 
 \maketitle
 
-\begin{abstract}
-  Causal inference from data is a third tool for scientific discovery,
-  complementing numerical and real world experimentation. We examine
-  the necessary assumptions and theoretical justification for applying
-  causal inference methods to generic earth system scenarios. The
-  primary challenge of using causal inference in earth science is that
-  we generally only partially observe the state space of the earth
-  science system. However an advantage of earth science systems is
-  that we generally know the temporal ordering of events and the speed
-  with which events' influence propagates through the system. These
-  characteristics can be used to filter events which can or cannot
-  influence other events in an earth science system, and identify
-  sufficient conditions for calculating causal effects from data. We
-  apply causal theory to generic earth science systems to show that
-  causal inference is identifiable from data when either: 1) we can
-  reconstruct the unobserved state space of the system using
-  time-lagged observations; or 2) we can assume causes are independent
-  of the larger earth system (occasionally justifiable at the
-  human-climate interface). If neither of these two conditions are
-  met, then causal effects are confounded by the unobserved portions
-  of the state space, and causal inference is not possible, even with
-  an infinite supply of data.
-\end{abstract}
-
 \section{Introduction}
 
-Causal inference is the estimation of effects
-(e.g. evapotranspiration) in response to changes in causes (e.g. soil
-moisture) using passive observations of a system
-\citep{pearl2009}. Causal inference is an alternative path towards
-scientific discovery, which traditionally relies on experimentation
-(e.g. numerical, lab, or real world) to determine the effect of
-varying causes.  However, in earth sciences in particular it may be
-impossible or unethical to execute real world experiments, and
-numerical experiments may rely on approximations that bias causal
-estimates relative to the real world
-\citep[e.g.,][]{kim-cmip5,stillmann-cmip5-extremes}. Given these
-challenges in earth science, causal inference from data is a
-tantalizing tool that allows for robust estimation of causal effects
-that may be otherwise impossible using traditional tools.
+Controlled experimentation is the traditional path to scientific
+discovery. A scientist designs controlled experiments where parameters
+are systematically varied to test hypotheses about a system's
+nature. Climate and earth system scientists primarily use numerical
+models for experimentation \citep[e.g.,][]{eyring-cmip6-2016}, but
+real world experiment is also used to a lesser degree
+\citep[e.g.,][]{ainsworth-face-2005}. However, it may be logisically
+impossible or unethical to execute many real world experiments, and
+numerical experiments may rely on approximations that bias
+experimental results realtive to the real world
+\citep[e.g.,][]{kim-cmip5,stillmann-cmip5-extremes}. Are these the
+only tools available for \textit{do}-ing experiments?
+\citet{pearl-1994-do-calculus} introduced \textit{do-}calculus for
+calculating the causal effects of experimenatal interventions based on
+passive observations of a system and assumptions about causal
+dependencies in the system. This is a powerful tool for earth
+scientists that complements numerical experimentation due to a
+completely orthogonal set of strengths, weaknesses, and assumptions.
 
 However, causal inference from data presents its own challenges; the
-causal effect must be identifiable from the set of observable
-variables. In addition to the set of observable variables, whether or
-not a causal effect is identifiable is determined from our assumptions
-about the system's behavior. If a causal effect is determined to be
-unidentifiable, then it is impossible to calculate the causal effect of
-interest, even with an infinite sample of data. Specific to problems
-in earth science, the identification of causal effects is challenging
-given two fundamental properties of many generic earth science
-problems: the system evolves through time according to an underlying
-dynamical system, and we only ever partially observe the state space
-of that dynamical system \citep{majda-state}. Using graph theory
-developed in \citep{pearl1995causal} we determine the generic problems
-causal inference is justified for, and the necessary assumptions for
-applying causal inference. There is the potential for applying causal
-inference in two scenarios: (1) under an assumption that the cause is
-independent of the system's state space (e.g. at the human-climate
-interface, anthropogenic green house gas emission, land use change)
-(Section \ref{human}); or (2) under certain conditions where we can
-estimate the state space of the system from time lagged observations
-(Section \ref{state-space}).  Our theoretical results identifying
-tractable problems in earth science require a few fundamentals from
-the causal inference literature, so we introduce causal inference
-theory, causal graphs, and \citet{pearl2009}'s \textit{do-}calculus
-for the unfamiliar reader (Section \ref{sec:causal-graphs-pearls}),
-and compare with recent earth science literature on the related field
-of causal discovery (Section \ref{sec:discovery}). Causal effects, due
-to their underlying logic and clear interpretation, are an exciting
-tool for scientific discovery and understanding
-\citep{hannart-da,naveau-2020}. This manuscript establishes the
-conditions required for the proper application of causal inference in
-earth science.
+causal effect must be identifiable from assumptions about the causal
+dependencies of variables in the system, and the available
+observations. If a causal effect is determined to be unidentifiable,
+then it is impossible to calculate the causal effect of interest, even
+with an infinite sample of data \citep[][]{shpitser2006}. Specific to
+problems in earth science, the identification of causal effects is
+challenging given two fundamental properties of many generic earth
+science problems: the system evolves through time according to an
+underlying dynamical system, and we only ever partially observe the
+state space of that dynamical system \citep{majda-state}. Using graph
+theory developed in \citep{pearl1995causal} we determine the generic
+problems causal inference is justified for, and the necessary
+assumptions for applying causal inference. There is the potential for
+applying causal inference in two scenarios: (1) under an assumption
+that the cause is independent of the system's state space (e.g. at the
+human-climate interface, anthropogenic green house gas emission, land
+use change) (Section \ref{human}); or (2) under certain conditions
+where we can estimate the state space of the system from time lagged
+observations (Section \ref{state-space}).  Our theoretical results
+identifying tractable problems in earth science require a few
+fundamentals from the causal inference literature, so we introduce
+causal inference theory, causal graphs, and \citet{pearl2009}'s
+\textit{do-}calculus for the unfamiliar reader (Section
+\ref{sec:causal-graphs-pearls}), and compare with recent earth science
+literature on the related field of causal discovery (Section
+\ref{sec:discovery}). Causal effects, due to their underlying logic
+and clear interpretation, are an exciting tool for scientific
+discovery and understanding \citep{hannart-da,naveau-2020}. This
+manuscript establishes the conditions required for the proper
+application of causal inference in earth science.
 
 \section{Causal graphs and Pearl's do calculus}
 \label{sec:causal-graphs-pearls}
@@ -139,21 +118,83 @@ the joint distribution:
 
 Interpreted causally, as in \citet{pearl1995causal} and this
 manuscript, the directed edges encode causal dependencies in addition
-to a factorization of the joint.
+to a factorization of the joint. More specifically, interpretted
+causally, the graph represents the assumed Structural Causal Model
+\citet[SCM,][]{pearl2009}, which is the set of functions that
+determines how variables are generated. Each variable in the graph is
+determined by a function with inputs corresponding to inward edges of
+the variable of interest, as well as randomness due to the variables
+not included in the causal graph (``exogenous variables'').  In the
+cloud-aerosol-radiation example,
 
-\textit{/explain how this is different than a probabilistic model,
-  e.g. that there could be many graphs that are consistent with a given
-  factorization of a joint?/}
+\begin{equation}
+  SCM =
+  \begin{cases}
+    f_{aerosol} &: U_{aerosol} \\
+    f_{cloud} &: aerosol, U_{cloud}  \\
+    f_{radiation} &: aerosol, cloud, U_{radiation}
+  \end{cases}
+  \label{eq:1}
+\end{equation}
 
-We can use causal graph theory
-\citep[e.g.,][]{pearl1995causal,shpitser2006} to identify which
-distributions we must estimate from data in order to calculate a
-causal effect of interest. This process of identifying the necessary
-distributions is formally termed \emph{causal identification}. If a
-causal effect is not identifiable (\emph{un}-identifiable), for
-example if calculating a causal effect requires distributions of
-variables that we do not observe, then we cannot use causal inference
-to calculate a causal effect, even with an infinite sample of data.
+The SCM asserts that each variable is generated from a deterministic
+function. The randomness is due to exogonous variables ($U$) that
+represent all the factors not represented explicitly in the SCM and
+corrresponding causal graph. For example, sources of aerosol
+variability not considered include anthropogenic aerosol release,
+biosphere plant release, fires, volcanoes, etc. For cloud, this
+includes synoptic forcing, moisture content, etc. For radiation, this
+includes variability of top of atmosphere radiation, etc. For the
+causal graph, as drawn, we assume that all of these sources of
+randomness are idnependent of each other. That is, $U_{aerosol}$,
+$U_{cloud}$, and $U_{radiation}$ are independent of each other. These
+are strong assumptions, encoded in the graph as the lack of a
+bi-directed dashed edge between two variables. Bi-directed dashed
+edges represent correlations between exogenous variables. For example,
+if aerosol in Figure \ref{fig:toy} were istead considered to be
+exogenous, we would represen the graph instead as in Figure
+\ref{fig:bi-directed}, and the corresponding SCM would be:
+
+\begin{figure}
+  \includegraphics[]{bidirected.pdf}
+  \caption{A graph equivalent to Figure \ref{fig:toy}, but under an
+    assumption that aerosol, a source of variability in both cloud and
+    surface radation, is exogenous. In this case, there is a dependency
+    between the randomness of cloud and radiation.}
+  \label{fig:bi-directed}
+\end{figure}
+
+\begin{equation}
+  SCM =
+  \begin{cases}
+    f_{cloud} &: U_{cloud,radiation}  \\
+    f_{radiation} &: cloud, U_{cloud,radiation}
+  \end{cases},
+  \label{eq:2}
+\end{equation}
+
+where cloud and radiation now share an exogenous term.
+
+\textit{/discuss barienboim's notation (which I do not like) of
+  including and representing exogoneous variation that affects
+  multiple variables with a dashed line? not as applicable for earth
+  science, where I *think* we have a general idea of the main players
+  (e.g. state), and how they relate to each other. I prefer to
+  represent these instead as unobservable $V$ than $U$. However, show
+  it in this example by just saying, if we did not include aerosol as
+  an endogenous variable  we would just represent that as a
+  bi-directed dashed arrow from $V$ to $U$./}
+
+We can apply causal graph theory
+\citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
+encoded in our graph to identify which distributions we must estimate
+from data in order to calculate a causal effect of interest. This
+process of identifying the necessary distributions is formally termed
+\emph{causal identification}. If a causal effect is not identifiable
+(\emph{un}-identifiable), for example if calculating a causal effect
+requires distributions of variables that we do not observe, then we
+cannot use causal inference to calculate a causal effect, even with an
+infinite sample of data.
 
 % backdoor path}
 
@@ -181,24 +222,36 @@ calculate unbiased causal effects from data.
 % backdoor path with example}
 Understanding backdoor paths and the backdoor criterion is helped by
 example. Returning to our toy example (Figure \ref{fig:toy}), we will
-attempt to calculate the causal effect of clouds on sunlight. In
-other words, we want to isolate the variability of sunlight due to the
-causal link from cloud to sunlight. However, aerosols both effect cloud
-(edge from aerosol to cloud), and sunlight, so if we naively calculate
-a causal effect, for example by just regressing sunlight on cloud, we
-would get a biased estimate of the mean causal effect of cloud on
-sunlight. This can be shown graphically if we remove all edges from
-our cause (cloud) to children of our cause (in this case sunlight)
-(Figure \ref{fig:mutilated-toy}). We see that cloud is not independent
-of surface solar radiation in the mutilated graph; that is, there is
-covariability between cloud and surface solar radiation induced by
-variability in aerosol.  How would we make cloud and sunlight
-independent in this mutilated graph?  In this case, by observing
-aerosol. In other words, with aerosol fixed, any covariability between
-cloud and surface solar radiation is due to the causal path between
-cloud and surface solar radiation (Figure \ref{fig:toy}).
-Mathematically, the identification of the causal effect of cloud and
-aerosol according to the backdoor criterion is:
+attempt to calculate the causal effect of clouds on sunlight. In other
+words, we want to isolate the variability of sunlight due to the
+causal link from cloud to sunlight. However, aerosols both affect
+cloud (edge from aerosol to cloud), and sunlight, so if we naively
+calculate a causal effect we would get a biased estimate of the mean
+causal effect of cloud on sunlight. To demonstrate, consider generated
+data where the ``true'' SCM is:
+
+\begin{equation}
+  SCM =
+  \begin{cases}
+    f_{aerosol} &: U_{aerosol} \sim \text{uniform (0, 1]}\\
+    f_{cloud} &: aerosol, U_{cloud}  \\
+    f_{radiation} &: aerosol, cloud, U_{radiation}
+  \end{cases}
+  \label{eq:1}
+\end{equation}
+
+This can be shown graphically if
+we remove all edges from our cause (cloud) to children of our cause
+(in this case sunlight) (Figure \ref{fig:mutilated-toy}). We see that
+cloud is not independent of surface solar radiation in the mutilated
+graph; that is, there is covariability between cloud and surface solar
+radiation induced by variability in aerosol.  How would we make cloud
+and sunlight independent in this mutilated graph?  In this case, by
+observing aerosol. In other words, with aerosol fixed, any
+covariability between cloud and surface solar radiation is due to the
+causal path between cloud and surface solar radiation (Figure
+\ref{fig:toy}).  Mathematically, the identification of the causal
+effect of cloud and aerosol according to the backdoor criterion is:
 
 % Perhaps more intuition
 % can be gained by considering a mutilated causal graph where we remove
@@ -216,11 +269,12 @@ aerosol according to the backdoor criterion is:
 
 \emph{/introduce ATE?/}
 
-where we have implicitly introduced Pearl's \textit{do}-calculus
-\citep{pearl2009}. $do(cloud)\, = \,c$ represents an artificial
-intervention on cloud, where cloud is no longer determined by its
-causal parents but instead is set to some value of our choosing (in
-this case, $c$). In the case that observations of aerosols are not
+where Pearl's \textit{do}-calculus \citep{pearl2009}.
+$do(cloud)\, = \,c$ represents an artificial intervention on cloud,
+where cloud is no longer determined by its causal parents but instead
+is set to some value of our choosing (in this case, $c$). This is
+equivalent to calculating the casaul effect of an experiment in which
+we set cloud to $c$. In the case that observations of aerosols are not
 available, our causal effect is not identifiable and we cannot use
 causal inference no matter how large the sample sizes of clouds and
 aerosols. This theory is an elegant tool: without having to touch data

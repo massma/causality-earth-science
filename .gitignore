@@ -22,3 +22,6 @@ stack.yaml.lock
 # figs and derived stuff
 *.pdf
 *.png
+
+# derived data, etc
+dat

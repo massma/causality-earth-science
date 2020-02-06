@@ -1,0 +1,8 @@
+digraph G {
+	c[label="cloud"];
+	s[label="sfc solar rad"];
+
+	c -> s;
+	s -> c [dir="both",style="dashed"];
+
+}
