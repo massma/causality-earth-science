@@ -64,17 +64,16 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     need ["stack.yaml"]
     cmd_ "stack" ["exec", "spacetime-cause-exe", "--", out]
 
-  "naiveCloudSunlight.pdf" %> \_out -> do
+  "naiveCloudSunlight.pdf" %> \out -> do
     let s = "naiveCloudSunlight.gp"
-    let p = "dat/cloudSunlight.csv"
     need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", s]
-    naiveDiff <- liftIO $ CloudSunlight.cloudSunlightExperiment 1000 p
+    naiveDiff <- liftIO $ CloudSunlight.cloudSunlightExperiment 1000
     gp        <-
-      GnuplotParser.setTitle
-        (printf "Average difference: %5.2f W/m^2" naiveDiff)
+      (GnuplotParser.header out <>)
+      .   GnuplotParser.setTitle
+            (printf "Average difference: %5.2f W/m^2" naiveDiff)
       .   GnuplotParser.parseGp
       <$> readFile' s
-    liftIO $ print gp
     cmd_ (Stdin (unlines (fmap show gp))) "gnuplot"
 
   mapM_ genDot   dotfigs

@@ -148,10 +148,17 @@ includes variability of top of atmosphere radiation, etc. For the
 causal graph, as drawn, we assume that all of these sources of
 randomness are idnependent of each other. That is, $U_{aerosol}$,
 $U_{cloud}$, and $U_{radiation}$ are independent of each other. These
-are strong assumptions, encoded in the graph as the lack of a
-bi-directed dashed edge between two variables. Bi-directed dashed
-edges represent correlations between exogenous variables. For example,
-if aerosol in Figure \ref{fig:toy} were istead considered to be
+$U$ variables are powerful tools: by positing an SCM and causal graph,
+we are not stating that the variables in the graph are the only
+processes in the system. Instead, we are stating that all other
+processes not included the graph induce variations in the causal
+variables that are uncorrelated with each other. In some scenarios,
+this assumption may be unreasonable and we would need to encode
+correlations between $U$ terms; that is, co-variability induced
+between variables due to exogenous processes. This can be encoded in
+the graph as a bi-directed dashed edge between two variables with the
+statistical depedence induced by exogenous processes. For example, if
+aerosol in Figure \ref{fig:toy} were istead considered to be
 exogenous, we would represen the graph instead as in Figure
 \ref{fig:bi-directed}, and the corresponding SCM would be:
 
@@ -252,10 +259,25 @@ where:
 Now, consider not knowing the underlying SCM, but just receiving
 passive data of cloud and sunlight data. If one were interested in
 calculating the effect of cloud on sunlight, and aerosol data were not
-available, or one where very naive, an approach would be to bin the
+available or one where very naive, an approach would be to bin the
 data by cloudy and clear conditions, and comapre the amount of
-sunlight on each day (Figure \ref{fig:naive-cloud-sunlight}). This
-suggests that clouds reduce sunlight by %f W/m2.
+sunlight in each type of observation (Figure
+\ref{fig:naive-cloud-sunlight}). This approach suggests that clouds
+reduce sunlight by, on average, 160 W m$^{-2}$, which is substantial
+overestimation of the true average effect of clouds derived from the
+SCM, which is 136 W m$^{-2}$. Aerosol induces co-variability between
+cloud and aerosol that has nothing to do with the causal link from
+cloud to aerosol. Graphically, this is clairied by removing all edges
+from our cause (cloud) to children of our cause (in this case
+sunlight) (Figure \ref{fig:mutilated-toy}). We see that cloud is not
+independent of surface solar radiation in the mutilated graph.  How
+would we make cloud and sunlight independent in this mutilated graph?
+In this case, by observing aerosol. In other words, with aerosol
+fixed, any covariability between cloud and surface solar radiation is
+due to the causal path between cloud and surface solar radiation
+(Figure \ref{fig:toy}).  Mathematically, the identification of the
+causal effect of cloud and aerosol according to the backdoor criterion
+is:
 
 \begin{figure}
   \includegraphics[]{naiveCloudSunlight.pdf}
@@ -265,18 +287,6 @@ suggests that clouds reduce sunlight by %f W/m2.
   \label{fig:naive-cloud-sunlight}
 \end{figure}
 
-This can be shown graphically if
-we remove all edges from our cause (cloud) to children of our cause
-(in this case sunlight) (Figure \ref{fig:mutilated-toy}). We see that
-cloud is not independent of surface solar radiation in the mutilated
-graph; that is, there is covariability between cloud and surface solar
-radiation induced by variability in aerosol.  How would we make cloud
-and sunlight independent in this mutilated graph?  In this case, by
-observing aerosol. In other words, with aerosol fixed, any
-covariability between cloud and surface solar radiation is due to the
-causal path between cloud and surface solar radiation (Figure
-\ref{fig:toy}).  Mathematically, the identification of the causal
-effect of cloud and aerosol according to the backdoor criterion is:
 
 % Perhaps more intuition
 % can be gained by considering a mutilated causal graph where we remove

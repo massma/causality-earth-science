@@ -62,19 +62,19 @@ getCloud (_a, c, _s) = c
 getSun :: (a, b, c) -> c
 getSun (_a, _c, s) = s
 
-calcStats :: [(Double, String, Double)] -> Double
-calcStats xs = f cld - f noCld
- where
-  (cld, noCld) = L.partition ((== "Cloudy") . getCloud) xs
-  f xs' = (/ fromIntegral (length xs')) . sum . fmap getSun $ xs'
+calcStats :: [(Double, String, Double)] -> [(Double, String, Double)] -> Double
+calcStats cld noCld = f cld - f noCld
+  where f xs' = (/ fromIntegral (length xs')) . sum . fmap getSun $ xs'
 
-cloudSunlightExperiment :: Int -> FilePath -> IO Double
-cloudSunlightExperiment n fpath = do
+cloudSunlightExperiment :: Int -> IO Double
+cloudSunlightExperiment n = do
   gen <- create
   xs  <- replicateM n (genTuple gen)
-  let naiveDiff = calcStats xs
-  BL.writeFile fpath
-    . ("aerosol\tcloud\tsunlight\n" <>)
-    . encodeWith (defaultEncodeOptions { encDelimiter = 9 })
-    $ xs
+  let (cld, noCld) = L.partition ((== "Cloudy") . getCloud) xs
+  let naiveDiff    = calcStats cld noCld
+  f "dat/cloudy.dat" cld
+  f "dat/clear.dat"  noCld
   return naiveDiff
+ where
+  f fpath = BL.writeFile fpath . ("aerosol\tcloud\tsunlight\n" <>) . encodeWith
+    (defaultEncodeOptions { encDelimiter = 9 })

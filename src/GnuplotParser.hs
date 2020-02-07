@@ -8,6 +8,7 @@ module GnuplotParser
   ( parseGp
   , setTitle
   , setInput
+  , header
   )
 where
 
@@ -47,6 +48,12 @@ gpLine = (S <$> gpSet) P.<++ (P <$> gpPlot) P.<++ unImplemented
 gpSet :: P.ReadP Set
 gpSet = P.string "set" >> P.many (P.char ' ') >> gpOutput P.<++ gpTitle
 
+gpPlot :: P.ReadP Plot
+gpPlot = gpTwoItem Plot "plot"
+
+unImplemented :: P.ReadP Line
+unImplemented = Generic <$> P.munch (/= '\n')
+
 gpTwoItem :: (String -> String -> b) -> String -> P.ReadP b
 gpTwoItem constructor str = do
   _    <- P.string str
@@ -63,12 +70,6 @@ gpOutput = gpTwoItem Output "output"
 
 gpTitle :: P.ReadP Set
 gpTitle = gpTwoItem Title "title"
-
-gpPlot :: P.ReadP Plot
-gpPlot = gpTwoItem Plot "plot"
-
-unImplemented :: P.ReadP Line
-unImplemented = Generic <$> P.munch (/= '\n')
 
 parseGp :: String -> [Line]
 parseGp s = case P.readP_to_S gpFile s of
@@ -87,8 +88,14 @@ setInput :: String -> [Line] -> [Line]
 setInput str = go
  where
   go []                   = [P (Plot str "")]
-  go (P (Plot _p r) : xs) = P (Plot str r) : xs
+  go (P (Plot _p r) : xs) = P (Plot str r) : go xs
   go (x             : xs) = x : go xs
+
+header :: FilePath -> [Line]
+header fname =
+  [ Generic "set term pdfcairo enhanced font \"Arial,12\" size 3,2"
+  , S (Output fname "")
+  ]
 
 -- -- testing
 -- testStr =
