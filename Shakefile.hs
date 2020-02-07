@@ -29,6 +29,15 @@ genDot = genGraphvis "dot"
 genCirco :: FilePath -> Rules ()
 genCirco = genGraphvis "circo"
 
+generateFigGp
+  :: FilePath -> ([GnuplotParser.Line] -> [GnuplotParser.Line]) -> Action ()
+generateFigGp out pp = do
+  need [s]
+  gp <-
+    pp . (GnuplotParser.header out <>) . GnuplotParser.parseGp <$> readFile' s
+  cmd_ (Stdin (unlines (fmap show gp))) "gnuplot"
+  where s = out -<.> "gp"
+
 main :: IO ()
 main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
   let dotfigs =
@@ -39,7 +48,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         ]
   let circofigs = ["bidirected.pdf"]
 
-  let figs      = ["lightcone.pdf", "naiveCloudSunlight.pdf"]
+  let figs = ["lightcone.pdf", "naiveCloudSunlight.pdf", "aerosolSunlight.pdf"]
 
   want ["causality.pdf"]
 
@@ -64,17 +73,16 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     need ["stack.yaml"]
     cmd_ "stack" ["exec", "spacetime-cause-exe", "--", out]
 
-  "naiveCloudSunlight.pdf" %> \out -> do
-    let s = "naiveCloudSunlight.gp"
-    need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", s]
+
+  ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"] &%> \[naive, joint] -> do
+    need ["src/CloudSunlight.hs", "src/GnuplotParser.hs"]
     naiveDiff <- liftIO $ CloudSunlight.cloudSunlightExperiment 1000
-    gp        <-
-      (GnuplotParser.header out <>)
-      .   GnuplotParser.setTitle
-            (printf "Average difference: %5.2f W/m^2" naiveDiff)
-      .   GnuplotParser.parseGp
-      <$> readFile' s
-    cmd_ (Stdin (unlines (fmap show gp))) "gnuplot"
+    generateFigGp
+      naive
+      (GnuplotParser.setTitle
+        (printf "Average difference: %5.2f W/m^2" naiveDiff)
+      )
+    generateFigGp joint id
 
   mapM_ genDot   dotfigs
 

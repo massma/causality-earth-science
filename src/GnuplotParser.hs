@@ -9,6 +9,7 @@ module GnuplotParser
   , setTitle
   , setInput
   , header
+  , Line
   )
 where
 
