@@ -36,12 +36,9 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         ]
   let circofigs = ["bidirected.pdf"]
 
-  let figs      = ["lightcone.pdf"]
+  let figs      = ["lightcone.pdf", "naiveCloudSunlight.pdf"]
 
-  let cloudSunlight =
-        fmap ("dat" </>) ["cloudSunlight.csv", "cloud.csv", "noCloud.csv"]
-
-  want (["causality.pdf"] <> cloudSunlight)
+  want ["causality.pdf"]
 
   "causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
@@ -64,9 +61,14 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     need ["stack.yaml"]
     cmd_ "stack" ["exec", "spacetime-cause-exe", "--", out]
 
-  cloudSunlight &%> \fpaths -> do
+  "naiveCloudSunlight.pdf" %> \_out -> do
+    let s = "naiveCloudSunlight.gp"
+    need ["dat/cloudSunlight.csv", s]
+    cmd_ "gnuplot" [s]
+
+  "dat/cloudSunlight.csv" %> \fpath -> do
     need ["src/CloudSunlight.hs"]
-    liftIO $ CloudSunlight.writeData 1000 fpaths
+    liftIO $ CloudSunlight.writeData 1000 fpath
 
   mapM_ genDot   dotfigs
 

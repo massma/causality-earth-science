@@ -35,5 +35,6 @@ library
   import: build-dependencies
   exposed-modules:
       CloudSunlight
+      GnuplotParser
   hs-source-dirs:
       src

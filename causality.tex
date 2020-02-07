@@ -234,11 +234,36 @@ data where the ``true'' SCM is:
   SCM =
   \begin{cases}
     f_{aerosol} &: U_{aerosol} \sim \text{uniform (0, 1]}\\
-    f_{cloud} &: aerosol, U_{cloud}  \\
-    f_{radiation} &: aerosol, cloud, U_{radiation}
+    f_{cloud} &: Cloudy | Clear \sim \text{bernoulli(aerosol)}     \\
+    f_{radiation} &: \begin{cases}
+      Cloudy &: 0.6 \cdot \text{clear sky radiation}  \\
+      Clear &: \text{clear sky radiation}
+    \end{cases}
   \end{cases}
-  \label{eq:1}
 \end{equation}
+
+where:
+
+\begin{equation*}
+  \text{clear sky radiation} = U_{aerosol} \cdot (1 - aerosol); \;
+  U_{aerosol} \sim \text{Normal(340, 30)}
+\end{equation*}
+
+Now, consider not knowing the underlying SCM, but just receiving
+passive data of cloud and sunlight data. If one were interested in
+calculating the effect of cloud on sunlight, and aerosol data were not
+available, or one where very naive, an approach would be to bin the
+data by cloudy and clear conditions, and comapre the amount of
+sunlight on each day (Figure \ref{fig:naive-cloud-sunlight}). This
+suggests that clouds reduce sunlight by %f W/m2.
+
+\begin{figure}
+  \includegraphics[]{naiveCloudSunlight.pdf}
+  \caption{A naive approach to estimating the ``effect'' of clouds on
+    sunlight: bin observations by cloudy and clear day, and compare
+    the values of sunlight.}
+  \label{fig:naive-cloud-sunlight}
+\end{figure}
 
 This can be shown graphically if
 we remove all edges from our cause (cloud) to children of our cause
