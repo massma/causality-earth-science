@@ -72,7 +72,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     gp        <-
       GnuplotParser.setTitle
         (printf "Average difference: %5.2f W/m^2" naiveDiff)
-      .   GnuplotParser.parseGnu
+      .   GnuplotParser.parseGp
       <$> readFile' s
     liftIO $ print gp
     cmd_ (Stdin (unlines (fmap show gp))) "gnuplot"
