@@ -6,7 +6,7 @@
 {-# OPTIONS_GHC -Wredundant-constraints #-}
 
 module CloudSunlight
-  ( writeData
+  ( cloudSunlightExperiment
   )
 where
 
@@ -56,13 +56,25 @@ genTuple gen = do
   s <- sunlight a c gen
   return (a, if c then "Cloudy" else "Clear", s)
 
+getCloud :: (a, b, c) -> b
 getCloud (_a, c, _s) = c
 
-writeData :: Int -> FilePath -> IO ()
-writeData n fpath = do
-  gen   <- create
-  datas <- replicateM n (genTuple gen)
+getSun :: (a, b, c) -> c
+getSun (_a, _c, s) = s
+
+calcStats :: [(Double, String, Double)] -> Double
+calcStats xs = f cld - f noCld
+ where
+  (cld, noCld) = L.partition ((== "Cloudy") . getCloud) xs
+  f xs' = (/ fromIntegral (length xs')) . sum . fmap getSun $ xs'
+
+cloudSunlightExperiment :: Int -> FilePath -> IO Double
+cloudSunlightExperiment n fpath = do
+  gen <- create
+  xs  <- replicateM n (genTuple gen)
+  let naiveDiff = calcStats xs
   BL.writeFile fpath
     . ("aerosol\tcloud\tsunlight\n" <>)
     . encodeWith (defaultEncodeOptions { encDelimiter = 9 })
-    $ datas
+    $ xs
+  return naiveDiff

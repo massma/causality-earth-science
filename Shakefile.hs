@@ -10,7 +10,10 @@ import           Development.Shake.FilePath
 import           Development.Shake.Util
 import qualified Data.ByteString               as BS
 import           Data.List                      ( isInfixOf )
+import           Text.Printf
 import qualified CloudSunlight
+import qualified GnuplotParser
+
 
 genGraphvis :: FilePath -> FilePath -> Rules ()
 genGraphvis cmdStr pat = pat %> \out -> do
@@ -63,12 +66,16 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   "naiveCloudSunlight.pdf" %> \_out -> do
     let s = "naiveCloudSunlight.gp"
-    need ["dat/cloudSunlight.csv", s]
-    cmd_ "gnuplot" [s]
-
-  "dat/cloudSunlight.csv" %> \fpath -> do
-    need ["src/CloudSunlight.hs"]
-    liftIO $ CloudSunlight.writeData 1000 fpath
+    let p = "dat/cloudSunlight.csv"
+    need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", s]
+    naiveDiff <- liftIO $ CloudSunlight.cloudSunlightExperiment 1000 p
+    gp        <-
+      GnuplotParser.setTitle
+        (printf "Average difference: %5.2f W/m^2" naiveDiff)
+      .   GnuplotParser.parseGnu
+      <$> readFile' s
+    liftIO $ print gp
+    cmd_ (Stdin (unlines (fmap show gp))) "gnuplot"
 
   mapM_ genDot   dotfigs
 
