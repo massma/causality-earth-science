@@ -263,9 +263,9 @@ available or one where very naive, an approach would be to bin the
 data by cloudy and clear conditions, and comapre the amount of
 sunlight in each type of observation (Figure
 \ref{fig:naive-cloud-sunlight}). This approach suggests that clouds
-reduce sunlight by, on average, 160 W m$^{-2}$, which is substantial
+reduce sunlight by, on average, 160 W m$^{-2}$, which is a massive
 overestimation of the true average effect of clouds derived from the
-SCM, which is 136 W m$^{-2}$. Aerosol induces co-variability between
+SCM, which is -68 W m$^{-2}$. Aerosol induces co-variability between
 cloud and aerosol that has nothing to do with the causal link from
 cloud to aerosol. Graphically, this is clairied by removing all edges
 from our cause (cloud) to children of our cause (in this case
@@ -331,9 +331,9 @@ into Equation (\ref{eq:4}) rearranging gives:
 
 Where $\mathbb{E}(S=s | C=c, A=a)$ is just a regression of sunlight on
 cloud and aerosol. Estimating the marginal $P(A=a)$ is difficult, but
-if we assume that our observations are IID and we have a large enough
-sample, we can use the law of large numbers to approximate Equation
-(\ref{eq:5}) with:
+if we assume that our observations are independent and identically
+distributed (IID) and we have a large enough sample, we can use the
+law of large numbers to approximate Equation (\ref{eq:5}) with:
 
 \begin{equation}
   \mathbb{E}(S | do(C = c))  = \frac{1}{n} \sum_{i=1}^n \mathbb{E}(S=s_i |
@@ -341,14 +341,17 @@ sample, we can use the law of large numbers to approximate Equation
   \label{eq:6}
 \end{equation}
 
-Data or aprior knowledge can inform the regression function for $\mathbb{E}(S=s_i |
-C=c, A=a_i)$. In the toy example, a linear model, conditional on
-$cloud$, appears to be a good choice of regression function (Figure
-\ref{fig:linear}). ****  TODO: calc stats, and reinforce main points of
-section e.g. we get biased effects if we don't use causal theory, but
-causal theory makes no parametric assumptions. these can sill be used
-to make causal inference more tractable. hence, it is a very flexible
-tool.
+Data or aprior knowledge can inform the regression function for
+$\mathbb{E}(S=s_i | C=c, A=a_i)$. In the toy example, a linear model,
+conditional on $cloud$, appears to be a good choice of regression
+function (Figure \ref{fig:linear}). The causal effect of clouds ons
+unlight as calculated using Equation (\ref{eq:6})) is -68.52 W
+m$^{-2}$, which matches closely the true causal effect from the SCM of
+-68 W m$^{-2}$.  **** TODO: add regression lines to plots and
+reinforce main points of section e.g. we get biased effects if we
+don't use causal theory, but causal theory makes no parametric
+assumptions. these can sill be used to make causal inference more
+tractable. hence, it is a very flexible tool.
 
 \begin{figure}
   \includegraphics[]{aerosolSunlight.pdf}

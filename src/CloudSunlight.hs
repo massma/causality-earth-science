@@ -14,6 +14,9 @@ import           Control.Monad
 import qualified Data.ByteString.Lazy          as BL
 import           Data.Csv
 import qualified Data.List                     as L
+import qualified Data.Vector.Unboxed           as V
+import qualified Statistics.Sample             as S
+import qualified Statistics.Regression         as R
 import           System.Random.MWC
 import qualified System.Random.MWC.Distributions
                                                as D
@@ -62,19 +65,35 @@ getCloud (_a, c, _s) = c
 getSun :: (a, b, c) -> c
 getSun (_a, _c, s) = s
 
-calcStats :: [(Double, String, Double)] -> [(Double, String, Double)] -> Double
-calcStats cld noCld = f cld - f noCld
-  where f xs' = (/ fromIntegral (length xs')) . sum . fmap getSun $ xs'
+getAerosol :: (a, b, c) -> a
+getAerosol (a, _c, _s) = a
 
-cloudSunlightExperiment :: Int -> IO Double
+calcStats
+  :: [(Double, String, Double)]
+  -> [(Double, String, Double)]
+  -> (Double, Double)
+calcStats cloud' clear =
+  (calcRegress olsCloud - calcRegress olsClear, naiveCloud - naiveClear)
+ where
+  calcAvgs xs = (as, ols, S.mean ss)
+   where
+    ss  = V.fromList (fmap getSun xs)
+    as  = V.fromList (fmap getAerosol xs)
+    ols = fst . R.olsRegress [as] $ ss
+  (aCloud, olsCloud, naiveCloud) = calcAvgs cloud'
+  (aClear, olsClear, naiveClear) = calcAvgs clear
+  totAs                          = aCloud <> aClear
+  calcRegress ols = S.mean $ V.map (\x -> x * ols V.! 0 + ols V.! 1) totAs
+
+cloudSunlightExperiment :: Int -> IO (Double, Double)
 cloudSunlightExperiment n = do
   gen <- create
   xs  <- replicateM n (genTuple gen)
-  let (cld, noCld) = L.partition ((== "Cloudy") . getCloud) xs
-  let naiveDiff    = calcStats cld noCld
-  f "dat/cloudy.dat" cld
-  f "dat/clear.dat"  noCld
-  return naiveDiff
+  let (cloud', clear)      = L.partition ((== "Cloudy") . getCloud) xs
+  let (estDiff, naiveDiff) = calcStats cloud' clear
+  f "dat/cloudy.dat" cloud'
+  f "dat/clear.dat"  clear
+  return (estDiff, naiveDiff)
  where
   f fpath = BL.writeFile fpath . ("aerosol\tcloud\tsunlight\n" <>) . encodeWith
     (defaultEncodeOptions { encDelimiter = 9 })

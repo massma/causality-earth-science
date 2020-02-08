@@ -76,12 +76,13 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"] &%> \[naive, joint] -> do
     need ["src/CloudSunlight.hs", "src/GnuplotParser.hs"]
-    naiveDiff <- liftIO $ CloudSunlight.cloudSunlightExperiment 1000
+    (estDiff, naiveDiff) <- liftIO $ CloudSunlight.cloudSunlightExperiment 1000
     generateFigGp
       naive
       (GnuplotParser.setTitle
         (printf "Average difference: %5.2f W/m^2" naiveDiff)
       )
+    liftIO $ putStrLn (printf "Estimated difference: %5.2f W/m2" estDiff)
     generateFigGp joint id
 
   mapM_ genDot   dotfigs
