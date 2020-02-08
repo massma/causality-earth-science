@@ -21,9 +21,11 @@ import           System.Random.MWC
 import qualified System.Random.MWC.Distributions
                                                as D
 
+meanToa :: Double
+meanToa = 340.0
 
 toa :: GenIO -> IO Double
-toa = D.normal 340.0 30.0
+toa = D.normal meanToa 30.0
 
 -- | magnitude of aerosol affect on sunlight, between 1.0 and 0.0 (1.0 = max effect)
 aerosolAffectSunlight :: Double
@@ -68,12 +70,19 @@ getSun (_a, _c, s) = s
 getAerosol :: (a, b, c) -> a
 getAerosol (a, _c, _s) = a
 
+calcRegression :: V.Vector Double -> Double -> Double
+calcRegression ols x = x * ols V.! 0 + ols V.! 1
+
 calcStats
   :: [(Double, String, Double)]
   -> [(Double, String, Double)]
-  -> (Double, Double)
+  -> (V.Vector Double, V.Vector Double, Double, Double)
 calcStats cloud' clear =
-  (calcRegress olsCloud - calcRegress olsClear, naiveCloud - naiveClear)
+  ( olsCloud
+  , olsClear
+  , avgRegress olsCloud - avgRegress olsClear
+  , naiveCloud - naiveClear
+  )
  where
   calcAvgs xs = (as, ols, S.mean ss)
    where
@@ -83,17 +92,25 @@ calcStats cloud' clear =
   (aCloud, olsCloud, naiveCloud) = calcAvgs cloud'
   (aClear, olsClear, naiveClear) = calcAvgs clear
   totAs                          = aCloud <> aClear
-  calcRegress ols = S.mean $ V.map (\x -> x * ols V.! 0 + ols V.! 1) totAs
+  avgRegress ols = S.mean $ V.map (calcRegression ols) totAs
 
-cloudSunlightExperiment :: Int -> IO (Double, Double)
+cloudSunlightExperiment :: Int -> IO (Double, Double, Double)
 cloudSunlightExperiment n = do
   gen <- create
   xs  <- replicateM n (genTuple gen)
-  let (cloud', clear)      = L.partition ((== "Cloudy") . getCloud) xs
-  let (estDiff, naiveDiff) = calcStats cloud' clear
+  let (cloud', clear) = L.partition ((== "Cloudy") . getCloud) xs
+  let (olsCloud, olsClear, estDiff, naiveDiff) = calcStats cloud' clear
+  let regPoints       = [0, 0.1 .. 1]
   f "dat/cloudy.dat" cloud'
   f "dat/clear.dat"  clear
-  return (estDiff, naiveDiff)
+  write "aerosol\tsunlight\n"
+        "dat/olsCloudy.dat"
+        (zip regPoints (fmap (calcRegression olsCloud) regPoints))
+  write "aerosol\tsunlight\n"
+        "dat/olsClear.dat"
+        (zip regPoints (fmap (calcRegression olsClear) regPoints))
+  return (estDiff, naiveDiff, (0.5 * meanToa * (cloudAffectSunlight - 1.0)))
  where
-  f fpath = BL.writeFile fpath . ("aerosol\tcloud\tsunlight\n" <>) . encodeWith
+  f = write "aerosol\tcloud\tsunlight\n"
+  write header' fpath = BL.writeFile fpath . (header' <>) . encodeWith
     (defaultEncodeOptions { encDelimiter = 9 })

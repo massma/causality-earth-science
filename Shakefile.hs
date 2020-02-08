@@ -10,6 +10,7 @@ import           Development.Shake.FilePath
 import           Development.Shake.Util
 import qualified Data.ByteString               as BS
 import           Data.List                      ( isInfixOf )
+import qualified System.Directory              as D
 import           Text.Printf
 import qualified CloudSunlight
 import qualified GnuplotParser
@@ -29,12 +30,14 @@ genDot = genGraphvis "dot"
 genCirco :: FilePath -> Rules ()
 genCirco = genGraphvis "circo"
 
-generateFigGp
-  :: FilePath -> ([GnuplotParser.Line] -> [GnuplotParser.Line]) -> Action ()
-generateFigGp out pp = do
+generateFigGp :: FilePath -> String -> Action ()
+generateFigGp out title = do
   need [s]
   gp <-
-    pp . (GnuplotParser.header out <>) . GnuplotParser.parseGp <$> readFile' s
+    GnuplotParser.setTitle title
+    .   (GnuplotParser.header out <>)
+    .   GnuplotParser.parseGp
+    <$> readFile' s
   cmd_ (Stdin (unlines (fmap show gp))) "gnuplot"
   where s = out -<.> "gp"
 
@@ -75,20 +78,31 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
 
   ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"] &%> \[naive, joint] -> do
-    need ["src/CloudSunlight.hs", "src/GnuplotParser.hs"]
-    (estDiff, naiveDiff) <- liftIO $ CloudSunlight.cloudSunlightExperiment 1000
+    need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", "Shakefile.hs"]
+    liftIO $ D.createDirectoryIfMissing True "dat"
+    (estDiff, naiveDiff, trueDiff) <- liftIO
+      $ CloudSunlight.cloudSunlightExperiment 1000
     generateFigGp
       naive
-      (GnuplotParser.setTitle
-        (printf "Average difference: %5.2f W/m^2" naiveDiff)
+      (printf
+        "Average sunlight difference: %5.2f W/m^2 (true effect of cloud on sunlight: %3.0f W/m^2)"
+        naiveDiff
+        trueDiff
       )
-    liftIO $ putStrLn (printf "Estimated difference: %5.2f W/m2" estDiff)
-    generateFigGp joint id
+    liftIO $ putStrLn (printf "Estimated difference: %5.2f W/m^22" estDiff)
+    generateFigGp
+      joint
+      (printf
+        "Effect of cloud on sunlight as estimated from data: %5.2f W/m^2 (true effect: %3.0f W/m^2)"
+        estDiff
+        trueDiff
+      )
 
   mapM_ genDot   dotfigs
 
   mapM_ genCirco circofigs
 
   phony "clean" $ do
-    liftIO $ putStrLn "Cleaning files in _build"
+    liftIO $ putStrLn "Cleaning files in _build and dat"
     removeFilesAfter "_build" ["//*"]
+    removeFilesAfter "dat"    ["//*"]

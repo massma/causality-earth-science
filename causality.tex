@@ -283,7 +283,9 @@ is:
   \includegraphics[]{naiveCloudSunlight.pdf}
   \caption{A naive approach to estimating the ``effect'' of clouds on
     sunlight: bin observations by cloudy and clear day, and compare
-    the values of sunlight.}
+    the values of sunlight. This approach yields a massive
+    overestimation of the true causal effect of clouds on sunlight,
+    which is -68.0 W m$^{-2}$}
   \label{fig:naive-cloud-sunlight}
 \end{figure}
 
@@ -345,22 +347,54 @@ Data or aprior knowledge can inform the regression function for
 $\mathbb{E}(S=s_i | C=c, A=a_i)$. In the toy example, a linear model,
 conditional on $cloud$, appears to be a good choice of regression
 function (Figure \ref{fig:linear}). The causal effect of clouds ons
-unlight as calculated using Equation (\ref{eq:6})) is -68.52 W
-m$^{-2}$, which matches closely the true causal effect from the SCM of
--68 W m$^{-2}$.  **** TODO: add regression lines to plots and
-reinforce main points of section e.g. we get biased effects if we
-don't use causal theory, but causal theory makes no parametric
-assumptions. these can sill be used to make causal inference more
-tractable. hence, it is a very flexible tool.
+unlight as calculated using Equation (\ref{eq:6})) (e.g.
+$\mathbb{E}(S | do(C = 1)) - \mathbb{E}(S | do(C = 0))$) is -68.52 W
+m$^{-2}$, which closely matches the true causal effect from the SCM of
+-68 W m$^{-2}$.
+
+In summary of the main points of this introduction to causal graphical
+models, structural causal models, and \textit{do-}calculus:
+
+\begin{itemize}
+\item Graphical causal models encode our assumptions about causal
+  dependencies in a system (edges are drawn \emph{from} causes
+  \emph{to} effects).
+\item Each graphical causal model corresponds to a structural causal
+  model, which are a set of functions that map causes and random
+  variations to effects.
+\item In order to calculate an unbiased causal effect from data, we
+  must remove all covariability between our cause and effect that is
+  not due to the directed causal path from cause to effect. The
+  presence of non-causal covariation between the cause and effect
+  can be deduced from the causal graph: the presence of a backdoor
+  path from the cause to the effect leads to non-causal covariation.
+\item The backdoor criterion identifies the distributions we must
+  calculate from data in order to block a backdoor path, remove
+  non-causal covariability between the cause and effect, and
+  calculate an unbiased causal effect from data.
+\item The \emph{average} causal effect can be reliably approximated
+  with regression (Equation (\ref{eq:6})) derived from the backdoor
+  criterion. In this scenario, causal theory and graphs identify the
+  variables that should (and should not be) included in the
+  regression to calculate an unbiased causal effect.
+\item Causal identification is a flexible tool that provides the
+  distributions that must be estimated by data, while making to
+  assumptions about the forms of those distribution. However,
+  parametric assumptions can be applied to make the calculation of
+  those distributions from data more computationally tractable.
+\end{itemize}
 
 \begin{figure}
   \includegraphics[]{aerosolSunlight.pdf}
   \caption{A linear relationship between aerosol and sunlight,
-    conditional on cloud.}
+    conditional on cloud. If we use linear regression to calculate the
+    average causal effect of cloud on sunlight, as in Equation
+    (\ref{eq:6}), our result is very close to the true causal effect
+    of -68.0 W m$^{-2}$.}
   \label{fig:linear}
 \end{figure}
 
-Here we focus on the backdoor criterion to block backdoor paths. An
+Here we focused on the backdoor criterion to block backdoor paths. An
 un-blockable backdoor path from the cause to the effect is a necessary
 condition for un-unidentifiability. However, it is not sufficient
 (e.g. there are other identification strategies like the front door

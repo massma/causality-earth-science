@@ -94,7 +94,7 @@ setInput str = go
 
 header :: FilePath -> [Line]
 header fname =
-  [ Generic "set term pdfcairo enhanced font \"Arial,12\" size 3,2"
+  [ Generic "set term pdfcairo enhanced font \"Arial,12\" size 5,3"
   , S (Output fname "")
   ]
 
