@@ -1,4 +1,4 @@
-set ylabel "Surface Solar Radiation (W m^{-1})"
+set ylabel "Sunlight/Surface Solar Radiation (W m^{-2})"
 set xlabel "Aerosol (-)"
 set linetype 30 lc rgb "black" lw 0.75 pt 1 dashtype solid
 plot "dat/clear.dat" using "aerosol":"sunlight" title "Clear",\

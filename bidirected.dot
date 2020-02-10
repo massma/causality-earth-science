@@ -1,6 +1,6 @@
 digraph G {
-	c[label="cloud"];
-	s[label="sfc solar rad"];
+	c[label="cloud (C)"];
+	s[label="sunlight (S)"];
 
 	c -> s;
 	s -> c [dir="both",style="dashed"];

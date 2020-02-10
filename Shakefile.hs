@@ -61,7 +61,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     need ([b, s, "def.tex"] <> dotfigs <> circofigs <> figs)
     Stdout o <- cmd "pdflatex" (b -<.> "tex")
     if isInfixOf "Rerun to get citations correct." o
-      then cmd_ "pdflatex" (b -<.> "tex")
+      then cmd_ "pdflatex" ["--synctex=1", (b -<.> "tex")]
       else return ()
 
   "causality.bbl" %> \out -> do

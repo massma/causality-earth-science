@@ -1,7 +1,7 @@
 digraph G {
-	c[label="cloud"];
-	a[label="aerosol"];
-	s[label="sfc solar rad"];
+	c[label="cloud (C)"];
+	a[label="aerosol (A)"];
+	s[label="sunlight (S)"];
 
 	a -> c;
 	c -> s;
