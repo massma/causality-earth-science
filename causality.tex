@@ -21,14 +21,20 @@ real world experiment is also used to a lesser degree
 impossible or unethical to execute many real world experiments, and
 numerical experiments may rely on approximations that bias
 experimental results realtive to the real world
-\citep[e.g.,][]{kim-cmip5,stillmann-cmip5-extremes}. Are these the
-only tools available for \textit{do}-ing experiments?
-\citet{pearl-1994-do-calculus} introduced \textit{do-}calculus for
-calculating the causal effects of experimenatal interventions based on
-passive observations of a system and assumptions about causal
-dependencies in the system. This is a powerful tool for earth
+\citep[e.g.,][]{kim-cmip5,stillmann-cmip5-extremes}. Given the
+limitations of real world and numerical experiments in earth science,
+researchers require additional tools for sceintific discovery.
+\citet{pearl-1994-do-calculus} introuduced just one such tool: the
+\textit{do-}calculus for calculating the causal effects of
+experimenatal interventions based on passive observations of a system
+and assumptions about causal dependencies in the system. In other
+words, given observational data about a system one can use
+\textit{do}-calculus to calulate an experimental effect without
+conducting any experiments. This is a powerful tool for earth
 scientists that complements numerical experimentation due to a
-completely orthogonal set of strengths, weaknesses, and assumptions.
+completely orthogonal set of strengths, weaknesses, and
+assumptions. When numerical modelling assumptions break down, causal
+inference may be a tractable path towards scientific discovery.
 
 However, causal inference from data presents its own challenges; the
 causal effect must be identifiable from assumptions about the causal
@@ -42,7 +48,7 @@ science problems: the system evolves through time according to an
 underlying dynamical system, and we only ever partially observe the
 state space of that dynamical system \citep{majda-state}. Using graph
 theory developed in \citep{pearl1995causal} we determine the generic
-problems causal inference is justified for, and the necessary
+problems for which causal inference is justified, and the necessary
 assumptions for applying causal inference. There is the potential for
 applying causal inference in two scenarios: (1) under an assumption
 that the cause is independent of the system's state space (e.g. at the
@@ -71,8 +77,8 @@ acyclic graphs (DAGs) that encode our assumptions about the causal
 dependencies of a system. One draws directed edges (e.g. arrows) from
 variables that are causes to effects. We will demonstrate causal
 graphs with a simplified toy example examining clouds, aerosols, and
-surface solar radiation (Figure \ref{fig:toy}). The causal graph
-consists of:
+surface solar radiation/sunlight (Figure \ref{fig:toy}). The causal
+graph consists of:
 
 \begin{figure}
   % consider \noindent\include... [width=0.75\textwidth]...
@@ -83,13 +89,13 @@ consists of:
 
 \begin{enumerate}
 \item An edge from aerosols to clouds because aerosols serve as cloud
-  condensation nuclei.
+  condensation nuclei and affect the probability of water vapor
+  conversion to cloud.
 \item An edge from aerosols to surface solar radiation, because
   aerosols can reflect sunlight back to space and reduce sunlight
   at the surface.
-\item An edge from clouds to surface solar radiation, because clouds
-  also reflect sunlight back to space and can reduce sunlight at
-  the surface.
+\item An edge from clouds to sunlight, because clouds also reflect
+  sunlight back to space and can reduce sunlight at the surface.
 \end{enumerate}
 
 Causal graphs encode our assumptions about how the system behaves, and
@@ -111,28 +117,28 @@ graph in Figure \ref{fig:toy} represents a specific factorization of
 the joint distribution:
 
 \begin{equation}
-  P(cloud, aerosol, rad) = P(rad | cloud, aerosol) \, P(cloud |
-  aerosol) \,
-  P(aerosol)
+  P(A, C, S) = P(S \, | \,C, A) \, P(C \, | \, A) \, P(A),
 \end{equation}
 
-Interpreted causally, as in \citet{pearl1995causal} and this
-manuscript, the directed edges encode causal dependencies in addition
-to a factorization of the joint. More specifically, interpretted
-causally, the graph represents the assumed Structural Causal Model
-\citet[SCM,][]{pearl2009}, which is the set of functions that
-determines how variables are generated. Each variable in the graph is
-determined by a function with inputs corresponding to inward edges of
-the variable of interest, as well as randomness due to the variables
-not included in the causal graph (``exogenous variables'').  In the
-cloud-aerosol-radiation example,
+where $A$ represents aerosol, $C$ represents cloud, and $S$
+representes surface sunlight/solar radiation, Interpreted causally, as
+in \citet{pearl1995causal} and this manuscript, the directed edges
+encode causal dependencies in addition to a factorization of the
+joint. More specifically, the graph represents the assumed Structural
+Causal Model \citep[SCM,][]{pearl2009}, which is the set of functions
+that determines how variables are generated by their causes. Each
+variable in the graph is determined by a function with inputs
+corresponding to inward edges of the variable of interest, as well as
+randomness due to the variables not included in the causal graph
+(``exogenous variables'').  In the cloud-aerosol-radiation example the
+SCM is:
 
 \begin{equation}
   SCM =
   \begin{cases}
     f_{aerosol} &: U_{aerosol} \\
     f_{cloud} &: aerosol, U_{cloud}  \\
-    f_{radiation} &: aerosol, cloud, U_{radiation}
+    f_{sunlight} &: aerosol, cloud, U_{sunlight}
   \end{cases}
   \label{eq:1}
 \end{equation}
@@ -141,26 +147,25 @@ The SCM asserts that each variable is generated from a deterministic
 function. The randomness is due to exogonous variables ($U$) that
 represent all the factors not represented explicitly in the SCM and
 corrresponding causal graph. For example, sources of aerosol
-variability not considered include anthropogenic aerosol release,
-biosphere plant release, fires, volcanoes, etc. For cloud, this
-includes synoptic forcing, moisture content, etc. For radiation, this
-includes variability of top of atmosphere radiation, etc. For the
-causal graph, as drawn, we assume that all of these sources of
-randomness are idnependent of each other. That is, $U_{aerosol}$,
-$U_{cloud}$, and $U_{radiation}$ are independent of each other. These
-$U$ variables are powerful tools: by positing an SCM and causal graph,
-we are not stating that the variables in the graph are the only
-processes in the system. Instead, we are stating that all other
-processes not included the graph induce variations in the causal
-variables that are uncorrelated with each other. In some scenarios,
-this assumption may be unreasonable and we would need to encode
-correlations between $U$ terms; that is, co-variability induced
-between variables due to exogenous processes. This can be encoded in
-the graph as a bi-directed dashed edge between two variables with the
-statistical depedence induced by exogenous processes. For example, if
-aerosol in Figure \ref{fig:toy} were istead considered to be
-exogenous, we would represen the graph instead as in Figure
-\ref{fig:bi-directed}, and the corresponding SCM would be:
+variability not considered include anthropogenic aerosol emission, the
+biosphere, fires, volcanoes, etc. For cloud, this includes synoptic
+forcing, moisture content, etc. For radiation, this includes
+variability of top of atmosphere radiation, etc. For the causal graph,
+as drawn, we assume that all of these sources of randomness are
+idnependent of each other. That is, $U_{aerosol}$, $U_{cloud}$, and
+$U_{radiation}$ are independent of each other. The $U$ variables are
+powerful tools: by positing an SCM and causal graph, we are not
+stating that the variables in the graph are the only processes in the
+system. Instead, we are stating that all other processes not included
+in the graph induce variations in the causal variables that are
+uncorrelated with each other. In some scenarios, this assumption may
+be unreasonable and we would need to encode correlations between $U$
+terms; that is, co-variability induced between variables due to
+exogenous processes. This can be encoded in the graph as a bi-directed
+dashed edge between the two variables with shared exogenous
+factors. For example, if aerosol in Figure \ref{fig:toy} were istead
+considered to be exogenous, we would represen the graph instead as in
+Figure \ref{fig:bi-directed}, and the corresponding SCM would be:
 
 \begin{figure}
   \includegraphics[]{bidirected.pdf}
@@ -180,28 +185,33 @@ exogenous, we would represen the graph instead as in Figure
   \label{eq:2}
 \end{equation}
 
-where cloud and radiation now share an exogenous term.
+where cloud and radiation now share an exogenous term. In this paper
+we do not include the bi-directed dashed edge notation, because in
+earth science we can usually identify the relevant variables and their
+dependencies, which is sufficient infrmation to include them
+expilcitly in the graph as nodes, even if we do not know the
+functional form of their dependencies or cannot observe them.
 
-\textit{/discuss barienboim's notation (which I do not like) of
-  including and representing exogoneous variation that affects
-  multiple variables with a dashed line? not as applicable for earth
-  science, where I *think* we have a general idea of the main players
-  (e.g. state), and how they relate to each other. I prefer to
+\textit{/include this discussion barienboim's notation (which I do not
+  like) of including and representing exogoneous variation that
+  affects multiple variables with a dashed line? not as applicable for
+  earth science, where I *think* we have a general idea of the main
+  players (e.g. state), and how they relate to each other. I prefer to
   represent these instead as unobservable $V$ than $U$. However, show
   it in this example by just saying, if we did not include aerosol as
-  an endogenous variable  we would just represent that as a
-  bi-directed dashed arrow from $V$ to $U$./}
+  an endogenous variable we would just represent that as a bi-directed
+  dashed arrow from $V$ to $U$./}
 
 We can apply causal graph theory
 \citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
-encoded in our graph to identify which distributions we must estimate
-from data in order to calculate a causal effect of interest. This
-process of identifying the necessary distributions is formally termed
-\emph{causal identification}. If a causal effect is not identifiable
-(\emph{un}-identifiable), for example if calculating a causal effect
-requires distributions of variables that we do not observe, then we
-cannot use causal inference to calculate a causal effect, even with an
-infinite sample of data.
+encoded in our causal graph to identify which distributions we must
+estimate from data in order to calculate a causal effect of
+interest. This process of identifying the necessary distributions is
+formally termed \emph{causal identification}. If a causal effect is
+not identifiable (\emph{un}-identifiable), for example if calculating
+a causal effect requires distributions of variables that we do not
+observe, then we cannot use causal inference to calculate a causal
+effect, even with an infinite sample of data.
 
 % backdoor path}
 
@@ -210,9 +220,10 @@ unblocked backdoor path from cause to effect. Backdoor paths are any
 paths going through parents of the cause to the effect. We can block
 these paths by selectively observing variables such that no
 information passes through them \citep{geiger-d-sep}. If we can
-observe variables such that backdoor paths are blocked, then we have
-satisfied the \emph{back-door criterion} \citep{pearl2009} and we can
-calculate unbiased causal effects from data.
+observe variables along the backdoor paths uch that they are blocked,
+then we have satisfied the \emph{back-door criterion}
+\citep{pearl2009} and we can calculate unbiased causal effects from
+data.
 
 \begin{figure}
   \noindent\includegraphics[]{./mutilated-cloud-aerosol.pdf}\\
@@ -234,7 +245,7 @@ words, we want to isolate the variability of sunlight due to the
 causal link from cloud to sunlight. However, aerosols both affect
 cloud (edge from aerosol to cloud), and sunlight, so if we naively
 calculate a causal effect we would get a biased estimate of the mean
-causal effect of cloud on sunlight. To demonstrate, consider generated
+effect of cloud on sunlight. To demonstrate, consider generated
 data where the ``true'' SCM is:
 
 \begin{equation}
@@ -242,7 +253,7 @@ data where the ``true'' SCM is:
   \begin{cases}
     f_{aerosol} &: U_{aerosol} \sim \text{uniform (0, 1]}\\
     f_{cloud} &: Cloudy | Clear \sim \text{bernoulli(aerosol)}     \\
-    f_{radiation} &: \begin{cases}
+    f_{sunlight} &: \begin{cases}
       Cloudy &: 0.6 \cdot \text{clear sky radiation}  \\
       Clear &: \text{clear sky radiation}
     \end{cases}
@@ -252,32 +263,33 @@ data where the ``true'' SCM is:
 where:
 
 \begin{equation*}
-  \text{clear sky radiation} = U_{aerosol} \cdot (1 - aerosol); \;
-  U_{aerosol} \sim \text{Normal(340, 30)}
+  \text{clear sky radiation} = U_{sunlight} \cdot (1 - aerosol); \;
+  U_{sunlight} \sim \text{Normal(340, 30)}
 \end{equation*}
 
 Now, consider not knowing the underlying SCM, but just receiving
 passive data of cloud and sunlight data. If one were interested in
 calculating the effect of cloud on sunlight, and aerosol data were not
-available or one where very naive, an approach would be to bin the
-data by cloudy and clear conditions, and comapre the amount of
-sunlight in each type of observation (Figure
+available or one where very naive, one approach would be to bin the
+data by cloudy and clear conditions and comapre the amount of sunlight
+between cloudy and clear observations (Figure
 \ref{fig:naive-cloud-sunlight}). This approach suggests that clouds
 reduce sunlight by, on average, 160 W m$^{-2}$, which is a massive
 overestimation of the true average effect of clouds derived from the
-SCM, which is -68 W m$^{-2}$. Aerosol induces co-variability between
-cloud and aerosol that has nothing to do with the causal link from
-cloud to aerosol. Graphically, this is clairied by removing all edges
-from our cause (cloud) to children of our cause (in this case
-sunlight) (Figure \ref{fig:mutilated-toy}). We see that cloud is not
-independent of surface solar radiation in the mutilated graph.  How
-would we make cloud and sunlight independent in this mutilated graph?
-In this case, by observing aerosol. In other words, with aerosol
-fixed, any covariability between cloud and surface solar radiation is
-due to the causal path between cloud and surface solar radiation
-(Figure \ref{fig:toy}).  Mathematically, the identification of the
-causal effect of cloud and aerosol according to the backdoor criterion
-is:
+SCM of -68 W m$^{-2}$. Aerosol induces co-variability between cloud
+and aerosol that unrelated to the causal link from cloud to
+aerosol. Graphically, this is clarified by removing all edges from our
+cause (cloud) to children of our cause (in this case sunlight) (Figure
+\ref{fig:mutilated-toy}). We see that cloud is not independent of
+surface solar radiation in the mutilated graph.  However if aerosol
+were fixed (e.g. observed or not varying), cloud and sunlgiht would be
+independent of each other in Figure \ref{fig:mutilated-toy}, and
+in(Figure \ref{fig:toy}) all co-variability between cloud and sunlight
+would be only due to the causal edge between cloud and sunlight.
+Mathematically incorporating this requirement that we must condiiton
+on aerosol to isolate the causal effect of cloud on radiation gives
+the identification of the causal effect of cloud and aerosol according
+to the backdoor criterion:
 
 \begin{figure}
   \includegraphics[]{naiveCloudSunlight.pdf}
@@ -290,30 +302,32 @@ is:
 \end{figure}
 
 \begin{equation}
-  P(sunlight | do(cloud = c)) = \int_{aerosol} P(sunlight| cloud = c,
-  aerosol) P(aerosols) \, d aerosol,
+  P(S | do(C = c)) = \int_{a} P(S \, | \, C = c,
+  A=a) \, P(A=a) \; da,
   \label{eq:3}
 \end{equation}
 
 where the \textit{do}-calculus \citep{pearl2009} term
-($P(sunlight \, | \, do(cloud\, = \,c))$) represents the probability of
-sunlight if we did an experiment where we intervened and set cloud to
-a value of our choosing (in this case $c$). In the case that
-observations of aerosols are not available, our causal effect is not
-identifiable and we cannot use causal inference no matter how large
-the sample sizes of clouds and aerosols. This theory is an elegant
-tool: without having to touch data or estimate marginal or conditional
+($P(S \, | \, do(C\, = \,c))$) represents the probability of sunlight
+if we did an experiment where we intervened and set cloud to a value
+of our choosing (in this case $c$). In the case that observations of
+aerosols are not available, our causal effect is not identifiable and
+we cannot use causal inference no matter how large the sample sizes of
+clouds and aerosols. This is a powerful time saving research tool:
+without having to manipulate data or estimate marginal or conditional
 distributions, we can determine whether it is possible to calculate a
 causal effect of interest, given the available observations and our
-assumptions about the causal dependencies in the system. We later use
+assumptions about the causal dependencies in the system.  We later use
 this theory to theoretically assess which general problems are
 tractable in earth science using causal inference (Section
 \ref{sec:necess-cond-caus}).
 
-Often it may be more computationally tractable to calculate an average
-causal effect, rather than the full causal distribution
-$P(sunlight | do(cloud))$. Returning to our toy example (Figure
-\ref{fig:toy}), the average effect is defined as:
+Once we have established that a causal effect is identifiable from
+data, we must use estimate the required observational distributions
+(Equation (\ref{eq:3}) from data. Often it may be more computationally
+tractable to calculate an average causal effect, rather than the full
+causal distribution $P(S | do(C=c))$. Returning to our toy example
+(Figure \ref{fig:toy}), the average effect is defined as:
 
 \begin{equation}
   \mathbb{E}(S | do(C = c)) = \int_{s} s \, P(S = s
@@ -321,17 +335,16 @@ $P(sunlight | do(cloud))$. Returning to our toy example (Figure
   \label{eq:4}
 \end{equation}
 
-where we have introduced the shorthand $S$ for solar radiation, $C$
-for cloud, and $A$ for aerosol. Substituting Equation (\ref{eq:3})
-into Equation (\ref{eq:4}) rearranging gives:
+Substituting Equation (\ref{eq:3}) into Equation (\ref{eq:4})
+rearranging gives:
 
 \begin{equation}
-  \mathbb{E}(S | do(C = c))  = \int_{a} P(A=a) \, \mathbb{E}(S=s |
-  C=c, A=a),
+  \mathbb{E}(S | do(C = c))  = \int_{a} P(A=a) \; \mathbb{E}(S=s |
+  C=c, A=a) \, d a,
   \label{eq:5}
 \end{equation}
 
-Where $\mathbb{E}(S=s | C=c, A=a)$ is just a regression of sunlight on
+Where $\mathbb{E}(S=s \, | \, C=c, A=a)$ is just a regression of sunlight on
 cloud and aerosol. Estimating the marginal $P(A=a)$ is difficult, but
 if we assume that our observations are independent and identically
 distributed (IID) and we have a large enough sample, we can use the
@@ -344,13 +357,28 @@ law of large numbers to approximate Equation (\ref{eq:5}) with:
 \end{equation}
 
 Data or aprior knowledge can inform the regression function for
-$\mathbb{E}(S=s_i | C=c, A=a_i)$. In the toy example, a linear model,
-conditional on $cloud$, appears to be a good choice of regression
+$\mathbb{E}(S=s_i | C=c, A=a_i)$. In the toy example, a linear model
+conditional on cloud appears to be a good choice of regression
 function (Figure \ref{fig:linear}). The causal effect of clouds ons
 unlight as calculated using Equation (\ref{eq:6})) (e.g.
 $\mathbb{E}(S | do(C = 1)) - \mathbb{E}(S | do(C = 0))$) is -68.52 W
 m$^{-2}$, which closely matches the true causal effect from the SCM of
--68 W m$^{-2}$.
+-68 W m$^{-2}$. This example demonstrates how causal inference and
+theory can be used to calulate unibased average effects using
+regression. Causal inference can be used to justify and communicate
+assumptions in any observational analyses employing regression. In the
+best case, the causal effect is indentifiable from the availalbe
+observations, and the regression analysis can be framed as an average
+causal effect. In the worst case that the identification is not
+possible from the available observations, one may present the
+regression as observed associations between variables. However,
+presnentation of a causal graph still aids the reader: the reader can
+see from the causal graph what the confounders and unobserved sources
+of covariability are between the predictors and the output. In all
+cases, the presentation of a causal graph makes explicit the
+assumptions about the causal dependencies of the system. Wherever
+possible, we commend including causal graphs with any
+observation-based analyses.
 
 In summary of the main points of this introduction to causal graphical
 models, structural causal models, and \textit{do-}calculus:
