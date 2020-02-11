@@ -445,8 +445,6 @@ representative of earth science systems (Figure \ref{fig:generic}).
 \section{Necessary conditions for causal identification in the earth
   systems}
 \label{sec:necess-cond-caus}
-\subsection{Causal identification when the state space is estimable}
-\label{state-space}
 
 Earth science systems are dynamical system evolving through time
 according to an underlying system state. This offers both advantages
@@ -456,7 +454,41 @@ temporal ordering of events; we know that future events can have no
 causal effect on the past.
 
 Causal identification and tractable causal inference to earth science
-requires assumptions about the unobserved portion of the state space.
+requires assumptions about the unobserved portion of the state
+space. For example, without assumptions we know that the unobserved
+portion of the state space will introduce confounding for any causal
+affect of interest (Figure \ref{fig:generic}). We do not observe the
+state space at every time (e.g. $S(t-1)$ in Figure \ref{fig:generic}),
+and at any given time, we do not observe the state space at all
+locations and for all state variables (e.g. $S(t)$ and $S(t-2)$ in
+Figure \ref{fig:generic}). So, if we are interested in the causal
+effect of any state variable on some a variable ($E$) at time $t+1$,
+then the causal effect will be confounded by the unobserved portions
+of the state space, and calculating a causal effect is impossible
+(un-identifable) without additional assumptions. We will apply causal
+graph theory to identify such additional assumptions that would make
+the caulcations of causal effects tractable, and may be reasonable in
+many earth science scenarios.
+
+\begin{figure}
+  \includegraphics[]{./generic-graph.pdf}
+  \caption{A generic graph of the earth system state sequence, limited
+    to a 3 time sequence subset of the infinite sequence. Unobserved
+    nodes are outlined by dashed lines.  In the scenario that we are
+    interested in calculating the causal effect of any portion of the
+    state space at time $t$ on some effect ($E$) at time $t+1$, the
+    causal effect will be confounded by the unobserved portions of the
+    state space, and calculating the causal effect is impossible
+    (un-identifiable) without additional assumptions.}
+  \label{fig:generic}
+\end{figure}
+
+\subsection{Statistical reconstruction of the state space with time
+  lagged observations}
+
+Takens's theorem implies that we can reconstruct the unobserved
+portions of the state space by
+
 
 First we consider a generic scenario in a simple temporal system with
 no spatial component, where we are interested in the causal effect of
@@ -471,18 +503,6 @@ causal effect of $C(t)$ on $E(t+1)$, we must block all back door paths
 from $C(t)$ to $E(t+1)$. In this generic scenario, this involves
 conditioning on $S'(t)$, $U(t)$, and $E(t)$:
 
-\begin{figure}
-  \includegraphics[]{./generic-graph.pdf}
-  \caption{A generic graph of the earth system sequence, limited to a
-    3 time sequence subset of the infinite sequence. $S$ and $U$ refer
-    to the observed and unobserved portions of the state space,
-    respectively.  At time steps $t$ and $t+1$ the observed portion
-    of the state space is broken up into three events: $C$, $E$, and
-    $S'(t)$, which is all parts of $S$ excluding $C$ and $E$. $C$ is a
-    generic portion of the state space we are interested in as a cause, and $E$ is
-    a generic portion of the state space we are interested in as an effect.}
-  \label{fig:generic}
-\end{figure}
 
 \begin{equation}
   \label{naive}
