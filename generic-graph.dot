@@ -1,45 +1,41 @@
 digraph G {
-	sMinus1[label="S(t-1)"];
-	uMinus1[label="U(t-1)"];
+	subgraph stateMinus2 {
+		sMinus2[label=""];
+		uMinus2[label="", style="dashed"];
+		sMinus2 -> uMinus2 [style=invis];
+		label="S(t-2)";
+	}
 
-	c[label="C(t)"];
-	e[label="E(t)"];
-	sPrime[label="S'(t)"];
-	u[label="U(t)"];
+	subgraph stateMinus1 {
+		sMinus1[label="", style="dashed"];
+		uMinus1[label="", style="dashed"];
+		sMinus1 -> uMinus1 [style=invis];
+		label="S(t-1)";
+	}
 
-	c1[label="C(t+1)"];
-	e1[label="E(t+1)"];
-	sPrime1[label="S'(t+1)"];
-	u1[label="U(t+1)"];
+	subgraph state{
+		s[label=""];
+		u[label=""];
+		s -> u [style=invis];
+		label="S(t)";
+	}
+	e[label="E(t+1)"];
 
-	sMinus1 -> c;
-	sMinus1 -> e;
-	sMinus1 -> sPrime;
+
+	sMinus2 -> sMinus1;
+	sMinus2 -> uMinus1;
+
+	uMinus2 -> sMinus1;
+	uMinus2 -> uMinus1;
+
+	sMinus1 -> s;
 	sMinus1 -> u;
 
-	uMinus1 -> c;
-	uMinus1 -> e;
-	uMinus1 -> sPrime;
+	uMinus1 -> s;
 	uMinus1 -> u;
 
-	c -> c1;
-	c -> e1;
-	c -> sPrime1;
-	c -> u1;
+	s -> e;
+	u -> e;
 
-	e -> c1;
-	e -> e1;
-	e -> sPrime1;
-	e -> u1;
-
-	sPrime -> c1;
-	sPrime -> e1;
-	sPrime -> sPrime1;
-	sPrime -> u1;
-
-	u -> c1;
-	u -> e1;
-	u -> sPrime1;
-	u -> u1;
 
 }

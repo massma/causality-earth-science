@@ -345,40 +345,40 @@ rearranging gives:
 \end{equation}
 
 Where $\mathbb{E}(S=s \, | \, C=c, A=a)$ is just a regression of sunlight on
-cloud and aerosol. Estimating the marginal $P(A=a)$ is difficult, but
+cloud and aerosol. Estimating the marginal $P(A)$ is difficult, but
 if we assume that our observations are independent and identically
 distributed (IID) and we have a large enough sample, we can use the
 law of large numbers to approximate Equation (\ref{eq:5}) with:
 
 \begin{equation}
-  \mathbb{E}(S | do(C = c))  = \frac{1}{n} \sum_{i=1}^n \mathbb{E}(S=s_i |
+  \mathbb{E}(S | do(C = c))  \approx \frac{1}{n} \sum_{i=1}^n \mathbb{E}(S=s_i |
   C=c, A=a_i).
   \label{eq:6}
 \end{equation}
 
-Data or aprior knowledge can inform the regression function for
+Data or prior knowledge can inform the regression function for
 $\mathbb{E}(S=s_i | C=c, A=a_i)$. In the toy example, a linear model
 conditional on cloud appears to be a good choice of regression
-function (Figure \ref{fig:linear}). The causal effect of clouds ons
-unlight as calculated using Equation (\ref{eq:6})) (e.g.
-$\mathbb{E}(S | do(C = 1)) - \mathbb{E}(S | do(C = 0))$) is -68.52 W
-m$^{-2}$, which closely matches the true causal effect from the SCM of
--68 W m$^{-2}$. This example demonstrates how causal inference and
-theory can be used to calulate unibased average effects using
-regression. Causal inference can be used to justify and communicate
-assumptions in any observational analyses employing regression. In the
-best case, the causal effect is indentifiable from the availalbe
-observations, and the regression analysis can be framed as an average
-causal effect. In the worst case that the identification is not
-possible from the available observations, one may present the
-regression as observed associations between variables. However,
-presnentation of a causal graph still aids the reader: the reader can
-see from the causal graph what the confounders and unobserved sources
-of covariability are between the predictors and the output. In all
-cases, the presentation of a causal graph makes explicit the
-assumptions about the causal dependencies of the system. Wherever
-possible, we commend including causal graphs with any
-observation-based analyses.
+function (Figure \ref{fig:linear}). The causal effect of clouds on
+sunlight as calculated using Equation (\ref{eq:6})) (e.g.
+$\mathbb{E}(S | do(C = \text{cloudy})) - \mathbb{E}(S | do(C =
+\text{clear}))$) is -68.52 W m$^{-2}$, which closely matches the true
+causal effect from the SCM of -68 W m$^{-2}$. This example
+demonstrates how causal inference and theory can be used to calulate
+unibased average effects using regression. Further, causal inference
+can be used to justify and communicate assumptions in any
+observational analyses employing regression. In the best case, the
+causal effect is indentifiable from the availalbe observations, and
+the regression analysis can be framed as an average causal effect. In
+the worst case that identification is not possible from the available
+observations, one may present the regression as observed associations
+between variables. However, presentation of a causal graph still aids
+the reader: the reader can see from the causal graph what the
+confounders and unobserved sources of covariability are between the
+predictors and the output. In all cases, the presentation of a causal
+graph makes explicit the assumptions about the causal dependencies of
+the system. Wherever possible, we commend including causal graphs with
+any observation-based analyses.
 
 In summary of the main points of this introduction to causal graphical
 models, structural causal models, and \textit{do-}calculus:
@@ -393,9 +393,10 @@ models, structural causal models, and \textit{do-}calculus:
 \item In order to calculate an unbiased causal effect from data, we
   must remove all covariability between our cause and effect that is
   not due to the directed causal path from cause to effect. The
-  presence of non-causal covariation between the cause and effect
-  can be deduced from the causal graph: the presence of a backdoor
-  path from the cause to the effect leads to non-causal covariation.
+  presence of non-causal covariation between the cause and effect can
+  be deduced from the causal graph: the presence of an unblocked
+  backdoor path from the cause to the effect leads to non-causal
+  covariation.
 \item The backdoor criterion identifies the distributions we must
   calculate from data in order to block a backdoor path, remove
   non-causal covariability between the cause and effect, and
@@ -406,7 +407,7 @@ models, structural causal models, and \textit{do-}calculus:
   variables that should (and should not be) included in the
   regression to calculate an unbiased causal effect.
 \item Causal identification is a flexible tool that provides the
-  distributions that must be estimated by data, while making to
+  distributions that must be estimated by data, while making no
   assumptions about the forms of those distribution. However,
   parametric assumptions can be applied to make the calculation of
   those distributions from data more computationally tractable.
@@ -426,7 +427,8 @@ Here we focused on the backdoor criterion to block backdoor paths. An
 un-blockable backdoor path from the cause to the effect is a necessary
 condition for un-unidentifiability. However, it is not sufficient
 (e.g. there are other identification strategies like the front door
-criterion, and instrumental variables). For a complete discussion of
+criterion and instrumental variables that do not rely on observing
+variabiles along the backdoor path). For a complete discussion of
 sufficient conditions for un-unidentifiability we refer you to
 \citet{shpitser2006}. For the purpose of identifying generally
 tractable causal inference approaches in earth science (Section
@@ -440,9 +442,149 @@ representative of earth science systems (Figure \ref{fig:generic}).
 
 \textit{/TODO: need to formally prove this or adjust language/}
 
-\subsection{Clarification on terminology and relationship to literature on causal discovery}
+\section{Necessary conditions for causal identification in the earth
+  systems}
+\label{sec:necess-cond-caus}
+\subsection{Causal identification when the state space is estimable}
+\label{state-space}
+
+Earth science systems are dynamical system evolving through time
+according to an underlying system state. This offers both advantages
+and challenges for causal inference. Challenges involve our partial
+observation of the system's state space, while advantages include the
+temporal ordering of events; we know that future events can have no
+causal effect on the past.
+
+Causal identification and tractable causal inference to earth science
+requires assumptions about the unobserved portion of the state space.
+
+First we consider a generic scenario in a simple temporal system with
+no spatial component, where we are interested in the causal effect of
+$C(t)$ on $E(t+1)$, where $C$ and $E$ are processes within the larger
+system's \textit{observed} state $S$. Note that in general we do not
+fully observe the state of the system, so there will also be an
+unobserved portion of the state space $U$. We denote the portion of
+the observed state space excluding $C$ and $E$ as $S'$. $S'(t)$,
+$U(t)$, $C(t)$ and $E(t)$ all affect $S'(t+1)$, $U(t+1)$, $C(t+1)$,
+and $E(t+1)$ (Figure \ref{fig:generic}). In order to calculate the
+causal effect of $C(t)$ on $E(t+1)$, we must block all back door paths
+from $C(t)$ to $E(t+1)$. In this generic scenario, this involves
+conditioning on $S'(t)$, $U(t)$, and $E(t)$:
+
+\begin{figure}
+  \includegraphics[]{./generic-graph.pdf}
+  \caption{A generic graph of the earth system sequence, limited to a
+    3 time sequence subset of the infinite sequence. $S$ and $U$ refer
+    to the observed and unobserved portions of the state space,
+    respectively.  At time steps $t$ and $t+1$ the observed portion
+    of the state space is broken up into three events: $C$, $E$, and
+    $S'(t)$, which is all parts of $S$ excluding $C$ and $E$. $C$ is a
+    generic portion of the state space we are interested in as a cause, and $E$ is
+    a generic portion of the state space we are interested in as an effect.}
+  \label{fig:generic}
+\end{figure}
+
+\begin{equation}
+  \label{naive}
+  P(E(t+1)| do(C(t))) = \int_{S'(t)} \int_{U(t)} \int_{E(t)}  P(E(t+1) | C(t), S'(t),
+  U(t), E(t)) \; P(E(t)) \; P(U(t)) \; P(S'(t))
+\end{equation}
+
+Unforunately, we do not observe $U(t)$ so Equation (\ref{naive}) is
+incalculable. However, it may be possible to estimate $U(t)$ by
+leveraging Takens's theorem and using lagged observations of the
+partial state space, going back in time (e.g. $S(t-1)$, $S(t-2)$,
+etc.). Still, this approach presents problems if we choose to
+reconstruct $S$ and $U$ at time $t$. The reconstruction will estimate
+$S$ rather than $S'$, which includes $C(t)$ because $C$ is a part of
+the state space. So, our cause will be shadowed by our reconstruction
+of the state space and our causal effect will be biased.  Fortunately,
+we can also block backdoor paths by conditioning on $S(t-1)$ and
+$U(t-1)$. If we reconstruct $U(t-1)$ using lagged observations of $S$
+before $t-1$, we can block backdoor paths and calculate a causal
+effect. So, the correct approach to blocking backdoor paths in the
+earth system, where we only ever partially observe the state space,
+is:
+
+\begin{equation}
+  \label{ce}
+  P(E(t+1)| do(C(t))) = \int_{S(t-1)} \int_{U(t-1)} P(E(t+1) | C(t), S(t-1),
+  U(t-1)) \; P(U(t-1)) \; P(S(t-1)),
+\end{equation}
+
+where $U(t-1)$ is statistically reconstructed using lagged
+observations of the state space $S(t')$, where
+$t' \in \{-\infty, t-2\}$ (justified by Takens's theorem).
+
+In practice we do not know the number of lagged observations of the
+state space that are required for reconstruction at time $t-1$. One
+approach is to use the data for guidance. This involves predicting the
+the observations at time $t$ with iteratively increasing numbers of
+lags. When the addition of more time lags does not improve the
+prediction of variables at time $t$, we have confidence that the
+relevant portions of state space at time $t=t-1$ has been
+reconstructed by the time series.
+
+Reconstructing state spaces can be computationally challenging. For
+spatiotemporal systems, \emph{lightcones} are a tool that can be used
+to filter observations that can and cannot affect a process at a given
+point in space and time \citep{PhysRevLett.84.1890,
+  montanez2015licors,doi:10.1063/1.5021130}. We assume a maximum
+propagation speed for the system, and only include observations in the
+state space recostruction whose influece can reach the state at the
+time and location of interest, given our assumed propagation
+speed. For generic physical systems the speed of propagation would be
+the speed of light, and for the atmosphere a conservative estimate
+would be the speed of sound. However less conservative assumptions
+about the propagation speed can be used; e.g. the group velocity of
+gravity waves or a maximum bound on advection speed. This less
+conservative assumptions would filter more observations out of the
+problem.
+
+\subsection{Applications at the human-earth system interface: when the
+  cause is approximately independent of the system}
+\label{human}
+
+Causal inference becomes substantially more tractable under an
+assumption that our causes of interest are independent from the
+evolution of the state space (Figure \ref{fig:forcing}). While the
+earth system certainly affects all processes on earth, in some cases
+this may still be a reasonable assumption. For example, recent human
+history demonstrates that global human actions are relatively
+independent of the climate state \citep{arto2014drivers}. That is, we
+have failed to reduce green house gas emissions even as global
+temperature increased. Instances of reduced rises in global green
+house gas emissions are usually due to global economic recession
+(e.g. the 2008 financial crisis) rather than factors directly tied to
+the climate state. In this example many global social, political and
+economic factors are the primary causes of global green house gas
+emission, and while the climate system may effect these factors, the
+historical evidence suggests that the climate system exerts a
+relatively small impact (with tragic consequences)
+\citep{arto2014drivers}.
+
+\emph{/discuss data problem? - we know
+  don't observe the future of green house gas emissions/}.
+
+\begin{figure}
+  \includegraphics[]{./forcing-graph.pdf}
+  \caption{A generic graph asserting an assumption that there are
+    forcing external to the evolution of the state-space}
+  \label{fig:forcing}
+\end{figure}
+
+Generally this logic applies to many scenarios on the "human-climate"
+interface, such as land-use land-cover change in urban centers where
+urban planning is relatively independent of recent climate
+history. The general graph in Figure \ref{fig:forcing} is
+representative of many such scenarios at the human-climate interface,
+and because the state space does not affect the cause, there are no
+unblocked backdoor paths through the unobserved portions of the state
+space. Causal inference is particularly tractable for this class of
+problems.
+
+\section{Relation to previous work and ``causal discovery''}
 \label{sec:discovery}
-% causal discovery = infering causal graph from data}
 The term ``causal inference'' has been used to describe two
 techniques:
 
@@ -507,202 +649,6 @@ infer graph structure from data (Section \ref{sec:necess-cond-caus}).
   described it seems like it leads to the invalidation of ``causal
   discovery''
 }
-\section{Necessary conditions for causal identification in the earth
-  systems}
-\label{sec:necess-cond-caus}
-\subsection{Causal identification when the state space is estimable}
-\label{state-space}
-
-Earth science systems are stochastic dynamical system evolving through
-time according to an underlying state state \citep{majda-state}. This
-offers both advantages and challenges for causal inference. Challenges
-involve estimating the state space from observations, while advantages
-include the temporal ordering of events; we know that future events
-can have no causal effect on the past.
-
-First we consider a generic scenario in a simple temporal system with
-no spatial component, where we are interested in the causal effect of
-$C(t)$ on $E(t+1)$, where $C$ and $E$ are processes within the larger
-system's \textit{observed} state $S$. Note that in general we do not
-fully observe the state of the system, so there will also be an
-unobserved portion of the state space $U$. We denote the portion of
-the observed state space excluding $C$ and $E$ as $S'$. $S'(t)$,
-$U(t)$, $C(t)$ and $E(t)$ all affect $S'(t+1)$, $U(t+1)$, $C(t+1)$,
-and $E(t+1)$ (Figure \ref{fig:generic}). In order to calculate the
-causal effect of $C(t)$ on $E(t+1)$, we must block all back door paths
-from $C(t)$ to $E(t+1)$. In this generic scenario, this involves
-conditioning on $S'(t)$, $U(t)$, and $E(t)$:
-
-\begin{figure}
-  \includegraphics[]{./generic-graph.pdf}
-  \caption{A generic graph of the earth system sequence, limited to a
-    3 time sequence subset of the infinite sequence. $S$ and $U$ refer
-    to the observed and unobserved portions of the state space,
-    respectively.  At time steps $t$ and $t+1$ the observed portion
-    of the state space is broken up into three events: $C$, $E$, and
-    $S'(t)$, which is all parts of $S$ excluding $C$ and $E$. $C$ is a
-    generic portion of the state space we are interested in as a cause, and $E$ is
-    a generic portion of the state space we are interested in as an effect.}
-  \label{fig:generic}
-\end{figure}
-
-\begin{equation}
-  \label{naive}
-  P(E(t+1)| do(C(t))) = \int_{S'(t)} \int_{U(t)} \int_{E(t)}  P(E(t+1) | C(t), S'(t),
-  U(t), E(t)) \; P(E(t)) \; P(U(t)) \; P(S'(t))
-\end{equation}
-
-However, we do not observe $U(t)$, and cannot block the path through $U(t)$. We may,
-however, be able to estimate $U(t)$ by leveraging Takens's theorem and
-using lagged observations of the partial state space, going back in
-time (e.g. $S(t-1)$, $S(t-2)$, etc.). In this application, this
-approach presents problems. The reconstruction will estimate $S$
-rather than $S'$, which includes $C(t)$ because $C$ is a part of the
-state space. Fortunately, we can also block backdoor paths by
-conditioning on $S(t-1)$ and $U(t-1)$. If we reconstruct $U(t-1)$
-using lagged observations of $S$ before $t-1$, we can block backdoor
-paths and calculate a causal effect. So, the more tractable approach
-to blocking backdoor paths in the earth system, where we only ever
-partially observe the state space, is:
-
-\begin{equation}
-  \label{ce}
-  P(E(t+1)| do(C(t))) = \int_{S(t-1)} \int_{U(t-1)} P(E(t+1) | C(t), S(t-1),
-  U(t-1)) \; P(U(t-1)) \; P(S(t-1)),
-\end{equation}
-
-where $U(t-1)$ is statistically reconstructed using lagged
-observations of the state space $S(t')$, where
-$t' \in \{-\infty, t-2\}$ (justified by Takens's theorem).
-
-To extend this result on a purely temporal dynamical system to a
-spatio-temporal system, we apply the concept of lightcones
-\citep{PhysRevLett.84.1890,
-  montanez2015licors,doi:10.1063/1.5021130}. Lightcones leverage our
-general knowledge or assumptions about the speed with the influence of
-events can propagate through the system. For a general physical
-system, an upper limit on the propagation speed is the speed of
-light. For the atmosphere, a useful upper limit is the speed of
-sound. However, in many scenarios (e.g. if we do not care about the
-effect of soundwaves), we can use a more reasonable speed of
-propagation like the advection (wind) speed, or the phase/group speed
-of gravity waves. The propagation speed of the system constrains
-portions of the state space that can affect an event at a given time
-and spatial extent. The past lightcones are the set of all events in a
-spatiotemporal system that can \textit{affect} a single event at a
-given location and time. The future lightcones are the set of all
-events in a spatiotemporal system that are \textit{affected by} an
-event at a given location and time. Formally, the past lightcone
-($L^-$) is the set of all events defined by:
-
-\begin{equation}
-  L^-(r,t) \equiv \left\{ X_{t'}^{r'} \, : \, t' \leq t \text{ and }
-    ||r'-r|| \leq c(t-t')\right\},
-\end{equation},
-
-where $c$ is the propagation speed. The future lightcone is defined
-similarly:
-
-\begin{equation}
-  L^+(r,t) \equiv \left\{ X_{t'}^{r'} \, : \, t' \geq t \text{ and }
-    ||r'-r|| \leq c(t'-t) \right\}
-\end{equation}.
-
-We can use the past lightcones of our cause and out effect to
-determine the spatio-temporal locations over which we must $S(t-1)$ to
-block backdoor paths.
-
-An example will aid visualizing lightcones (Figure
-\ref{fig:lightcone}), and their consequences for causal
-inference. Consider a scenario where half-hourly observations are
-available, we assume the propagation speed is $25 m/s$, and that we
-are interested in the affect of $C(x=0 \, m, y=0 \, m, t=0 \, hr)$ on
-$E(x=0 \, m, y=0 \, m , t=0.5 \, hr)$. In this case, we would need to
-estimate $S(t=-0.5 \, hr)$, over all locations that could affect
-\emph{both} $C(0,0,0)$ and $E(0,0,0.5)$.  For a propagation speed of
-$25 m/s$, this requires estimating the state over a circular area
-centered at $x=0$, $y=0$, and with a radius
-$25 \, m/s \cdot 1800 \, s = $ 45 \, km (Figure
-\ref{fig:lightcone}). However, because we only partially observe the
-state space, we must use lagged observations going back in time,
-including all observations of events within the intersection of the
-past lightcones of the cause and effect. For example, at $-1$ hours
-our circular radius would be 90 km, at $-1.5$ hr: 135 km (Figure
-\ref{fig:lightcone}), and at $-2$ hr: 180 km. As one can observe, the
-problem because statistically and computationally harder the more lags
-that are required to estimate are state space. If the number of lags
-in inversely proportional to the observational coverage of the state
-space, the value of earth system observations becomes apparent. A
-software package that automatically identifies the spatiotemporal
-extent over which the state space must be estimated to block backdoor
-paths for a given cause and effect is available at
-\url{https://github.com/massma/spacetime-causality}.
-
-\begin{figure}
-  \includegraphics[width=0.75\textwidth]{./lightcone.pdf}
-  \caption{A graphical aid to understanding lightcones in a two
-    dimensional system. Given a maximum propagation speed in our
-    system of 25 m/s, the circles depict the areas that may affect
-    both the cause and the effect at time $t=-0.5 \, hr$,
-    $t=-1.0 \, hr$, and $t=-1.5 \, hr$. In order to block back door
-    paths in a spatiotemporal system, we would need to condition on
-    the state space over these areas.}
-  \label{fig:lightcone}
-\end{figure}
-
-In practice we do not know the number of lagged observations of the
-state space that are required for reconstruction at time $t-1$. One
-approach is to use the data for guidance. This involves predicting the
-cause and the effect with iteratively increasing numbers of lags. When
-the addition of more time lags does not improve the prediction of the
-cause and effect, we have confidence that the relevant portions of
-state space at time $t=t-1$ has been reconstructed by the time series.
-
-\textit{/discuss the more holistic approach suggested by shalizi of
-  looking at predictive state space reconstructions and examining the
-  changes needed to change state?/}
-
-\subsection{Applications at the human-earth system interface: when the
-  cause is approximately independent of the system}
-\label{human}
-
-Causal inference becomes substantially more tractable under an
-assumption that our causes of interest are independent from the
-evolution of the state space (Figure \ref{fig:forcing}). While the
-earth system certainly affects all processes on earth, in some cases
-this may still be a reasonable assumption. For example, recent human
-history demonstrates that global human actions are relatively
-independent of the climate state \citep{arto2014drivers}. That is, we
-have failed to reduce green house gas emissions even as global
-temperature increased. Instances of reduced rises in global green
-house gas emissions are usually due to global economic recession
-(e.g. the 2008 financial crisis) rather than factors directly tied to
-the climate state. In this example many global social, political and
-economic factors are the primary causes of global green house gas
-emission, and while the climate system may effect these factors, the
-historical evidence suggests that the climate system exerts a
-relatively small impact (with tragic consequences)
-\citep{arto2014drivers}.
-
-\emph{/discuss data problem? - we know
-  don't observe the future of green house gas emissions/}.
-
-\begin{figure}
-  \includegraphics[]{./forcing-graph.pdf}
-  \caption{A generic graph asserting an assumption that there are
-    forcing external to the evolution of the state-space}
-  \label{fig:forcing}
-\end{figure}
-
-Generally this logic applies to many scenarios on the "human-climate"
-interface, such as land-use land-cover change in urban centers where
-urban planning is relatively independent of recent climate
-history. The general graph in Figure \ref{fig:forcing} is
-representative of many such scenarios at the human-climate interface,
-and because the state space does not affect the cause, there are no
-unblocked backdoor paths through the unobserved portions of the state
-space. Causal inference is particularly tractable for this class of
-problems.
 
 \section{Discussion}
 

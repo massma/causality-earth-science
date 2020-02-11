@@ -50,6 +50,7 @@ sunlight a c gen = toa gen >>= \toa' ->
 
 cloud :: Double -> GenIO -> IO Bool
 cloud a = D.bernoulli (0.5 + aerosolAffectCloud * (a - 0.5))
+  -- deterministic: if a > 0.5 then return True else return False
 
 aerosol :: GenIO -> IO Double
 aerosol = uniform

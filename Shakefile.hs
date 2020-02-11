@@ -51,7 +51,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         ]
   let circofigs = ["bidirected.pdf"]
 
-  let figs = ["lightcone.pdf", "naiveCloudSunlight.pdf", "aerosolSunlight.pdf"]
+  let figs = ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"]
 
   want ["causality.pdf"]
 
@@ -71,11 +71,6 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
       else return ()
     need ["references.bib", "def.tex"]
     cmd_ "bibtex" $ out -<.> ""
-
-  "lightcone.pdf" %> \out -> do
-    need ["stack.yaml"]
-    cmd_ "stack" ["exec", "spacetime-cause-exe", "--", out]
-
 
   ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"] &%> \[naive, joint] -> do
     need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", "Shakefile.hs"]
