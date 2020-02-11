@@ -14,7 +14,7 @@ import qualified System.Directory              as D
 import           Text.Printf
 import qualified CloudSunlight
 import qualified GnuplotParser
-
+import qualified GraphDiagrams
 
 genGraphvis :: FilePath -> FilePath -> Rules ()
 genGraphvis cmdStr pat = pat %> \out -> do
@@ -46,12 +46,12 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
   let dotfigs =
         [ "cloud-aerosol.pdf"
         , "mutilated-cloud-aerosol.pdf"
-        , "generic-graph.pdf"
         , "forcing-graph.pdf"
         ]
   let circofigs = ["bidirected.pdf"]
 
-  let figs = ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"]
+  let figs =
+        ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf", "generic-graph.pdf"]
 
   want ["causality.pdf"]
 
@@ -71,6 +71,11 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
       else return ()
     need ["references.bib", "def.tex"]
     cmd_ "bibtex" $ out -<.> ""
+
+  "generic-graph.pdf" %> \out -> do
+    need ["src/GraphDiagrams.hs"]
+    putInfo ("# GraphDiagrams for " <> out)
+    liftIO $ GraphDiagrams.genericGraph out
 
   ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"] &%> \[naive, joint] -> do
     need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", "Shakefile.hs"]

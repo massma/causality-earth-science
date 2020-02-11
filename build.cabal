@@ -40,5 +40,6 @@ library
   exposed-modules:
       CloudSunlight
       GnuplotParser
+      GraphDiagrams
   hs-source-dirs:
       src
