@@ -458,17 +458,17 @@ requires assumptions about the unobserved portion of the state
 space. For example, without assumptions we know that the unobserved
 portion of the state space will introduce confounding for any causal
 affect of interest (Figure \ref{fig:generic}). We do not observe the
-state space at every time (e.g. $S(t-1)$ in Figure \ref{fig:generic}),
-and at any given time, we do not observe the state space at all
-locations and for all state variables (e.g. $S(t)$ and $S(t-2)$ in
-Figure \ref{fig:generic}). So, if we are interested in the causal
-effect of any state variable on some a variable ($E$) at time $t+1$,
-then the causal effect will be confounded by the unobserved portions
-of the state space, and calculating a causal effect is impossible
-(un-identifable) without additional assumptions. We will apply causal
-graph theory to identify such additional assumptions that would make
-the caulcations of causal effects tractable, and may be reasonable in
-many earth science scenarios.
+state space at every time (e.g. $S(t-1/2)$ in Figure
+\ref{fig:generic}), and at any given time, we do not observe the state
+space at all locations and for all state variables (e.g. $S(t)$ and
+$S(t-1)$ in Figure \ref{fig:generic}). So, if we are interested in the
+causal effect of any state variable on some a variable ($E$) at time
+$t+1$, then the causal effect will be confounded by the unobserved
+portions of the state space, and calculating a causal effect is
+impossible (un-identifable) without additional assumptions. We will
+apply causal graph theory to identify such additional assumptions that
+would make the caulcations of causal effects tractable, and may be
+reasonable in many earth science scenarios.
 
 \begin{figure}
   \includegraphics[]{./generic-graph.pdf}
@@ -485,6 +485,7 @@ many earth science scenarios.
 
 \subsection{Statistical reconstruction of the state space with time
   lagged observations}
+\label{sec:stat-reconstr-state}
 
 Takens's theorem implies that we can reconstruct the unobserved
 portions of the state space using lagged observations back in time. In
@@ -505,7 +506,7 @@ interventions on observable variables considered thus far. For
 example, say that we reconstructed our state space from available
 observations, and this reconstruction reduced to a discrete state
 space of 10 states, with associated patterns in the observations at
-time $<t$. If we are interested in the effect of a change in state on
+time $\leq t$. If we are interested in the effect of a change in state on
 a process at time $t+1$, for example a change from state $1$ to state
 $2$, this correspondes to an intervention on the \textit{entire state
   space at time $t$}. This includes the unobserved portions of the
@@ -519,86 +520,138 @@ a singificant barrier to interpretation, and motivates the exploration
 of stronger assumptions that result in a clearer interetation (at the
 cost of an increased likelihood that the assumptions are voilated).
 
+In practice we also do not know the number of lagged observations of
+the state space that are required for reconstruction at time
+$t-1$. One approach is to use the data for guidance. This involves
+predicting the the observations at time $t$ with iteratively
+increasing numbers of lags. When the addition of more time lags does
+not improve the prediction of variables at time $t$, we have
+confidence that the relevant portions of state space at time $t=t-1$
+has been reconstructed by the time series. However even this approach
+can be problematic; while predictive power may plateau as we add more
+temporal observations back in time, we could still gain causally
+relevant knowledge going back further in time. For example, a
+significant drought last year may impact ecosystem state in the
+current year, but predicitive power may locally plateau going back in
+time 2 months. This example highlights the challenges associated with
+any method relying on state space reconstruction with lagged
+observations: to be sure we reconstruct the state space we must
+include observations from a potentially infinite temporal extent.
+
 \begin{figure}
   \includegraphics[]{reconstruction.pdf}
   \caption{The causal graph under an assumption that we can
-    reconstrcut the state space. Each node S(t) is reconstructed from
-    the observable potions of the state space at lagged times $< t$.}
+    reconstrcut the state space, for a two time step sequence. Each
+    node S(t) is reconstructed from the observable potions of the
+    state space at lagged times $< t$. We can examine the causal
+    effect of the reconstructed state on any future observed process,
+    represented by $E(t+1)$.}
   \label{fig:reconstructed}
 \end{figure}
 
+\subsection{Missing temporal observations induce independent random
+  variations in cause and effect}
+\label{sec:miss-temp-observ}
 
-
-First we consider a generic scenario in a simple temporal system with
-no spatial component, where we are interested in the causal effect of
-$C(t)$ on $E(t+1)$, where $C$ and $E$ are processes within the larger
-system's \textit{observed} state $S$. Note that in general we do not
-fully observe the state of the system, so there will also be an
-unobserved portion of the state space $U$. We denote the portion of
-the observed state space excluding $C$ and $E$ as $S'$. $S'(t)$,
-$U(t)$, $C(t)$ and $E(t)$ all affect $S'(t+1)$, $U(t+1)$, $C(t+1)$,
-and $E(t+1)$ (Figure \ref{fig:generic}). In order to calculate the
-causal effect of $C(t)$ on $E(t+1)$, we must block all back door paths
-from $C(t)$ to $E(t+1)$. In this generic scenario, this involves
-conditioning on $S'(t)$, $U(t)$, and $E(t)$:
-
+If we can assume that the missing temporal observations
+(e.g. $S(t-1/2)$ in Figure \ref{fig:generic}) induce independent
+random variations in the cause and effect, conditional on $S(t-1)$,
+then the causal graph reduces to Figure \ref{fig:no-temporal}. In this
+case, if we can reconstruct the state space at time $t-1$ using lagged
+observations at time t $\leq t-1$, then we can block all backdoor
+paths between our cause $C(t)$ and any future effect $E(t+1)$. In this
+case, the causal effect would be calculated as:
 
 \begin{equation}
-  \label{naive}
-  P(E(t+1)| do(C(t))) = \int_{S'(t)} \int_{U(t)} \int_{E(t)}  P(E(t+1) | C(t), S'(t),
-  U(t), E(t)) \; P(E(t)) \; P(U(t)) \; P(S'(t))
+  P(E(t+1)| do(C(t)=c)) = \int_{S(t-1)} P(E(t+1) \, | \, C(t)=c,
+  S(t-1) = s
+  )\; P(S(t-1)=s) \, d s,
 \end{equation}
 
-Unforunately, we do not observe $U(t)$ so Equation (\ref{naive}) is
-incalculable. However, it may be possible to estimate $U(t)$ by
-leveraging Takens's theorem and using lagged observations of the
-partial state space, going back in time (e.g. $S(t-1)$, $S(t-2)$,
-etc.). Still, this approach presents problems if we choose to
-reconstruct $S$ and $U$ at time $t$. The reconstruction will estimate
-$S$ rather than $S'$, which includes $C(t)$ because $C$ is a part of
-the state space. So, our cause will be shadowed by our reconstruction
-of the state space and our causal effect will be biased.  Fortunately,
-we can also block backdoor paths by conditioning on $S(t-1)$ and
-$U(t-1)$. If we reconstruct $U(t-1)$ using lagged observations of $S$
-before $t-1$, we can block backdoor paths and calculate a causal
-effect. So, the correct approach to blocking backdoor paths in the
-earth system, where we only ever partially observe the state space,
-is:
+where $S(t-1)$ is reconstructed from time lags of observations at
+times $\leq t-1$. From the graph it may appear that we could also
+block backdoor paths by conditioning on $S'(t)$. However, under these
+assumptions $S'(t)$ is incalculable because if we attempt to
+reconstruct $S'(t)$ using lagged observations of the state space, the
+reconstruction will estimate $S$ rather than $S'$, which includes
+$C(t)$ because $C$ is a part of the state space. So, our cause will be
+shadowed by our reconstruction of the state space and our causal
+effect will be biased. We further must assume that the missing
+temporal observation induce independent random variations in the cause
+and effect; otherwise there would be an open backdoor path between the
+cause and effect through the unobserved time slice. Relative to
+Section \ref{sec:stat-reconstr-state}, the advantage of this approach
+to causal inference is that we can calculate the causal effects of
+individual observations (e.g. soil moisture), rather than needing to
+interpret the causal impact of the entire state holistically. However,
+this approach requires an additional assumption that the missing
+temporal observations do not induce dependencies between the cause and
+effect of interest. As with Section \ref{sec:stat-reconstr-state}, we
+must be able to reconstruct the state space, which may not always be
+possible, and may also muddy interpretation.
+
+\begin{figure}
+  \includegraphics[]{no-temporal.pdf}
+  \caption{The causal graph under an assumption that missing temporal
+    observations (e.g. $S(t-1/2)$ in  Figure \ref{fig:generic}) induce
+    indepednent random variations in the cause ($C(t)$) and effect
+    ($E(t+1)$). $S'(t)$ denotes the state space, not including the
+    cause $C(t)$.}
+  \label{fig:no-temporal}
+\end{figure}
+
+\subsection{The unobserved portion of the state space does not affect
+  the cause}
+\label{sec:observ-port-state}
+
+If we assume that we observe all portions of the state space that
+affect the effect, then we can calculate the effect of any
+state variable on future processes. In this case, the graph is as in
+Figure \ref{fig:observed}. If we can assume that there are no
+interactions between observations at time $t$ then we can calulcate
+the causal effect as:
 
 \begin{equation}
-  \label{ce}
-  P(E(t+1)| do(C(t))) = \int_{S(t-1)} \int_{U(t-1)} P(E(t+1) | C(t), S(t-1),
-  U(t-1)) \; P(U(t-1)) \; P(S(t-1)),
+  P(E(t+1)| do(C(t)=c)) = \int_{Obs'(t)} P(E(t+1) \, | \, C(t)=c,
+  Obs'(t) = o
+  )\; P(Obs'(t-1)=o) \, d \, o,
 \end{equation}
 
-where $U(t-1)$ is statistically reconstructed using lagged
-observations of the state space $S(t')$, where
-$t' \in \{-\infty, t-2\}$ (justified by Takens's theorem).
+where $Obs'(t)$ are all observations at time $t$, not including the
+cause $C(t)$. Whether or not there are interactions between
+observations at time $t$ is a strong function of the temporal and
+spatial extent of the observations. If observations are instanteneous
+point observatins precisiely indexed in time, then interactions
+between them can likely be ignored. However, often the spatial and/or
+temporal extents of observations overlap, and in this case an
+assumption of zero interactions between observations is not
+justified. In this case, we can still block backdoor paths by
+conditioning on $Obs(t-1)$:
 
-In practice we do not know the number of lagged observations of the
-state space that are required for reconstruction at time $t-1$. One
-approach is to use the data for guidance. This involves predicting the
-the observations at time $t$ with iteratively increasing numbers of
-lags. When the addition of more time lags does not improve the
-prediction of variables at time $t$, we have confidence that the
-relevant portions of state space at time $t=t-1$ has been
-reconstructed by the time series.
+\begin{equation}
+  P(E(t+1)| do(C(t)=c)) = \int_{Obs(t-1)} P(E(t+1) \, | \, C(t)=c,
+  Obs(t-1) = o
+  )\; P(Obs(t-1)=o) \, d \, o.
+\end{equation}
 
-Reconstructing state spaces can be computationally challenging. For
-spatiotemporal systems, \emph{lightcones} are a tool that can be used
-to filter observations that can and cannot affect a process at a given
-point in space and time \citep{PhysRevLett.84.1890,
-  montanez2015licors,doi:10.1063/1.5021130}. We assume a maximum
-propagation speed for the system, and only include observations in the
-state space recostruction whose influece can reach the state at the
-time and location of interest, given our assumed propagation
-speed. For generic physical systems the speed of propagation would be
-the speed of light, and for the atmosphere a conservative estimate
-would be the speed of sound. However less conservative assumptions
-about the propagation speed can be used; e.g. the group velocity of
-gravity waves or a maximum bound on advection speed. This less
-conservative assumptions would filter more observations out of the
-problem.
+The assumption that we observe all variables relevant to an effect is
+a strong assumption. However, it provides significant benefits both in
+terms of the statistical complexity of estimating the causal effect,
+as well as in intepretation of the causal effect. We do not need to
+reconstruct the state space  using lagged observations, which can be a
+statistically and computationally challenging problem. Additionally,
+the assumption that we observe everything relevant to the effect is
+much easier to interpret relative to an assumption about the degree to
+which we can (or cannot) reconstruct the relevant state space with
+lagged observations.
+
+\begin{figure}
+  \includegraphics[]{observe-everything.pdf}
+  \caption{The causal graph under an assumption that we observe all
+    portions of the state causally relevant to the effect. $Obs'$ are
+    all of the observations excluding $C$.}
+  \label{fig:observed}
+\end{figure}
 
 \subsection{Applications at the human-earth system interface: when the
   cause is approximately independent of the system}

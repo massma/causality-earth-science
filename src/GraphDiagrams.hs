@@ -67,7 +67,12 @@ labelState ts = atPoints ps labels
  where
   ps     = fmap (\t -> P (r2 (0, diagramUnits (negate t)))) ts
   labels = fmap
-    (\t -> boundedLabel (if t == 0 then "S(t)" else (printf "S(t%1.0f)" t)))
+    (\t -> boundedLabel $ case t of
+      x | x == 0  -> "S(t)"
+        | x == -1 -> "S(t-1/2)"
+        | x == -2 -> "S(t-1)"
+      _ -> error "unimplemented label state"
+    )
     ts
 
 bidirectedArrow fpath = displayDiagram fpath d

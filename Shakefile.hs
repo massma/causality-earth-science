@@ -49,6 +49,8 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         , "mutilated-cloud-aerosol.pdf"
         , "forcing-graph.pdf"
         , "reconstruction.pdf"
+        , "no-temporal.pdf"
+        , "observe-everything.pdf"
         ]
 
   let figs =
