@@ -487,7 +487,17 @@ many earth science scenarios.
   lagged observations}
 
 Takens's theorem implies that we can reconstruct the unobserved
-portions of the state space by
+portions of the state space using lagged observations back in time. In
+this case, the causal graph is greatly simplified (Figure
+
+\begin{figure}
+  \includegraphics[]{reconstruction.pdf}
+  \caption{The causal graph under an assumption that we can
+    reconstrcut the state space. Each node S(t) is reconstructed from
+    the observable potions of the state space at lagged times $< t$.}
+\end{figure}
+
+
 
 
 First we consider a generic scenario in a simple temporal system with

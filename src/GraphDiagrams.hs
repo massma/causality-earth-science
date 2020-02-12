@@ -10,6 +10,7 @@
 
 module GraphDiagrams
   ( genericGraph
+  , bidirectedArrow
   )
 where
 
@@ -66,6 +67,31 @@ labelState ts = atPoints ps labels
   labels = fmap
     (\t -> boundedLabel (if t == 0 then "S(t)" else (printf "S(t%1.0f)" t)))
     ts
+
+bidirectedArrow fpath = displayDiagram fpath d
+ where
+  ps       = [P (r2 (diagramUnits 0, 0)), P (r2 (diagramUnits 3, 0))]
+  (n1, n2) = ((0 :: Int), (3 :: Int))
+  shaft'   = arc xDir (-1 / 5 @@ turn)
+  arrowStyle =
+    (  with
+    &  arrowHead
+    .~ spike
+    &  arrowShaft
+    .~ shaft'
+    &  arrowTail
+    .~ spike'
+    &  tailTexture
+    .~ solid black
+    &  shaftStyle
+    %~ dashingN [0.01, 0.01] 0.01
+    &  lengths
+    .~ normal
+    )
+  d =
+    atPoints ps [observed "cloud" # named n1, observed "sunlight" # named n2]
+      # connectOutside n1 n2
+      # connectPerim' arrowStyle n1 n2 (2 / 12 @@ turn) (4 / 12 @@ turn)
 
 genericGraph fpath = displayDiagram
   fpath

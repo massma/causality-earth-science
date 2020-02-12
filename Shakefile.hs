@@ -27,6 +27,7 @@ genGraphvis cmdStr pat = pat %> \out -> do
 genDot :: FilePath -> Rules ()
 genDot = genGraphvis "dot"
 
+
 genCirco :: FilePath -> Rules ()
 genCirco = genGraphvis "circo"
 
@@ -47,18 +48,22 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         [ "cloud-aerosol.pdf"
         , "mutilated-cloud-aerosol.pdf"
         , "forcing-graph.pdf"
+        , "reconstruction.pdf"
         ]
-  let circofigs = ["bidirected.pdf"]
 
   let figs =
-        ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf", "generic-graph.pdf"]
+        [ "naiveCloudSunlight.pdf"
+        , "aerosolSunlight.pdf"
+        , "generic-graph.pdf"
+        , "bidirected.pdf"
+        ]
 
   want ["causality.pdf"]
 
   "causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
     let s = out -<.> "tex"
-    need ([b, s, "def.tex"] <> dotfigs <> circofigs <> figs)
+    need ([b, s, "def.tex"] <> dotfigs <> figs)
     Stdout o <- cmd "pdflatex" (b -<.> "tex")
     if isInfixOf "Rerun to get citations correct." o
       then cmd_ "pdflatex" ["--synctex=1", (b -<.> "tex")]
@@ -76,6 +81,11 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     need ["src/GraphDiagrams.hs"]
     putInfo ("# GraphDiagrams for " <> out)
     liftIO $ GraphDiagrams.genericGraph out
+
+  "bidirected.pdf" %> \out -> do
+    need ["src/GraphDiagrams.hs"]
+    putInfo ("# GraphDiagrams for " <> out)
+    liftIO $ GraphDiagrams.bidirectedArrow out
 
   ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"] &%> \[naive, joint] -> do
     need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", "Shakefile.hs"]
@@ -98,9 +108,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         trueDiff
       )
 
-  mapM_ genDot   dotfigs
-
-  mapM_ genCirco circofigs
+  mapM_ genDot dotfigs
 
   phony "clean" $ do
     liftIO $ putStrLn "Cleaning files in _build and dat"

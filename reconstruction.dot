@@ -1,0 +1,7 @@
+digraph G {
+	s[label="S(t)"];
+	e[label="E(t+1)"];
+
+	s -> e;
+
+}
