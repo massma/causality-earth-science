@@ -74,19 +74,9 @@ bidirectedArrow fpath = displayDiagram fpath d
   (n1, n2) = ((0 :: Int), (3 :: Int))
   shaft'   = arc xDir (-1 / 5 @@ turn)
   arrowStyle =
-    (  with
-    &  arrowHead
-    .~ spike
-    &  arrowShaft
-    .~ shaft'
-    &  arrowTail
-    .~ spike'
-    &  tailTexture
-    .~ solid black
-    &  shaftStyle
-    %~ dashingN [0.01, 0.01] 0.01
-    &  lengths
-    .~ normal
+    (with & arrowShaft .~ shaft' & arrowTail .~ spike' & shaftStyle %~ dashingN
+      [0.01, 0.01]
+      0.01
     )
   d =
     atPoints ps [observed "cloud" # named n1, observed "sunlight" # named n2]
