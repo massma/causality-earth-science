@@ -489,14 +489,43 @@ many earth science scenarios.
 Takens's theorem implies that we can reconstruct the unobserved
 portions of the state space using lagged observations back in time. In
 this case, the causal graph is greatly simplified (Figure
+\ref{fig:reconstructed}). If we assume that the state is
+reconstructable, then we can calulcate the causal effect of any
+reconstructed state on any future variable or process. The primary
+advantages of this approach is that it is the minimum assumption
+required to caclulate a causal effect in the generic earth system
+proposed in Figure \ref{fig:generic}. However there is no free lunch:
+the significant disadcantage of this approach is that we cannot
+examine the causal effect of a specific variable (e.g. soil moisture
+at time $t$) on the efffect; we limit ourselves to only examining the
+causal effect of changes in the entire state
+holistically. Additionally, this approach requires a shift in
+perspective from the relatively straightforward interpretation of
+interventions on observable variables considered thus far. For
+example, say that we reconstructed our state space from available
+observations, and this reconstruction reduced to a discrete state
+space of 10 states, with associated patterns in the observations at
+time $<t$. If we are interested in the effect of a change in state on
+a process at time $t+1$, for example a change from state $1$ to state
+$2$, this correspondes to an intervention on the \textit{entire state
+  space at time $t$}. This includes the unobserved portions of the
+state space. So, our intervention no longer consists of just
+intervenning on our observed variables to change them from state $1$
+to state $2$, but instead intervenning on our observed variables
+\emph{and all unobserved variables consistent with the system and
+  changes in the observed variables from state $1$ to $2$.}
+Conceptualizing unknowable changes in unobserved variables represents
+a singificant barrier to interpretation, and motivates the exploration
+of stronger assumptions that result in a clearer interetation (at the
+cost of an increased likelihood that the assumptions are voilated).
 
 \begin{figure}
   \includegraphics[]{reconstruction.pdf}
   \caption{The causal graph under an assumption that we can
     reconstrcut the state space. Each node S(t) is reconstructed from
     the observable potions of the state space at lagged times $< t$.}
+  \label{fig:reconstructed}
 \end{figure}
-
 
 
 
