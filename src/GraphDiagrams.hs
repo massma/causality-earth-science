@@ -26,7 +26,9 @@ observed label = text label <> node
 unObserved label = text label <> node # dashingN [0.01, 0.01] 0.01
 -- common default of pixel per inch is 150, so 5 x 3 in = 750 x 450 pixel
 
-renderSize = dims $ r2 (750, 450)
+-- | from: http://ipdfdev.com/2016/07/06/what-resolution-pdf-files/ ;
+-- maybe cairo point (1 inch = 72 points) = pixel
+renderSize = dims $ r2 (5 * 72, 3 * 72)
 
 boundedLabel l = text l <> square (nodeSize * 2) # lcA transparent
 
@@ -70,8 +72,8 @@ labelState ts = atPoints ps labels
 
 bidirectedArrow fpath = displayDiagram fpath d
  where
-  ps       = [P (r2 (diagramUnits 0, 0)), P (r2 (diagramUnits 3, 0))]
-  (n1, n2) = ((0 :: Int), (3 :: Int))
+  ps       = [P (r2 (diagramUnits 0, 0)), P (r2 (diagramUnits 2, 0))]
+  (n1, n2) = ((0 :: Int), (2 :: Int))
   shaft'   = arc xDir (-1 / 5 @@ turn)
   arrowStyle =
     (with & arrowShaft .~ shaft' & arrowTail .~ spike' & shaftStyle %~ dashingN
