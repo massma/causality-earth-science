@@ -18,7 +18,7 @@ import qualified GraphDiagrams
 
 genGraphvis :: FilePath -> FilePath -> Rules ()
 genGraphvis cmdStr pat = pat %> \out -> do
-  let s = out -<.> "dot"
+  let s = "dot" </> takeFileName out -<.> "dot"
   liftIO $ putStrLn s
   need [s]
   Stdout o <- cmd cmdStr ["-Tpdf", s]
@@ -26,7 +26,6 @@ genGraphvis cmdStr pat = pat %> \out -> do
 
 genDot :: FilePath -> Rules ()
 genDot = genGraphvis "dot"
-
 
 genCirco :: FilePath -> Rules ()
 genCirco = genGraphvis "circo"
@@ -40,11 +39,12 @@ generateFigGp out title = do
     .   GnuplotParser.parseGp
     <$> readFile' s
   cmd_ (Stdin (unlines (fmap show gp))) "gnuplot"
-  where s = out -<.> "gp"
+  where s = "gnuplot" </> takeFileName out -<.> "gp"
 
 main :: IO ()
 main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
-  let dotfigs =
+  let dotfigs = fmap
+        (("doc" </>) . ("figs" </>))
         [ "cloud-aerosol.pdf"
         , "mutilated-cloud-aerosol.pdf"
         , "forcing-graph.pdf"
@@ -53,62 +53,73 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         , "observe-everything.pdf"
         ]
 
-  let figs =
+  let figs = fmap
+        (("doc" </>) . ("figs" </>))
         [ "naiveCloudSunlight.pdf"
         , "aerosolSunlight.pdf"
         , "generic-graph.pdf"
         , "bidirected.pdf"
         ]
 
-  want ["causality.pdf"]
+  want ["doc/causality.pdf"]
 
-  "causality.pdf" %> \out -> do
+  "doc/causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
     let s = out -<.> "tex"
-    need ([b, s, "def.tex"] <> dotfigs <> figs)
-    Stdout o <- cmd "pdflatex" (b -<.> "tex")
+    let d = takeDirectory out
+    need ([b, s, d </> "def.tex"] <> dotfigs <> figs)
+    Stdout o <- cmd (Cwd d)
+                    "pdflatex"
+                    ["--synctex=1", dropDirectory1 (b -<.> "tex")]
     if isInfixOf "Rerun to get citations correct." o
-      then cmd_ "pdflatex" ["--synctex=1", (b -<.> "tex")]
+      then cmd_ (Cwd d)
+                "pdflatex"
+                ["--synctex=1", dropDirectory1 (b -<.> "tex")]
       else return ()
 
-  "causality.bbl" %> \out -> do
+  "doc/causality.bbl" %> \out -> do
     aux <- doesFileExist (out -<.> "aux")
+    let s = out -<.> "tex"
+    let d = takeDirectory out
     if not aux
-      then need (dotfigs <> figs) >> cmd_ "pdflatex" (out -<.> "tex")
+      then need ([s, d </> "def.tex"] <> dotfigs <> figs)
+        >> cmd_ (Cwd d) "pdflatex" (dropDirectory1 (out -<.> "tex"))
       else return ()
-    need ["references.bib", "def.tex"]
-    cmd_ "bibtex" $ out -<.> ""
+    need (fmap (d </>) ["references.bib", "def.tex"])
+    cmd_ (Cwd d) "bibtex" (dropDirectory1 out -<.> "")
 
-  "generic-graph.pdf" %> \out -> do
+  "//*generic-graph.pdf" %> \out -> do
     need ["src/GraphDiagrams.hs"]
     putInfo ("# GraphDiagrams for " <> out)
     liftIO $ GraphDiagrams.genericGraph out
 
-  "bidirected.pdf" %> \out -> do
+  "//*bidirected.pdf" %> \out -> do
     need ["src/GraphDiagrams.hs"]
     putInfo ("# GraphDiagrams for " <> out)
     liftIO $ GraphDiagrams.bidirectedArrow out
 
-  ["naiveCloudSunlight.pdf", "aerosolSunlight.pdf"] &%> \[naive, joint] -> do
-    need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", "Shakefile.hs"]
-    liftIO $ D.createDirectoryIfMissing True "dat"
-    (estDiff, naiveDiff, trueDiff) <- liftIO
-      $ CloudSunlight.cloudSunlightExperiment 1000
-    generateFigGp
-      naive
-      (printf
-        "Average sunlight difference: %5.2f W/m^2 (true effect of cloud on sunlight: %3.0f W/m^2)"
-        naiveDiff
-        trueDiff
-      )
-    liftIO $ putStrLn (printf "Estimated difference: %5.2f W/m^22" estDiff)
-    generateFigGp
-      joint
-      (printf
-        "Effect of cloud on sunlight as estimated from data: %5.2f W/m^2 (true effect: %3.0f W/m^2)"
-        estDiff
-        trueDiff
-      )
+  ["//*naiveCloudSunlight.pdf", "//*aerosolSunlight.pdf"]
+    &%> \[naive, joint] -> do
+          need ["src/CloudSunlight.hs", "src/GnuplotParser.hs", "Shakefile.hs"]
+          liftIO $ D.createDirectoryIfMissing True "dat"
+          (estDiff, naiveDiff, trueDiff) <- liftIO
+            $ CloudSunlight.cloudSunlightExperiment 1000
+          generateFigGp
+            naive
+            (printf
+              "Average sunlight difference: %5.2f W/m^2 (true effect of cloud on sunlight: %3.0f W/m^2)"
+              naiveDiff
+              trueDiff
+            )
+          liftIO
+            $ putStrLn (printf "Estimated difference: %5.2f W/m^22" estDiff)
+          generateFigGp
+            joint
+            (printf
+              "Effect of cloud on sunlight as estimated from data: %5.2f W/m^2 (true effect: %3.0f W/m^2)"
+              estDiff
+              trueDiff
+            )
 
   mapM_ genDot dotfigs
 
