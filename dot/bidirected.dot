@@ -1,0 +1,8 @@
+digraph G {
+	c[label="cloud (C)"];
+	s[label="sunlight (S)"];
+
+	c -> s;
+	s -> c [dir="both",style="dashed"];
+
+}
