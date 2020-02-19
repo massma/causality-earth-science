@@ -263,10 +263,11 @@ data where the ``true'' SCM is:
   SCM =
   \begin{cases}
     f_{aerosol} &: U_{aerosol} \sim \text{uniform (0, 1]}\\
-    f_{cloud} &: Cloudy | Clear \sim \text{bernoulli(aerosol)}     \\
+    f_{cloud} &: \text{Cloudy if } U_{cloud} + aerosol > 1; \;
+    U_{cloud} \sim \text{uniform (0, 1]}\\
     f_{sunlight} &: \begin{cases}
-      Cloudy &: 0.6 \cdot \text{clear sky radiation}  \\
-      Clear &: \text{clear sky radiation}
+      \text{Cloudy} &: 0.6 \cdot \text{clear sky radiation}  \\
+      \text{Clear} &: \text{clear sky radiation}
     \end{cases}
   \end{cases}
 \end{equation}
