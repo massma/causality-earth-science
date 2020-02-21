@@ -19,7 +19,7 @@ import qualified GraphDiagrams
 genGraphvis :: FilePath -> FilePath -> Rules ()
 genGraphvis cmdStr pat = pat %> \out -> do
   let s       = "dot" </> takeFileName out -<.> "dot"
-  let figtype = takeExtension out
+  let figtype = drop 1 $ takeExtension out
   liftIO $ putStrLn s
   need [s]
   Stdout o <- cmd cmdStr ["-T" <> figtype, s]
