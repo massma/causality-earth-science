@@ -18,10 +18,11 @@ import qualified GraphDiagrams
 
 genGraphvis :: FilePath -> FilePath -> Rules ()
 genGraphvis cmdStr pat = pat %> \out -> do
-  let s = "dot" </> takeFileName out -<.> "dot"
+  let s       = "dot" </> takeFileName out -<.> "dot"
+  let figtype = takeExtension out
   liftIO $ putStrLn s
   need [s]
-  Stdout o <- cmd cmdStr ["-Tpdf", s]
+  Stdout o <- cmd cmdStr ["-T" <> figtype, s]
   liftIO $ BS.writeFile out o
 
 genDot :: FilePath -> Rules ()
