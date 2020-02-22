@@ -84,13 +84,17 @@ Earth science.
 \label{sec:causal-graphs-pearls}
 % intro causal graphs}
 
-Causal graphs, introduced in \citep{pearl1995causal}, are directed
+Causal graphs, introduced in \citet{pearl1995causal}, are directed
 acyclic graphs (DAGs) that encode our assumptions about the causal
-dependencies of a system. One draws directed edges (e.g. arrows) from
-variables that are causes to effects. We will demonstrate causal
-graphs with a simplified toy example examining clouds, aerosols, and
-surface solar radiation/sunlight (Figure \ref{fig:toy}). The causal
-graph consists of:
+dependencies of a system. Causal graphs are useful tools because they
+can be drawn by any domain expert with no required knowledge of math
+or probability, but they also represent formal mathematical objects
+with specific meaning. A domain expert simply draws directed edges
+(e.g. arrows) from variables that are causes to effects. We illustrate
+causal graphs and their mathematical consequences with a simplified
+toy example examining clouds, aerosols, and surface solar
+radiation/sunlight (Figure \ref{fig:toy}). Our causal graph consists
+of:
 
 \begin{figure}
   % consider \noindent\include... [width=0.75\textwidth]...
@@ -114,19 +118,21 @@ Causal graphs encode our assumptions about how the system behaves, and
 the nodes and edges that are \textit{missing} from the graph often
 represent strong assumptions. For example, in the
 cloud-aerosol-sunlight example, clouds also affect aerosols; e.g. by
-increasing the likelihood that aerosol will be scoured from the
-atmosphere during precipitation. By not including an edge from cloud
-to aerosol, we are making a strong assumption that we are ignoring the
-effect of clouds on aerosols. Considering this example is intended to
-be pedagogical for introducing causal theory to the readers, we will
-continue with the graph as drawn in Figure \ref{fig:toy} (Section
-\ref{sec:necess-cond-caus} explores realistic Earth system graphs). Causal
-graphs are very useful tools because they can be drawn by any domain
-expert with no required knowledge of math or probability, but they
-also represent formal mathematical objects with a very specific
-meanings. For example, as a general probabilistic graphical model, the
-graph in Figure \ref{fig:toy} represents a specific factorization of
-the joint distribution:
+increasing the likelihood that aerosol will be scavenged from the
+atmosphere during precipitation
+\citep[e.g.,][]{radke-scavenge-1980}. By not including an edge from
+cloud to aerosol, we are making a strong assumption that we are
+ignoring the effect of clouds on aerosols. Considering this example is
+intended to be pedagogical for introducing causal theory to the
+readers, we will continue with the graph as drawn in Figure
+\ref{fig:toy} (Section \ref{sec:necess-cond-caus} explores realistic
+Earth system graphs).
+
+Even though probablistic reasoning is not required to construct a
+causal graph, the resulting graph encodes specific probablistic
+meaning. Interpreted as a general probabilistic graphical model, our
+example graph in Figure \ref{fig:toy} represents a specific
+factorization of the joint distribution:
 
 \begin{equation}
   P(A, C, S) = P(S \, | \,C, A) \, P(C \, | \, A) \, P(A),

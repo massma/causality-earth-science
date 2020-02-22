@@ -22,8 +22,13 @@ genGraphvis cmdStr pat = pat %> \out -> do
   let figtype = drop 1 $ takeExtension out
   liftIO $ putStrLn s
   need [s]
-  Stdout o <- cmd cmdStr ["-T" <> figtype, s]
-  liftIO $ BS.writeFile out o
+  if figtype == "pdf"
+    then do
+      Stdout o <- cmd cmdStr ["-Tps2", s]
+      cmd_ (StdinBS o) "ps2pdf" ["-", out]
+    else do
+      Stdout o <- cmd cmdStr ["-T" <> figtype, s]
+      liftIO $ BS.writeFile out o
 
 genDot :: FilePath -> Rules ()
 genDot = genGraphvis "dot"
@@ -42,24 +47,29 @@ generateFigGp out title = do
   cmd_ (Stdin (unlines (fmap show gp))) "gnuplot"
   where s = "gnuplot" </> takeFileName out -<.> "gp"
 
+figPath :: FilePath -> FilePath
+figPath = ("doc" </>) . ("figs" </>) . (<.> "pdf")
+
 main :: IO ()
 main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
   let dotfigs = fmap
-        (("doc" </>) . ("figs" </>))
-        [ "cloud-aerosol.pdf"
-        , "mutilated-cloud-aerosol.pdf"
-        , "forcing-graph.pdf"
-        , "reconstruction.pdf"
-        , "no-temporal.pdf"
-        , "observe-everything.pdf"
+        figPath
+        [ "cloud-aerosol"
+        , "mutilated-cloud-aerosol"
+        , "forcing-graph"
+        , "reconstruction"
+        , "no-temporal"
+        , "observe-everything"
+        , "unobserved-aerosol"
         ]
 
   let figs = fmap
-        (("doc" </>) . ("figs" </>))
-        [ "naiveCloudSunlight.pdf"
-        , "aerosolSunlight.pdf"
-        , "generic-graph.pdf"
-        , "bidirected.pdf"
+        figPath
+        [ "naiveCloudSunlight"
+        , "aerosolSunlight"
+        , "generic-graph"
+        , "cloud-aerosol-bidirected"
+        , "bidirected"
         ]
 
   want ["doc/causality.pdf"]
@@ -78,6 +88,17 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
                 ["--synctex=1", dropDirectory1 (b -<.> "tex")]
       else return ()
 
+  "//*cloud-aerosol-bidirected.pdf" %> \out -> withTempDir
+    (\dir -> do
+      let c    = figPath "cloud-aerosol"
+      let u    = figPath "unobserved-aerosol"
+      let b    = figPath "bidirected"
+      let temp = dir </> "temp.pdf"
+      need [c, u, b]
+      cmd_ "pdfjam" [c, u, "--nup", "2x1", "--landscape", "--outfile", temp]
+      cmd_ "pdfjam" [temp, b, "--nup", "1x2", "--outfile", out]
+    )
+
   "doc/causality.bbl" %> \out -> do
     aux <- doesFileExist (out -<.> "aux")
     let s = out -<.> "tex"
@@ -94,10 +115,10 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     putInfo ("# GraphDiagrams for " <> out)
     liftIO $ GraphDiagrams.genericGraph out
 
-  "//*bidirected.pdf" %> \out -> do
+  "//*" </> "bidirected.pdf" %> \out -> do
     need ["src/GraphDiagrams.hs"]
     putInfo ("# GraphDiagrams for " <> out)
-    liftIO $ GraphDiagrams.bidirectedArrow out
+    liftIO $ GraphDiagrams.biDirected out
 
   ["//*naiveCloudSunlight.pdf", "//*aerosolSunlight.pdf"]
     &%> \[naive, joint] -> do
@@ -125,6 +146,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
   mapM_ genDot dotfigs
 
   phony "clean" $ do
-    liftIO $ putStrLn "Cleaning files in _build and dat"
-    removeFilesAfter "_build" ["//*"]
-    removeFilesAfter "dat"    ["//*"]
+    liftIO $ putStrLn "Cleaning files in _build, dat, and doc/figs"
+    removeFilesAfter "_build"           ["//*"]
+    removeFilesAfter "dat"              ["//*"]
+    removeFilesAfter ("doc" </> "figs") ["//*.pdf"]

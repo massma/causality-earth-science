@@ -10,12 +10,13 @@
 
 module GraphDiagrams
   ( genericGraph
-  , bidirectedArrow
+  , biDirected
   )
 where
 
 
 import           Diagrams.Prelude
+import           Diagrams.TwoD.Image
 import           Diagrams.Backend.Cairo
 import           Text.Printf
 
@@ -75,7 +76,11 @@ labelState ts = atPoints ps labels
     )
     ts
 
-bidirectedArrow fpath = displayDiagram fpath d
+biDirected fpath = do
+  img <- loadImageExt "doc/figs/cloud-aerosol.pdf"
+  case img of
+    Left  str -> error ("failed to load external image: " <> str)
+    Right x   -> displayDiagram fpath (image x ||| d)
  where
   ps       = [P (r2 (diagramUnits 0, 0)), P (r2 (diagramUnits 2, 0))]
   (n1, n2) = ((0 :: Int), (2 :: Int))

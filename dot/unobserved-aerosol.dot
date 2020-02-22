@@ -1,0 +1,10 @@
+digraph G {
+	c[label="cloud (C)"];
+	a[label="aerosol (A)", shape = "plaintext"];
+	s[label="sunlight (S)"];
+
+	a -> c[style = "dashed"];
+	c -> s;
+	a -> s[style = "dashed"];
+
+}

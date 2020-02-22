@@ -6,6 +6,9 @@
    - [[https://docs.haskellstack.org/en/stable/README/][Haskell Stack]]
    - [[https://www.graphviz.org/][Graphviz]]
    - [[http://www.gnuplot.info/][gnuplot]]
+   - [[https://poppler.freedesktop.org/][poppler]]
+   - [[https://github.com/DavidFirth/pdfjam][pdfjam]]
+   - [[https://www.cairographics.org/][cairo]]
 
 * Build instructions
 ** Windows (untested)
