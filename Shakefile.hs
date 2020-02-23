@@ -48,12 +48,12 @@ generateFigGp out title = do
   where s = "gnuplot" </> takeFileName out -<.> "gp"
 
 figPath :: FilePath -> FilePath
-figPath = ("doc" </>) . ("figs" </>) . (<.> "pdf")
+figPath = ("doc" </>) . ("figs" </>)
 
 main :: IO ()
 main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
-  let dotfigs = fmap
-        figPath
+  let dotFigs = fmap
+        (figPath . (<.> "pdf"))
         [ "cloud-aerosol"
         , "mutilated-cloud-aerosol"
         , "forcing-graph"
@@ -63,49 +63,50 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         , "unobserved-aerosol"
         ]
 
-  let figs = fmap
-        figPath
-        [ "naiveCloudSunlight"
-        , "aerosolSunlight"
-        , "generic-graph"
-        , "cloud-aerosol-bidirected"
-        , "bidirected"
-        ]
+  let figs = fmap (figPath . (<.> "pdf"))
+                  ["naiveCloudSunlight", "aerosolSunlight", "generic-graph"]
 
+  let texFigs = fmap figPath ["cloud-aerosol.tex"]
   want ["doc/causality.pdf"]
 
   "doc/causality.pdf" %> \out -> do
     let b = out -<.> "bbl"
     let s = out -<.> "tex"
     let d = takeDirectory out
-    need ([b, s, d </> "def.tex"] <> dotfigs <> figs)
-    Stdout o <- cmd (Cwd d)
-                    "pdflatex"
-                    ["--synctex=1", dropDirectory1 (b -<.> "tex")]
+    need ([b, s, d </> "def.tex"] <> dotFigs <> figs <> texFigs)
+    Stdout o <- cmd
+      (Cwd d)
+      "pdflatex"
+      ["--synctex=1", "-interaction=nonstopmode", dropDirectory1 (b -<.> "tex")]
     if isInfixOf "Rerun to get citations correct." o
-      then cmd_ (Cwd d)
-                "pdflatex"
-                ["--synctex=1", dropDirectory1 (b -<.> "tex")]
+      then cmd_
+        (Cwd d)
+        "pdflatex"
+        [ "--synctex=1"
+        , "-interaction=nonstopmode"
+        , dropDirectory1 (b -<.> "tex")
+        ]
       else return ()
 
-  "//*cloud-aerosol-bidirected.pdf" %> \out -> withTempDir
-    (\dir -> do
-      let c    = figPath "cloud-aerosol"
-      let u    = figPath "unobserved-aerosol"
-      let b    = figPath "bidirected"
-      let temp = dir </> "temp.pdf"
-      need [c, u, b]
-      cmd_ "pdfjam" [c, u, "--nup", "2x1", "--landscape", "--outfile", temp]
-      cmd_ "pdfjam" [temp, b, "--nup", "1x2", "--outfile", out]
-    )
+  "//*cloud-aerosol.tex" %> \out -> do
+    let c = figPath . (<.> "pdf") $ "cloud-aerosol"
+    let u = figPath . (<.> "pdf") $ "unobserved-aerosol"
+    need [c, u, "src/GraphDiagrams.hs"]
+    putInfo ("# GraphDiagrams for " <> out)
+    liftIO $ GraphDiagrams.cloudAerosol "doc" c u out
 
   "doc/causality.bbl" %> \out -> do
     aux <- doesFileExist (out -<.> "aux")
     let s = out -<.> "tex"
     let d = takeDirectory out
     if not aux
-      then need ([s, d </> "def.tex"] <> dotfigs <> figs)
-        >> cmd_ (Cwd d) "pdflatex" (dropDirectory1 (out -<.> "tex"))
+      then need ([s, d </> "def.tex"] <> dotFigs <> figs) >> cmd_
+        (Cwd d)
+        "pdflatex"
+        [ "--synctex=1"
+        , "-interaction=nonstopmode"
+        , dropDirectory1 (out -<.> "tex")
+        ]
       else return ()
     need (fmap (d </>) ["references.bib", "def.tex"])
     cmd_ (Cwd d) "bibtex" (dropDirectory1 out -<.> "")
@@ -115,10 +116,6 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     putInfo ("# GraphDiagrams for " <> out)
     liftIO $ GraphDiagrams.genericGraph out
 
-  "//*" </> "bidirected.pdf" %> \out -> do
-    need ["src/GraphDiagrams.hs"]
-    putInfo ("# GraphDiagrams for " <> out)
-    liftIO $ GraphDiagrams.biDirected out
 
   ["//*naiveCloudSunlight.pdf", "//*aerosolSunlight.pdf"]
     &%> \[naive, joint] -> do
@@ -143,7 +140,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
               trueDiff
             )
 
-  mapM_ genDot dotfigs
+  mapM_ genDot dotFigs
 
   phony "clean" $ do
     liftIO $ putStrLn "Cleaning files in _build, dat, and doc/figs"

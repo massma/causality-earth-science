@@ -1,6 +1,6 @@
 digraph G {
 	c[label="cloud (C)"];
-	a[label="aerosol (A)", shape = "plaintext"];
+	a[label="aerosol (A)", style = "dashed"];
 	s[label="sunlight (S)"];
 
 	a -> c[style = "dashed"];
