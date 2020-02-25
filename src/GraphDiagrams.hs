@@ -25,21 +25,29 @@ import           Data.Either
 import           Development.Shake.FilePath
 
 type DGram = QDiagram B V2 Double Any
+type Width = Double
 
 masterText :: String
 masterText = "sunlight (S)"
 
-nodeWidth :: Double
-nodeWidth = width $ ((hboxSurf latexSurface masterText :: DGram) # pad 1.3)
-node :: DGram
-node = circle (0.5 * nodeWidth) # pad 1.1
+nodeWidth :: String -> Double
+nodeWidth txt = width $ ((hboxSurf latexSurface txt :: DGram) # pad 1.3)
 
-observed :: String -> DGram
-observed label = hboxSurf latexSurface label # centerXY <> node
+node :: Width -> DGram
+node w = circle (0.5 * w) # pad 1.1
 
-unObserved :: String -> DGram
-unObserved label =
-  hboxSurf latexSurface label # centerXY <> node # dashingN [0.01, 0.01] 0.01
+hSpace :: Width -> Double -> DGram
+hSpace w f = rect (w * f) w # lcA transparent
+
+vSpace :: Width -> Double -> DGram
+vSpace w f = rect w (w * f) # lcA transparent
+
+observed :: Width -> String -> DGram
+observed w label = boundedLabel label # centerXY <> node w
+
+unObserved :: Width -> String -> DGram
+unObserved w label =
+  boundedLabel label # centerXY <> node w # dashingN [0.01, 0.01] 0.01
 -- common default of pixel per inch is 150, so 5 x 3 in = 750 x 450 pixel
 
 -- | from: http://ipdfdev.com/2016/07/06/what-resolution-pdf-files/ ;
@@ -50,33 +58,41 @@ unObserved label =
 boundedLabel :: String -> DGram
 boundedLabel l = hboxSurf latexSurface l
 
-diagramUnits :: Double -> Double
-diagramUnits x = x * nodeWidth * 1.5
+diagramUnits :: Width -> Double -> Double
+diagramUnits w x = x * w * 1.5
 
-timeSlice :: (String -> DGram, String -> DGram, Double) -> ([Double], DGram)
-timeSlice (f1, f2, t) =
+timeSlice
+  :: Width
+  -> (Width -> String -> DGram, Width -> String -> DGram, Double)
+  -> ([Double], DGram)
+timeSlice w (f1, f2, t) =
   ( dnames
-  , atPoints ps [f1 "" # named (dnames !! 0), f2 "" # named (dnames !! 1)]
+  , atPoints ps [f1 w "" # named (dnames !! 0), f2 w "" # named (dnames !! 1)]
   )
  where
-  vLoc   = negate t
-  ps     = fmap (\hLoc -> P (r2 (diagramUnits hLoc, diagramUnits vLoc))) [0, 1]
+  vLoc = negate t
+  ps = fmap (\hLoc -> P (r2 (diagramUnits w hLoc, diagramUnits w vLoc))) [0, 1]
   dnames = [vLoc * 2, vLoc * 2 + 1]
 
 displayDiagram :: FilePath -> DGram -> IO ()
 displayDiagram fpath = renderPGF' fpath def
 
-diagramState :: [String -> DGram] -> [String -> DGram] -> [Double] -> DGram
-diagramState f1s f2s ts = namedF
+diagramState
+  :: Width
+  -> [Width -> String -> DGram]
+  -> [Width -> String -> DGram]
+  -> [Double]
+  -> DGram
+diagramState w f1s f2s ts = namedF
   (foldr
     (<>)
-    (atPoints [P (r2 (diagramUnits 0.5, diagramUnits vLoc))]
-              [observed "E(t+1)" # named (vNames !! 0)]
+    (atPoints [P (r2 (diagramUnits w 0.5, diagramUnits w vLoc))]
+              [observed w "E(t+1)" # named (vNames !! 0)]
     )
     diagrams
   )
  where
-  (hNames, diagrams) = unzip $ fmap timeSlice (zip3 f1s f2s ts)
+  (hNames, diagrams) = unzip $ fmap (timeSlice w) (zip3 f1s f2s ts)
   vLoc               = negate (last ts + 1)
   vNames             = [vLoc * 2]
   namedF             = foldr (.) id $ zipWith
@@ -85,12 +101,10 @@ diagramState f1s f2s ts = namedF
     hNames
     (drop 1 hNames <> [vNames])
 
-
-
-labelState :: [Double] -> DGram
-labelState ts = atPoints ps labels
+labelState :: Width -> [Double] -> DGram
+labelState w ts = atPoints ps labels
  where
-  ps     = fmap (\t -> P (r2 (0, diagramUnits (negate t)))) ts
+  ps     = fmap (\t -> P (r2 (0, diagramUnits w (negate t)))) ts
   labels = fmap
     (\t -> boundedLabel $ case t of
       x | x == 0  -> "S(t)"
@@ -120,51 +134,50 @@ parsePDFDims str = P.parseOnly dimensions str
 testStr = -- "<</Type/Page/MediaBox [0 0 176 224]"
   "endobj\n6 0 obj\n632\nendobj\n4 0 obj\n<</Type/Page/MediaBox [0 0 176 224]\n/Rotate 0/Parent 3 0 R\n/Resources<</ProcSet[/PDF /Text]\n/ExtGState 10 0 R\n"
 
-addLabel lab d = hboxSurf latexSurface lab # alignTL <> (alignTL d)
+addLabel lab d = hboxPoint lab <> (alignTL d)
 
 cloudAerosol :: FilePath -> FilePath -> FilePath -> FilePath -> IO ()
 cloudAerosol texPath obsPath unObsPath fpath = do
-  obsImg   <- loadImg obsPath
-  unObsImg <- loadImg unObsPath
   displayDiagram
     fpath
-    (addLabel "A)" (image obsImg) ||| addLabel "B)" d ||| addLabel
-      "C)"
-      (image unObsImg)
-    )
+    (addLabel "A)" obs === addLabel "B)" pearl === addLabel "C)" unObs)
  where
-  ps       = [P (r2 (diagramUnits 0, 0)), P (r2 (diagramUnits 2, 0))]
-  (n1, n2) = ((0 :: Int), (2 :: Int))
-  shaft'   = arc xDir (-1 / 5 @@ turn)
-  arrowStyle =
-    (with & arrowShaft .~ shaft' & arrowTail .~ spike' & shaftStyle %~ dashingN
-      [0.01, 0.01]
-      0.01
-    )
-  d =
-    atPoints
-        ps
-        [observed "cloud (C)" # named n1, observed "sunlight (S)" # named n2]
-      # connectOutside n1 n2
-      # connectPerim' arrowStyle n1 n2 (2 / 12 @@ turn) (4 / 12 @@ turn)
-  h = height d
-  loadImg p =
-    (   fromRight (error ("getting dims from " <> p))
-      .   parsePDFDims
-      <$> BS.readFile p
-      )
-      >>= \(x, y) ->
-            let ratio = 3 * h / y
-            in  return $ uncheckedImageRef (makeRelative texPath p)
-                                           (round (ratio * x))
-                                           (round (ratio * y))
+  w            = nodeWidth "sunlight (S)"
+  dashConfig   = dashingN [0.01, 0.01] 0.01
+  (nC, nS, nA) = ((0 :: Int), (2 :: Int), (4 :: Int))
+  shaft'       = arc xDir (-1 / 5 @@ turn)
+  dashed       = (with & arrowShaft .~ shaft' & shaftStyle %~ dashConfig)
+  doubleDashed = dashed & arrowTail .~ spike'
+  c            = observed w "cloud (C)" # named nC
+  s            = observed w "sunlight (S)" # named nS
+  a            = observed w "aerosol (A)" # named nA
+  pearl = (c ||| hSpace w 2.0 ||| s) # connectOutside nC nS # connectPerim'
+    doubleDashed
+    nC
+    nS
+    (2 / 12 @@ turn)
+    (4 / 12 @@ turn)
+  obs =
+    (a === (c ||| hSpace w 2.0 ||| s) # center)
+      # connectOutside nC nS
+      # connectOutside nA nC
+      # connectOutside nA nS
+  unObs =
+    (a # dashConfig === (c ||| hSpace w 2.0 ||| s) # center)
+      # connectOutside nC nS
+      # connectOutside' dashed nA nC
+      # connectOutside' dashed nA nS
 
 genericGraph :: FilePath -> IO ()
 genericGraph fpath = displayDiagram
   fpath
-  (   labelState ts
-  ||| diagramState [observed, unObserved, observed]
-                   (replicate 3 unObserved)
-                   ts
+  (   labelState w ts
+  ||| diagramState
+        w
+        [observed, unObserved, observed]
+        (replicate 3 unObserved)
+        ts
   )
-  where ts = [-2, -1, 0]
+ where
+  ts = [-2, -1, 0]
+  w  = nodeWidth "E(t+1)"
