@@ -24,36 +24,36 @@ import qualified Data.ByteString               as BS
 import           Data.Either
 import           Development.Shake.FilePath
 
-nodeSize :: Num p => p
-nodeSize = 3
+type DGram = QDiagram B V2 Double Any
 
-node :: QDiagram B V2 Double Any
-node = circle nodeSize # pad 1.1
+masterText :: String
+masterText = "sunlight (S)"
 
-observed :: String -> QDiagram B V2 Double Any
-observed label = text label <> node
+nodeWidth :: Double
+nodeWidth = width $ ((hboxSurf latexSurface masterText :: DGram) # pad 1.3)
+node :: DGram
+node = circle (0.5 * nodeWidth) # pad 1.1
 
-unObserved :: String -> QDiagram B V2 Double Any
-unObserved label = text label <> node # dashingN [0.01, 0.01] 0.01
+observed :: String -> DGram
+observed label = hboxSurf latexSurface label # centerXY <> node
+
+unObserved :: String -> DGram
+unObserved label =
+  hboxSurf latexSurface label # centerXY <> node # dashingN [0.01, 0.01] 0.01
 -- common default of pixel per inch is 150, so 5 x 3 in = 750 x 450 pixel
 
 -- | from: http://ipdfdev.com/2016/07/06/what-resolution-pdf-files/ ;
 -- maybe cairo point (1 inch = 72 points) = pixel
-renderSize :: Num n => SizeSpec V2 n
-renderSize = dims $ r2 (5 * 72, 3 * 72)
+-- renderSize :: Num n => SizeSpec V2 n
+-- renderSize = dims $ r2 (5 * 72, 3 * 72)
 
-boundedLabel :: String -> QDiagram B V2 Double Any
-boundedLabel l = text l <> square (nodeSize * 2) # lcA transparent
+boundedLabel :: String -> DGram
+boundedLabel l = hboxSurf latexSurface l
 
-diagramUnits :: Fractional a => a -> a
-diagramUnits x = x * nodeSize * 2 * 1.5
+diagramUnits :: Double -> Double
+diagramUnits x = x * nodeWidth * 1.5
 
-timeSlice
-  :: ( String -> QDiagram B V2 Double Any
-     , String -> QDiagram B V2 Double Any
-     , Double
-     )
-  -> ([Double], QDiagram B V2 Double Any)
+timeSlice :: (String -> DGram, String -> DGram, Double) -> ([Double], DGram)
 timeSlice (f1, f2, t) =
   ( dnames
   , atPoints ps [f1 "" # named (dnames !! 0), f2 "" # named (dnames !! 1)]
@@ -63,14 +63,10 @@ timeSlice (f1, f2, t) =
   ps     = fmap (\hLoc -> P (r2 (diagramUnits hLoc, diagramUnits vLoc))) [0, 1]
   dnames = [vLoc * 2, vLoc * 2 + 1]
 
-displayDiagram :: FilePath -> QDiagram B V2 Double Any -> IO ()
+displayDiagram :: FilePath -> DGram -> IO ()
 displayDiagram fpath = renderPGF' fpath def
 
-diagramState
-  :: [String -> QDiagram B V2 Double Any]
-  -> [String -> QDiagram B V2 Double Any]
-  -> [Double]
-  -> QDiagram B V2 Double Any
+diagramState :: [String -> DGram] -> [String -> DGram] -> [Double] -> DGram
 diagramState f1s f2s ts = namedF
   (foldr
     (<>)
@@ -91,7 +87,7 @@ diagramState f1s f2s ts = namedF
 
 
 
-labelState :: [Double] -> QDiagram B V2 Double Any
+labelState :: [Double] -> DGram
 labelState ts = atPoints ps labels
  where
   ps     = fmap (\t -> P (r2 (0, diagramUnits (negate t)))) ts
@@ -104,6 +100,7 @@ labelState ts = atPoints ps labels
     )
     ts
 
+parsePDFDims :: BS.ByteString -> Either String (Double, Double)
 parsePDFDims str = P.parseOnly dimensions str
  where
   dimensions :: P.Parser (Double, Double)
@@ -123,11 +120,18 @@ parsePDFDims str = P.parseOnly dimensions str
 testStr = -- "<</Type/Page/MediaBox [0 0 176 224]"
   "endobj\n6 0 obj\n632\nendobj\n4 0 obj\n<</Type/Page/MediaBox [0 0 176 224]\n/Rotate 0/Parent 3 0 R\n/Resources<</ProcSet[/PDF /Text]\n/ExtGState 10 0 R\n"
 
+addLabel lab d = hboxSurf latexSurface lab # alignTL <> (alignTL d)
+
 cloudAerosol :: FilePath -> FilePath -> FilePath -> FilePath -> IO ()
 cloudAerosol texPath obsPath unObsPath fpath = do
   obsImg   <- loadImg obsPath
   unObsImg <- loadImg unObsPath
-  displayDiagram fpath (image obsImg ||| d ||| image unObsImg)
+  displayDiagram
+    fpath
+    (addLabel "A)" (image obsImg) ||| addLabel "B)" d ||| addLabel
+      "C)"
+      (image unObsImg)
+    )
  where
   ps       = [P (r2 (diagramUnits 0, 0)), P (r2 (diagramUnits 2, 0))]
   (n1, n2) = ((0 :: Int), (2 :: Int))
@@ -138,7 +142,9 @@ cloudAerosol texPath obsPath unObsPath fpath = do
       0.01
     )
   d =
-    atPoints ps [observed "cloud" # named n1, observed "sunlight" # named n2]
+    atPoints
+        ps
+        [observed "cloud (C)" # named n1, observed "sunlight (S)" # named n2]
       # connectOutside n1 n2
       # connectPerim' arrowStyle n1 n2 (2 / 12 @@ turn) (4 / 12 @@ turn)
   h = height d
