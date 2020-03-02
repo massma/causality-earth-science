@@ -4,20 +4,20 @@
 
 \begin{document}
 
-\title{Causal inference in earth science}
+\title{Causal inference in Earth science}
 
 \author{Adam Massmann\thanks{Corresponding author:
     akm2203@columbia.edu}, Pierre Gentine, need to contact: Elias
-  Bareinboim, Jakob Runge}
+  Bareinboim, Jakob Runge?}
 
 \maketitle
 
 \section{Introduction}
 
 Controlled experimentation is the traditional path to scientific
-discovery. A scientist designs experiments where parameters are
-systematically varied to test hypotheses about a system's
-nature. Climate and Earth system scientists primarily use numerical
+discovery. The scientist tests hypotheses aibout a system's nature by
+systematically varying experiment parameters and measuring the
+response. Climate and Earth system scientists primarily use numerical
 models for experimentation \citep[e.g.,][]{eyring-cmip6-2016}, but
 real world experiment is also used to a lesser degree
 \citep[e.g.,][]{ainsworth-face-2005}. However, it may be logistically
@@ -80,6 +80,88 @@ for scientific discovery and understanding
 conditions required for the proper application of causal inference in
 Earth science.
 
+\section{Relation to previous work, ``causal discovery'', and
+  clarification on terminology}
+\label{sec:discovery}
+
+The term ``causal inference'' has been used to describe two
+techniques:
+
+\begin{enumerate}
+\item \textbf{Causal effect inference}: Calculating the causal effect
+  of some processes on other, given data and assumptions about the
+  causal structure of the system.
+\item \textbf{Causal structure discovery}: Inferring the causal
+  structure (e.g. the causal graph) of the system using data.
+\end{enumerate}
+
+This paper focuses on causal inference as (1): calculating causal
+effects from data (Section \ref{sec:causal-graphs-pearls}). Inferring
+the causal structure of the system (2), is generally much more
+difficult and also requires additional assumptions. For example, some
+causal structure discovery algorithms rely on assumptions that we
+observe all relevant variables to the system (violated because we
+partially observe the state space) and/or possibly arbitrary
+parameters for statistical independence tests. Additionally, some
+methods invoke linearity assumptions about the relationships between
+processes, which is not generally true for the Earth system.
+
+There are other reasons to focus on (1) rather than (2) in Earth
+science: often in Earth science we know or have a strong a priori
+belief about the causal structure of the system, so inferring the
+causal graph structure from data is unnecessary. For example, in the
+climate system we can identify the state variables and the state at
+time \(t\) determines the state at time \(t+1\), even if the exact
+functional form of the dependency through time is not
+known. Therefore, we can write down a causal graph and do not need to
+infer graph structure from data (Section
+\ref{sec:necess-cond-caus}). Additionally, calculating an effect of
+some processes upon others illuminates more information about the
+system than the binary existence of a link or no link, as is output by
+causal structure discovery algorithms.
+
+\textit{/ TODO: tactfully critique causal discovery? a messy start is
+  here:}
+
+\textit{
+  However, there has been considerable work and effort in applying
+  causal structure discovery (2) in Earth science
+  \citep[e.g.,][]{ebert-uphoff2012,
+    samarasinghe-casuality,runge-causal-timeseries,runge2019inferring}. A
+  common application and motivation of these efforts is to filter and
+  ignore causal links in the system through structure discovery. The
+  ignored links are a function of the significance parameters used in
+  the causal discovery algorithms. Causal inference of effects, as we
+  explore here, represents a different approach where we do not rely on
+  assumptions about the significance of effects, but instead make
+  explicit assumptions about the causal structure of the system. To
+  reiterate, given our domain knowledge of the Earth science system we
+  generally have high confidence about the causal structure of the
+  system, and as we will see (Section \ref{sec:necess-cond-caus}) we can
+  construct quite general graphs that are faithful to our knowledge
+  about how dynamical systems evolve. It is possible some links in these
+  graphs correspond to small effects, and these links would be removed
+  through causal structure discovery. However, directly interpreting
+  what constitutes a ``negligibly small'' effect calculation presented in
+  physical units and probabilities, as calculated with causal effect
+  inference, may be more transparent than interpreting missing links
+  derived from causal structure discovery significance parameters. In
+  other words, direct calculation of effects may be more transparent and
+  interpretable for many readers, relative to a causal graph derived
+  from significance parameters with more abstract meaning. We hope to
+  motivate further research effort in causal effect inference to match
+  recent efforts in causal structure discovery. Ideally causal effect
+  inference and causal structure discovery will co-evolve as
+  complementary abstractions for causal interpretation; researchers and
+  readers can choose the method that suits their assumptions and
+  needs./}
+
+\textit{
+  TODO: talk to Elias about ``no mixing'' theorem; from what he
+  described it seems like it leads to the invalidation of ``causal
+  discovery''
+}
+
 \section{Causal graphs and Pearl's do calculus}
 \label{sec:causal-graphs-pearls}
 % intro causal graphs}
@@ -100,7 +182,17 @@ of:
   % % consider \noindent\include... [width=0.75\textwidth]...
   % \includegraphics[height=0.4\textheight]{cloud-aerosol-bidirected.pdf}\\
   \scalebox{1.0}{\input{figs/cloud-aerosol.tex}}
-  \caption{A relatable toy example to demonstrate basic causal theory.}
+  \caption{A toy graph example to demonstrate basic causal theory,
+    involving cloud (C), aerosol (A), and surface solar radiation
+    (S). In \textbf{A)} we observe all varialbes. However, in
+    \textbf{B)} and \textbf{C)} we do not observe aerosol. \textbf{B)}
+    is consistent with previous notation \citep{shpitser2006} for
+    representing unobserved confounders between two variables (in this
+    case cloud and sunlight). However for clarity we prefer the
+    notation in \textbf{C)}, which explicitly names and includes the
+    unobserved confounder (in this case aerosol). \textbf{C)} is
+    particularly useful for earth science, where we can often name
+    unobserved processes.}
   \label{fig:toy}
 \end{figure}
 
@@ -139,18 +231,21 @@ factorization of the joint distribution:
   P(A, C, S) = P(S \, | \,C, A) \, P(C \, | \, A) \, P(A),
 \end{equation}
 
-where $A$ represents aerosol, $C$ represents cloud, and $S$
-represents surface sunlight/solar radiation. Interpreted causally, as
-in \citet{pearl1995causal} and this manuscript, the directed edges
-encode causal dependencies in addition to a factorization of the
-joint. More specifically, the graph represents the assumed Structural
-Causal Model \citep[SCM,][]{pearl2009}, which is the set of functions
-that determines how variables are generated by their causes. Each
-variable in the graph is determined by a function with inputs
-corresponding to inward edges to the variable of interest, as well as
-randomness due to the variables not included in the causal graph
+where $A$ represents aerosol, $C$ represents cloud, and $S$ represents
+surface sunlight/solar radiation. Interpreted causally, as in
+\citet{pearl1995causal} and this manuscript, the directed edges encode
+causal dependencies in addition to a factorization of the joint. More
+specifically, the graph is consistent with the assumed Structural
+Causal Model (SCM) \citep[][]{pearl2009}, which is the set of
+functions that determines how variables are generated by their
+causes. Each variable in the graph is determined by a function with
+inputs corresponding to the inward edges to the variable of interest,
+and additionally variables not included in the causal graph
 (``exogenous variables'').  In the cloud-aerosol-radiation example the
 SCM is:
+
+\emph{/TODO: do full scm with endogenous, exogenous, and P(U)? or just
+  scrap scm?/}
 
 \begin{equation}
   SCM =
@@ -163,35 +258,38 @@ SCM is:
 \end{equation}
 
 where $U$ are random variables due to all the factors not represented
-explicitly in the SCM and corresponding causal graph. The SCM asserts
-that each variable is generated from a deterministic function, and the
-randomness randomness is due to the exogenous variables ($U$). For
-example, sources of aerosol variability not considered include
-anthropogenic aerosol emission, the biosphere, fires, volcanoes,
-etc. For cloud, this includes synoptic forcing, moisture content,
-etc. For radiation, this includes variability of top of atmosphere
-radiation, etc. For the causal graph, as drawn, we assume that all of
-these sources of randomness are independent of each other. That is,
-$U_{aerosol}$, $U_{cloud}$, and $U_{radiation}$ are independent of
-each other. The $U$ variables are powerful tools: by positing an SCM
-and causal graph, we are not stating that the variables in the graph
-are the only processes in the system. Instead, we are stating that all
-other processes not included in the graph induce variations in the
-causal variables that are independent of each other. In some
-scenarios, this assumption may be unreasonable and we would need to
-encode dependencies between variables due to shared $U$ terms; that is,
-co-variability induced between variables due to exogenous
-processes. This can be encoded in the graph as a bi-directed dashed
-edge between the two variables with shared exogenous factors. For
-example, if aerosol in Figure \ref{fig:toy} were instead considered to
-be exogenous, we would represent the graph instead as in Figure
-\ref{fig:toy}, and the corresponding SCM would be:
+explicitly in the SCM and causal graph, and $f$ are deterministic
+functions that generate each variable in the graph from their parents
+and corresponding $U$ (e.g. $f_{cloud}$ generates a value for cloud
+from a value of aerosol, and the random variabile $U_{cloud}$). The
+SCM asserts that each variable is generated from its $f$, and the
+randomness is due to the exogenous variables ($U$). For example,
+sources of aerosol variability not considered include anthropogenic
+aerosol emission, the biosphere, fires, volcanoes, etc. For cloud,
+this includes synoptic forcing, atmospheric humdity, etc. For
+radiation, this includes variability of top of atmosphere radiation,
+etc. For the causal graph, as drawn, we assume that all of these
+sources of randomness are independent of each other. That is,
+$U_{aerosol}$, $U_{cloud}$, and $U_{radiation}$ are assumed to be
+independent of each other. The $U$ variables are powerful tools: by
+positing an SCM and causal graph, we are not stating that the
+variables in the graph are the only processes in the system. Instead,
+we are stating that all other processes not included in the graph
+induce variations in the causal variables that are independent of each
+other. In some scenarios, this assumption may be unreasonable and we
+would need to encode dependencies between variables due to shared $U$
+terms; that is, co-variability induced between variables due to
+exogenous processes. This can be encoded in the graph as a bi-directed
+dashed edge between the two variables with shared exogenous
+factors. For example, if aerosol in Figure \ref{fig:toy}(A) were instead
+unobserved and exogenous, we would represent the graph instead as in
+Figure \ref{fig:toy}(B), and the corresponding SCM would be:
 
 \begin{equation}
   SCM =
   \begin{cases}
-    f_{cloud} &: U_{cloud,radiation}  \\
-    f_{radiation} &: cloud, U_{cloud,radiation}
+    f_{cloud} &: U_{cloud}, U_{cloud,radiation}  \\
+    f_{radiation} &: cloud, U_{radiation}, U_{cloud,radiation}
   \end{cases},
   \label{eq:2}
 \end{equation}
@@ -201,17 +299,22 @@ we do not include the bi-directed dashed edge notation, because in
 Earth science we can usually identify the relevant variables and their
 dependencies, which is sufficient information to include them
 explicitly in the graph as nodes, even if we do not know the
-functional form of their dependencies or cannot observe them.
+functional form of their dependencies or cannot observe them. In this
+case that we can name a variable but it is not observe, we instead
+prefer to cinlude it in the graph as a dashed node with dashed edges,
+as in Figure \ref{fig:toy}(C). THe corresponding SCM in this case is:
 
-\textit{/include this discussion barienboim's notation (which I do not
-  like) of including and representing exogenous variation that
-  affects multiple variables with a dashed line? not as applicable for
-  Earth science, where I *think* we have a general idea of the main
-  players (e.g. state), and how they relate to each other. I prefer to
-  represent these instead as unobservable $V$ than $U$. However, show
-  it in this example by just saying, if we did not include aerosol as
-  an endogenous variable we would just represent that as a bi-directed
-  dashed arrow from $V$ to $U$./}
+
+\begin{equation}
+  SCM =
+  \begin{cases}
+    f_{cloud} &: U_{cloud}, aerosol  \\
+    f_{radiation} &: cloud, U_{radiation}, aerosol
+  \end{cases}
+  \label{eq:2}
+\end{equation}
+
+
 
 We can apply causal graph theory
 \citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
@@ -237,7 +340,7 @@ then we have satisfied the \emph{back-door criterion}
 data.
 
 \begin{figure}
-  \noindent\includegraphics[]{mutilated-cloud-aerosol.pdf}\\
+  \input{figs/mutilated-cloud-aerosol.tex}
   \caption{A mutilation of Figure \ref{fig:toy}, where we have removed
     directed causal paths from the cause (cloud) to the effect (surface
     solar radiation). We can see that there is covariability between
@@ -710,85 +813,6 @@ unblocked backdoor paths through the unobserved portions of the state
 space. Causal inference is particularly tractable for this class of
 problems.
 
-\section{Relation to previous work and ``causal discovery''}
-\label{sec:discovery}
-
-The term ``causal inference'' has been used to describe two
-techniques:
-
-\begin{enumerate}
-\item \textbf{Causal effect inference}: Calculating the causal effect
-  of some processes on other, given data and assumptions about the
-  causal structure of the system.
-\item \textbf{Causal structure discovery}: Inferring the causal
-  structure (e.g. the causal graph) of the system using data.
-\end{enumerate}
-
-This paper focused on causal inference as (1): calculating causal
-effects from data. Inferring the causal structure of the system (2),
-is generally much more difficult and also requires additional
-assumptions. For example, some causal structure discovery algorithms
-rely on assumptions that we observe all relevant variables to the
-system (violated because we partially observe the state space) and/or
-possibly arbitrary parameters for statistical independence
-tests. Additionally, some methods invoke linearity assumptions about
-the relationships between processes, which is not generally true for
-the Earth system.
-
-There are other reasons to focus on (1) rather than (2) in
-Earth science: often in Earth science we know or have a strong a
-priori belief about the causal graph of our system. For example, in
-the climate system we can identify the state variables and the state
-at time \(t\) determines the state at time \(t+1\), even if the exact
-functional form of the dependency through time is not
-known. Therefore, we can write down a causal graph and do not need to
-infer graph structure from data (Section
-\ref{sec:necess-cond-caus}). Additionally, calculating an effect of
-some processes upon others illuminates more information about the
-system than the binary existence of a link or no link, as is output
-by causal structure discovery algorithms.
-
-\textit{/ TODO: tactfully critique causal discovery? a messy start is
-  here:}
-
-\textit{
-  However, there has been considerable work and effort in applying
-  causal structure discovery (2) in Earth science
-  \citep[e.g.,][]{ebert-uphoff2012,
-    samarasinghe-casuality,runge-causal-timeseries,runge2019inferring}. A
-  common application and motivation of these efforts is to filter and
-  ignore causal links in the system through structure discovery. The
-  ignored links are a function of the significance parameters used in
-  the causal discovery algorithms. Causal inference of effects, as we
-  explore here, represents a different approach where we do not rely on
-  assumptions about the significance of effects, but instead make
-  explicit assumptions about the causal structure of the system. To
-  reiterate, given our domain knowledge of the Earth science system we
-  generally have high confidence about the causal structure of the
-  system, and as we will see (Section \ref{sec:necess-cond-caus}) we can
-  construct quite general graphs that are faithful to our knowledge
-  about how dynamical systems evolve. It is possible some links in these
-  graphs correspond to small effects, and these links would be removed
-  through causal structure discovery. However, directly interpreting
-  what constitutes a ``negligibly small'' effect calculation presented in
-  physical units and probabilities, as calculated with causal effect
-  inference, may be more transparent than interpreting missing links
-  derived from causal structure discovery significance parameters. In
-  other words, direct calculation of effects may be more transparent and
-  interpretable for many readers, relative to a causal graph derived
-  from significance parameters with more abstract meaning. We hope to
-  motivate further research effort in causal effect inference to match
-  recent efforts in causal structure discovery. Ideally causal effect
-  inference and causal structure discovery will co-evolve as
-  complementary abstractions for causal interpretation; researchers and
-  readers can choose the method that suits their assumptions and
-  needs./}
-
-\textit{
-  TODO: talk to Elias about ``no mixing'' theorem; from what he
-  described it seems like it leads to the invalidation of ``causal
-  discovery''
-}
 
 \section{Discussion}
 

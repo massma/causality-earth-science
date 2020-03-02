@@ -54,19 +54,14 @@ main :: IO ()
 main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
   let dotFigs = fmap
         (figPath . (<.> "pdf"))
-        [ "cloud-aerosol"
-        , "mutilated-cloud-aerosol"
-        , "forcing-graph"
-        , "reconstruction"
-        , "no-temporal"
-        , "observe-everything"
-        , "unobserved-aerosol"
-        ]
+        ["forcing-graph", "reconstruction", "no-temporal", "observe-everything"]
 
   let figs = fmap (figPath . (<.> "pdf"))
                   ["naiveCloudSunlight", "aerosolSunlight", "generic-graph"]
 
-  let texFigs = fmap figPath ["cloud-aerosol.tex"]
+  let texFigs =
+        fmap figPath ["cloud-aerosol.tex", "mutilated-cloud-aerosol.tex"]
+
   want ["doc/causality.pdf"]
 
   "doc/causality.pdf" %> \out -> do
@@ -88,12 +83,11 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         ]
       else return ()
 
-  "//*cloud-aerosol.tex" %> \out -> do
-    let c = figPath . (<.> "pdf") $ "cloud-aerosol"
-    let u = figPath . (<.> "pdf") $ "unobserved-aerosol"
-    need [c, u, "src/GraphDiagrams.hs"]
-    putInfo ("# GraphDiagrams for " <> out)
-    liftIO $ GraphDiagrams.cloudAerosol "doc" c u out
+  ["//*/cloud-aerosol.tex", "//*/mutilated-cloud-aerosol.tex"] &%> \[c, mc] ->
+    do
+      need ["src/GraphDiagrams.hs"]
+      putInfo (printf "# GraphDiagrams.cloudAeorosl for %s, %s" c mc)
+      liftIO $ GraphDiagrams.cloudAerosol c mc
 
   "doc/causality.bbl" %> \out -> do
     aux <- doesFileExist (out -<.> "aux")
@@ -113,7 +107,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   "//*generic-graph.pdf" %> \out -> do
     need ["src/GraphDiagrams.hs"]
-    putInfo ("# GraphDiagrams for " <> out)
+    putInfo (printf "# GraphDiagrams.genericGraph for %s" out)
     liftIO $ GraphDiagrams.genericGraph out
 
 

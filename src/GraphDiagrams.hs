@@ -34,7 +34,7 @@ nodeWidth :: String -> Double
 nodeWidth txt = width $ ((hboxSurf latexSurface txt :: DGram) # pad 1.3)
 
 node :: Width -> DGram
-node w = circle (0.5 * w) # pad 1.1
+node w = circle (0.5 * w) -- # pad 1.1
 
 hSpace :: Width -> Double -> DGram
 hSpace w f = rect (w * f) w # lcA transparent
@@ -134,20 +134,25 @@ parsePDFDims str = P.parseOnly dimensions str
 testStr = -- "<</Type/Page/MediaBox [0 0 176 224]"
   "endobj\n6 0 obj\n632\nendobj\n4 0 obj\n<</Type/Page/MediaBox [0 0 176 224]\n/Rotate 0/Parent 3 0 R\n/Resources<</ProcSet[/PDF /Text]\n/ExtGState 10 0 R\n"
 
-addLabel lab d = hboxPoint lab <> (alignTL d)
+addLabel :: String -> DGram -> DGram
+addLabel lab d =
+  hboxPoint ("\\textbf{" <> lab <> "}")
+    #  translateY (0.75 * height d)
+    <> (alignBL d)
 
-cloudAerosol :: FilePath -> FilePath -> FilePath -> FilePath -> IO ()
-cloudAerosol texPath obsPath unObsPath fpath = do
+cloudAerosol :: FilePath -> FilePath -> IO ()
+cloudAerosol cloudAPath mutPath =
   displayDiagram
-    fpath
-    (addLabel "A)" obs === addLabel "B)" pearl === addLabel "C)" unObs)
+      cloudAPath
+      (addLabel "A)" obs === addLabel "B)" pearl === addLabel "C)" unObs)
+    >> displayDiagram mutPath mutilated
  where
   w            = nodeWidth "sunlight (S)"
   dashConfig   = dashingN [0.01, 0.01] 0.01
   (nC, nS, nA) = ((0 :: Int), (2 :: Int), (4 :: Int))
+  dashed       = (with & shaftStyle %~ dashConfig)
   shaft'       = arc xDir (-1 / 5 @@ turn)
-  dashed       = (with & arrowShaft .~ shaft' & shaftStyle %~ dashConfig)
-  doubleDashed = dashed & arrowTail .~ spike'
+  doubleDashed = dashed & arrowTail .~ spike' & arrowShaft .~ shaft'
   c            = observed w "cloud (C)" # named nC
   s            = observed w "sunlight (S)" # named nS
   a            = observed w "aerosol (A)" # named nA
@@ -155,13 +160,13 @@ cloudAerosol texPath obsPath unObsPath fpath = do
     doubleDashed
     nC
     nS
-    (2 / 12 @@ turn)
-    (4 / 12 @@ turn)
-  obs =
+    (1 / 6 @@ turn)
+    (1 / 2 - 1 / 6 @@ turn) -- (1 / 3 @@ turn)
+  mutilated =
     (a === (c ||| hSpace w 2.0 ||| s) # center)
-      # connectOutside nC nS
       # connectOutside nA nC
       # connectOutside nA nS
+  obs = mutilated # connectOutside nC nS
   unObs =
     (a # dashConfig === (c ||| hSpace w 2.0 ||| s) # center)
       # connectOutside nC nS
