@@ -175,7 +175,7 @@ with specific meaning. A domain expert simply draws directed edges
 (e.g. arrows) from variables that are causes to effects. We illustrate
 causal graphs and their mathematical consequences with a simplified
 toy example examining clouds, aerosols, and surface solar
-radiation/sunlight (Figure \ref{fig:toy}). Our causal graph consists
+radiation/sunlight (Figure \ref{fig:toy}(A)). Our causal graph consists
 of:
 
 \begin{figure}
@@ -224,7 +224,7 @@ Earth system graphs).
 Even though probablistic reasoning is not required to construct a
 causal graph, the resulting graph encodes specific probablistic
 meaning. Interpreted as a general probabilistic graphical model, our
-example graph in Figure \ref{fig:toy} represents a specific
+example graph in Figure \ref{fig:toy}(A) represents a specific
 factorization of the joint distribution:
 
 \begin{equation}
@@ -320,12 +320,18 @@ We can apply causal graph theory
 \citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
 encoded in our causal graph to identify which distributions we must
 estimate from data in order to calculate a causal effect of
-interest. This process of identifying the necessary distributions is
-formally termed \emph{causal identification}. If a causal effect is
-not identifiable (\emph{un}-identifiable), for example if calculating
-a causal effect requires distributions of variables that we do not
-observe, then we cannot use causal inference to calculate a causal
-effect, even with an infinite sample of data.
+interest. More precisely, ``caluclating a causal effect'' refers to
+estimating the probability distribution of a response (e.g. sunlight)
+to an experimental intervention on our cause where we artificially set
+it to a value of our choosing (e.g. presence or absence of a
+cloud). The challenge of causal inference is to derive the response
+distributions to the intervention in terms of only observed
+distributions. This process of identifying the necessary observed
+distributions is formally termed \emph{causal identification}. If a
+causal effect is not identifiable (\emph{un}-identifiable), for
+example if calculating a causal effect requires distributions of
+variables that we do not observe, then we cannot use causal inference
+to calculate a causal effect, even with an infinite sample of data.
 
 % backdoor path}
 
@@ -341,26 +347,25 @@ data.
 
 \begin{figure}
   \input{figs/mutilated-cloud-aerosol.tex}
-  \caption{A mutilation of Figure \ref{fig:toy}, where we have removed
-    directed causal paths from the cause (cloud) to the effect (surface
-    solar radiation). We can see that there is covariability between
-    cloud and surface solar radiation in the data, that is not
-    explained by a causal connection between cloud and surface solar
-    radiation, but instead is because of induced co-variability caused
-    by aerosol.}
+  \caption{A mutilation of Figure \ref{fig:toy}(A), where we have removed
+    directed causal paths from the cause (cloud) to the effect
+    (surface solar radiation). There is covariability between cloud
+    and surface solar radiation that is not due to the causal
+    connection between cloud and surface solar radiation, but instead
+    is due to aerosol's role as a common driver.}
   \label{fig:mutilated-toy}
 \end{figure}
 
 % backdoor path with example}
 Understanding backdoor paths and the backdoor criterion is helped by
-example. Returning to our toy example (Figure \ref{fig:toy}), we will
+example. Returning to our toy example (Figure \ref{fig:toy}(A)), we
 attempt to calculate the causal effect of clouds on sunlight. In other
 words, we want to isolate the variability of sunlight due to the
-causal link from cloud to sunlight. However, aerosols both affect
-cloud (edge from aerosol to cloud), and sunlight, so if we naively
-calculate a causal effect we would get a biased estimate of the mean
-effect of cloud on sunlight. To demonstrate, consider generated
-data where the ``true'' SCM is:
+causal link from cloud to sunlight (Figure \ref{fig:toy}(A)). However,
+aerosols both affect cloud (edge from aerosol to cloud), and sunlight,
+so if we naively calculate a causal effect we would get a biased
+estimate of the mean effect of cloud on sunlight. To demonstrate this,
+consider generated data where the ``true'' SCM is:
 
 \begin{equation}
   SCM =
@@ -398,13 +403,14 @@ cause (cloud) to children of our cause (in this case sunlight) (Figure
 \ref{fig:mutilated-toy}). We see that cloud is not independent of
 surface solar radiation in the mutilated graph.  However if aerosol
 were fixed (e.g. observed or not varying), cloud and sunlight would be
-independent of each other in Figure \ref{fig:mutilated-toy}, and
-in Figure \ref{fig:toy} all co-variability between cloud and sunlight
+independent of each other in Figure \ref{fig:mutilated-toy}, and in
+Figure \ref{fig:toy}(A) all co-variability between cloud and sunlight
 would be only due to the causal edge between cloud and sunlight.
 Mathematically incorporating this requirement that we must condition
 on aerosol to isolate the causal effect of cloud on radiation gives
 the identification of the causal effect of cloud and aerosol according
-to the backdoor criterion:
+by satisfying the backdoor criterion with \textit{adjustment} on
+aerosol:
 
 \begin{figure}
   \includegraphics[]{naiveCloudSunlight.pdf}
@@ -442,7 +448,7 @@ data, we must use estimate the required observational distributions
 (Equation (\ref{eq:3}) from data. Often it may be more computationally
 tractable to calculate an average causal effect, rather than the full
 causal distribution $P(S | do(C=c))$. Returning to our toy example
-(Figure \ref{fig:toy}), the average effect is defined as:
+(Figure \ref{fig:toy}(A)), the average effect is defined as:
 
 \begin{equation}
   \mathbb{E}(S | do(C = c)) = \int_{s} s \, P(S = s
