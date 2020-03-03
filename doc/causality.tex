@@ -347,12 +347,12 @@ data.
 
 \begin{figure}
   \input{figs/mutilated-cloud-aerosol.tex}
-  \caption{A mutilation of Figure \ref{fig:toy}(A), where we have removed
-    directed causal paths from the cause (cloud) to the effect
+  \caption{A mutilation of Figure \ref{fig:toy}(A), where we have
+    removed directed causal paths from the cause (cloud) to the effect
     (surface solar radiation). There is covariability between cloud
     and surface solar radiation that is not due to the causal
-    connection between cloud and surface solar radiation, but instead
-    is due to aerosol's role as a common driver.}
+    connection between cloud and surface solar radiation, but is
+    instead due to aerosol's role as a common driver.}
   \label{fig:mutilated-toy}
 \end{figure}
 
@@ -383,8 +383,8 @@ consider generated data where the ``true'' SCM is:
 where:
 
 \begin{equation*}
-  \text{clear sky radiation} = U_{sunlight} \cdot (1 - aerosol); \;
-  U_{sunlight} \sim \text{Normal(340, 30)}
+  \text{clear sky surface radiation} = U_{sunlight} \cdot (1 - aerosol); \;
+  U_{sunlight} \sim \text{Normal(340 W m$^{-2}$, 30 \, W m$^{-2}$)}
 \end{equation*}
 
 Now, consider not knowing the underlying SCM, but instead just
@@ -394,29 +394,29 @@ available or one where very naive, one approach would be to bin the
 data by cloudy and clear conditions and compare the amount of sunlight
 between cloudy and clear observations (Figure
 \ref{fig:naive-cloud-sunlight}). This approach suggests that clouds
-reduce sunlight by, on average, 160 W m$^{-2}$, which is a massive
+reduce sunlight by, on average, 160 W m$^{-2}$, which is a strong
 overestimation of the true average effect of clouds derived from the
 SCM of -68 W m$^{-2}$. Aerosol induces co-variability between cloud
 and aerosol that is unrelated to the causal link from cloud to
 aerosol. Graphically, this is clarified by removing all edges from our
-cause (cloud) to children of our cause (in this case sunlight) (Figure
-\ref{fig:mutilated-toy}). We see that cloud is not independent of
-surface solar radiation in the mutilated graph.  However if aerosol
-were fixed (e.g. observed or not varying), cloud and sunlight would be
-independent of each other in Figure \ref{fig:mutilated-toy}, and in
-Figure \ref{fig:toy}(A) all co-variability between cloud and sunlight
-would be only due to the causal edge between cloud and sunlight.
-Mathematically incorporating this requirement that we must condition
-on aerosol to isolate the causal effect of cloud on radiation gives
-the identification of the causal effect of cloud and aerosol according
-by satisfying the backdoor criterion with \textit{adjustment} on
-aerosol:
+cause (cloud) to children of our cause (in this case sunlight) to
+create a ``mutilated'' graph (Figure \ref{fig:mutilated-toy}). We see
+that clouds are not independent of surface solar radiation in the
+mutilated graph.  However if aerosol were fixed (e.g. observed or not
+varying), cloud and sunlight would be independent of each other in
+Figure \ref{fig:mutilated-toy}, and in Figure \ref{fig:toy}(A) all
+co-variability between cloud and sunlight would be only due to the
+causal edge between cloud and sunlight.  Mathematically incorporating
+the requirement that we must condition on aerosol to isolate the
+causal effect of cloud on radiation gives the identification of the
+causal effect of cloud and aerosol according by satisfying the
+backdoor criterion with \textit{adjustment} on aerosol:
 
 \begin{figure}
   \includegraphics[]{naiveCloudSunlight.pdf}
   \caption{A naive approach to estimating the ``effect'' of clouds on
     sunlight: bin observations by cloudy and clear day, and compare
-    the values of sunlight. This approach yields a massive
+    the values of sunlight. This approach yields a large
     overestimation of the true causal effect of clouds on sunlight,
     which is -68.0 W m$^{-2}$}
   \label{fig:naive-cloud-sunlight}
@@ -431,10 +431,12 @@ aerosol:
 where the \textit{do}-calculus \citep{pearl2009} term
 ($P(S \, | \, do(C\, = \,c))$) represents the probability of sunlight
 if we did an experiment where we intervened and set cloud to a value
-of our choosing (in this case $c$). In the case that observations of
-aerosols are not available, our causal effect is not identifiable and
-we cannot use causal inference no matter how large the sample sizes of
-clouds and aerosols. This is a powerful time saving research tool:
+of our choosing (in this case $c$, which could be ``True'' for the
+presence of a cloud, or ``False'' for no cloud). In the case that
+observations of aerosols are not available (e.g., Figure
+\ref{fig:toy}B, C), our causal effect is not identifiable and we
+cannot use causal inference no matter how large the sample sizes of
+clouds and sunlight. This is a powerful time saving research tool:
 without having to manipulate data or estimate marginal or conditional
 distributions, we can determine whether it is possible to calculate a
 causal effect of interest, given the available observations and our
@@ -444,7 +446,7 @@ tractable in Earth science using causal inference (Section
 \ref{sec:necess-cond-caus}).
 
 Once we have established that a causal effect is identifiable from
-data, we must use estimate the required observational distributions
+data, we must estimate the required observational distributions
 (Equation (\ref{eq:3}) from data. Often it may be more computationally
 tractable to calculate an average causal effect, rather than the full
 causal distribution $P(S | do(C=c))$. Returning to our toy example
@@ -456,8 +458,8 @@ causal distribution $P(S | do(C=c))$. Returning to our toy example
   \label{eq:4}
 \end{equation}
 
-Substituting Equation (\ref{eq:3}) into Equation (\ref{eq:4})
-rearranging gives:
+where $\mathbb{E}$ is the expected value. Substituting Equation
+(\ref{eq:3}) into Equation (\ref{eq:4}), and rearranging gives:
 
 \begin{equation}
   \mathbb{E}(S | do(C = c))  = \int_{a} P(A=a) \; \mathbb{E}(S=s |
