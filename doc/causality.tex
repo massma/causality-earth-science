@@ -673,13 +673,15 @@ predicting the effect at time $t+1$ with iteratively increasing
 numbers of lags. When the addition of more time lags does not improve
 the prediction of variables at time $t$, we have some confidence that
 the relevant portions of state space at time $t$ has been
-reconstructed by the time series. However even this approach can be
+reconstructed by the lagged time series and that we have defined the
+embedding dimension of the attractor . However even this approach can be
 problematic; while predictive power may plateau as we add more
 temporal observations back in time, there are no guarantees that we
 would not gain causally relevant knowledge from observations further
 back in time. For example, a significant drought last year may impact
 ecosystem state in the current year, but predictive power may locally
-plateau going back in time 2 months. This example highlights the
+plateau going back in time two months (i.e. when the system exhibits
+long and short term memory). This example highlights the
 challenges associated with any method relying on state space
 reconstruction with lagged observations: to be sure we reconstruct the
 state space we must include observations from a potentially infinite
