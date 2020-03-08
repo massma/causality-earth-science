@@ -52,15 +52,17 @@ figPath = ("doc" </>) . ("figs" </>)
 
 main :: IO ()
 main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
-  let dotFigs = fmap
-        (figPath . (<.> "pdf"))
-        ["forcing-graph", "reconstruction", "no-temporal", "observe-everything"]
+  let dotFigs = fmap (figPath . (<.> "pdf")) ["forcing-graph"]
 
-  let figs = fmap (figPath . (<.> "pdf"))
-                  ["naiveCloudSunlight", "aerosolSunlight", "generic-graph"]
+  let figs =
+        fmap (figPath . (<.> "pdf")) ["naiveCloudSunlight", "aerosolSunlight"]
 
-  let texFigs =
-        fmap figPath ["cloud-aerosol.tex", "mutilated-cloud-aerosol.tex"]
+  let texFigs = fmap
+        figPath
+        [ "cloud-aerosol.tex"
+        , "mutilated-cloud-aerosol.tex"
+        , "generic-graph.tex"
+        ]
 
   want ["doc/causality.pdf"]
 
@@ -105,10 +107,10 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
     need (fmap (d </>) ["references.bib", "def.tex"])
     cmd_ (Cwd d) "bibtex" (dropDirectory1 out -<.> "")
 
-  "//*generic-graph.pdf" %> \out -> do
+  "//*generic-graph*" %> \out -> do
     need ["src/GraphDiagrams.hs"]
     putInfo (printf "# GraphDiagrams.genericGraph for %s" out)
-    liftIO $ GraphDiagrams.genericGraph out
+    liftIO $ GraphDiagrams.genericGraphs out
 
 
   ["//*naiveCloudSunlight.pdf", "//*aerosolSunlight.pdf"]

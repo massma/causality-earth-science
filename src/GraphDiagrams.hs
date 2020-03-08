@@ -10,7 +10,7 @@
 {-# OPTIONS_GHC -Wredundant-constraints #-}
 
 module GraphDiagrams
-  ( genericGraph
+  ( genericGraphs
   , cloudAerosol
   )
 where
@@ -58,49 +58,43 @@ unObserved w label =
 boundedLabel :: String -> DGram
 boundedLabel l = hboxSurf latexSurface l
 
+sizeBoundedLabel w l =
+  hboxSurf latexSurface l # center <> hSpace w 1.0 # center
+
 diagramUnits :: Width -> Double -> Double
 diagramUnits w x = x * w * 1.5
 
-timeSlice
-  :: Width
-  -> (Width -> String -> DGram, Width -> String -> DGram, Double)
-  -> ([Double], DGram)
-timeSlice w (f1, f2, t) =
-  ( dnames
-  , atPoints ps [f1 w "" # named (dnames !! 0), f2 w "" # named (dnames !! 1)]
-  )
+timeSlice :: Width -> ([Width -> DGram], Double) -> ([Double], DGram)
+timeSlice w (fs, t) = case fs of
+  [] -> ([], mempty)
+  _  -> (fmap fst namedFs, foldr1 fr (fmap (\(n, f) -> f w # named n) namedFs))
  where
-  vLoc = negate t
-  ps = fmap (\hLoc -> P (r2 (diagramUnits w hLoc, diagramUnits w vLoc))) [0, 1]
-  dnames = [vLoc * 2, vLoc * 2 + 1]
+  fr d' d = d' ||| hSpace w 0.5 ||| d
+  namedFs = zipWith (\i d -> (10 * t + i, d)) [0 ..] fs
 
 displayDiagram :: FilePath -> DGram -> IO ()
 displayDiagram fpath = renderPGF' fpath def
 
-diagramState
-  :: Width
-  -> [Width -> String -> DGram]
-  -> [Width -> String -> DGram]
-  -> [Double]
-  -> DGram
-diagramState w f1s f2s ts = namedF
-  (foldr
-    (<>)
-    (atPoints [P (r2 (diagramUnits w 0.5, diagramUnits w vLoc))]
-              [observed w "E(t+1)" # named (vNames !! 0)]
-    )
-    diagrams
-  )
- where
-  (hNames, diagrams) = unzip $ fmap (timeSlice w) (zip3 f1s f2s ts)
-  vLoc               = negate (last ts + 1)
-  vNames             = [vLoc * 2]
-  namedF             = foldr (.) id $ zipWith
-    (\n1s n2s -> foldr (.) id ((\n1 n2 -> connectOutside n1 n2) <$> n1s <*> n2s)
-    )
-    hNames
-    (drop 1 hNames <> [vNames])
+(||||) :: DGram -> DGram -> DGram
+(||||) d1 d2 = beside (r2 (-1, 0)) d2 d1
 
+diagramStateLayOut
+  :: [Double] -> Width -> [[Width -> DGram]] -> [String] -> DGram
+diagramStateLayOut vSpaces w fss labels = snd
+  $ foldr fr ([], mempty) (zip (zip labels vSpaces) namedDs)
+ where
+  namedDs = fmap (timeSlice w) (zip fss [0 ..])
+  fr (_s, (n1s, d')) ([], _) = (n1s, d' # center)
+  fr ((str, vSpc), (n1s, d')) (n2s, d) =
+    ( n1s
+    , (foldr (.) id ((\n1 n2 -> connectOutside n1 n2) <$> n1s <*> n2s))
+      ((sizeBoundedLabel w str |||| (d' # center)) === vSpace w vSpc === d)
+    )
+
+diagramState :: Width -> [[Width -> DGram]] -> [String] -> DGram
+diagramState w fss = diagramStateLayOut (fmap (const 0.5) fss) w fss
+
+--
 labelState :: Width -> [Double] -> DGram
 labelState w ts = atPoints ps labels
  where
@@ -134,19 +128,21 @@ parsePDFDims str = P.parseOnly dimensions str
 testStr = -- "<</Type/Page/MediaBox [0 0 176 224]"
   "endobj\n6 0 obj\n632\nendobj\n4 0 obj\n<</Type/Page/MediaBox [0 0 176 224]\n/Rotate 0/Parent 3 0 R\n/Resources<</ProcSet[/PDF /Text]\n/ExtGState 10 0 R\n"
 
-addLabel :: String -> DGram -> DGram
-addLabel lab d =
+addLabel :: Double -> Double -> String -> DGram -> DGram
+addLabel wFactor hFactor lab d =
   hboxPoint ("\\textbf{" <> lab <> "}")
-    #  translateY (0.75 * height d)
+    #  translateY (hFactor * height d)
+    #  translateX (wFactor * width d)
     <> (alignBL d)
 
 cloudAerosol :: FilePath -> FilePath -> IO ()
 cloudAerosol cloudAPath mutPath =
   displayDiagram
       cloudAPath
-      (addLabel "A)" obs === addLabel "B)" pearl === addLabel "C)" unObs)
+      (addLabel' "A)" obs === addLabel' "B)" pearl === addLabel' "C)" unObs)
     >> displayDiagram mutPath mutilated
  where
+  addLabel'    = addLabel 0.0 0.75
   w            = nodeWidth "sunlight (S)"
   dashConfig   = dashingN [0.01, 0.01] 0.01
   (nC, nS, nA) = ((0 :: Int), (2 :: Int), (4 :: Int))
@@ -173,16 +169,30 @@ cloudAerosol cloudAPath mutPath =
       # connectOutside' dashed nA nC
       # connectOutside' dashed nA nS
 
-genericGraph :: FilePath -> IO ()
-genericGraph fpath = displayDiagram
+genericGraphs :: FilePath -> IO ()
+genericGraphs fpath = displayDiagram
   fpath
-  (   labelState w ts
-  ||| diagramState
-        w
-        [observed, unObserved, observed]
-        (replicate 3 unObserved)
-        ts
-  )
+  (full # alignB ||| reconstructed # alignB ||| noTemporal # alignB)
  where
-  ts = [-2, -1, 0]
-  w  = nodeWidth "E(t+1)"
+  addLabelW = addLabel 0.25 0.1
+  addLabel' = addLabel (0.25 * 3.0 / 2.0) 0.1
+  observed' name w' = observed w' name # center
+  w = nodeWidth "E(t+1)"
+  o w' = observed w' ""
+  unO w' = unObserved w' ""
+  full = addLabel' "A)" $ diagramState
+    w
+    [[o, unO], [unO, unO], [o, unO], [observed' "E(t+1)"]]
+    ["S(t-1)", "S(t-1/2)", "S(t)", ""]
+  reconstructed = addLabelW "B)" $ vSpace w 3 === diagramState
+    w
+    [[observed' "S(t)"], [observed' "E(t+1)"]]
+    ["", ""]
+  noTemporal = addLabel' "C)" $ diagramStateLayOut
+    [2.0, 0.5, 0.5]
+    w
+    [ [observed' "S(t-1)"]
+    , [observed' "S'(t)", observed' "C(t)"]
+    , [observed' "E(t+1)"]
+    ]
+    ["", "", ""]

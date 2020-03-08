@@ -594,19 +594,29 @@ would make the calculations of causal effects tractable, and may be
 reasonable in many Earth science situations.
 
 \begin{figure}
-  \includegraphics[]{generic-graph.pdf}
-  \caption{A generic graph of the Earth system state sequence, limited
-    to a 3 time sequence subset of the infinite sequence. Unobserved
-    nodes are outlined by dashed lines.  In the scenario that we are
-    interested in calculating the causal effect of any portion of the
-    state space at time $t$ on some effect ($E$) at time $t+1$, the
-    causal effect will be confounded by the unobserved portions of the
-    state space, and calculating the causal effect is impossible
-    (un-identifiable) without additional assumptions. At a given time
-    we do not observe the entire state space (e.g., $S(t)$, $S(t-1)$),
-    but we also often do not observe the Earth's state at all times:
-    observations are ususally at discrete times, so at intermediate
-    times (e.g. $S(t-1/2)$) we observe noneof the state space evolution.}
+  \input{figs/generic-graph.tex}
+  \caption{Generic graphs of the Earth system state sequence, limited
+    to a 3 time sequence subset of the infinite sequence. \textbf{A):}
+    The reality of the observed earth system: unobserved nodes are
+    outlined by dashed lines. We only observe the state space at
+    certain times (e.g., no observations at $S(t-1/2)$). At times with
+    observations, we only partially observe the full state ($S(t)$,
+    $S(t-1)$). In the scenario that we are interested in calculating
+    the causal effect of any portion of the state space at time $t$ on
+    some effect ($E$) at time $t+1$, the causal effect will be
+    confounded by the unobserved portions of the state space, and
+    calculating the causal effect is impossible (un-identifiable)
+    without additional assumptions. \textbf{B):} The reduction of the
+    earth system graph under an assumption that we can reconstruct the
+    state $S(t)$ from the observable portions of the state space at
+    lagged times $< t$ (see Section
+    \ref{sec:stat-reconstr-state}. \textbf{C):} The reduction of the
+    earth system graph under an assumption that missing temporal
+    observations (e.g. $S(t-1/2)$ in \textbf{A)}) induce independent
+    random variations in the cause ($C(t)$) and effect
+    ($E(t+1)$). $S'(t)$ denotes the state space, not including the
+    cause $C(t)$ (see Sections
+    \ref{sec:miss-temp-observ},\ref{sec:observ-port-state}).}
   \label{fig:generic}
 \end{figure}
 
