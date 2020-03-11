@@ -139,7 +139,7 @@ cloudAerosol :: FilePath -> FilePath -> IO ()
 cloudAerosol cloudAPath mutPath =
   displayDiagram
       cloudAPath
-      (addLabel' "A)" obs === addLabel' "B)" pearl === addLabel' "C)" unObs)
+      (addLabel' "A)" obs === addLabel' "B)" unObs === addLabel' "C)" pearl)
     >> displayDiagram mutPath mutilated
  where
   addLabel'    = addLabel 0.0 0.75
@@ -166,8 +166,8 @@ cloudAerosol cloudAPath mutPath =
   unObs =
     (a # dashConfig === (c ||| hSpace w 2.0 ||| s) # center)
       # connectOutside nC nS
-      # connectOutside' dashed nA nC
-      # connectOutside' dashed nA nS
+      # connectOutside nA nC
+      # connectOutside nA nS
 
 genericGraphs :: FilePath -> IO ()
 genericGraphs fpath = displayDiagram
