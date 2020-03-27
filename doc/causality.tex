@@ -157,28 +157,30 @@ factors:
 \end{equation}
 
 where $A$ represents aerosol, $C$ represents cloud, and $S$ represents
-surface sunlight/solar radiation. Interpreted causally, as in
-\citet{pearl1995causal} and this manuscript, the directed edges encode
-causal dependencies in addition to a factorization of the joint. More
-specifically, each node is causally determined by its parents, as well
-as some random variation due to processes not explicitly considered in
-the graph. For example, sources of aerosol variability not considered
-in Figure \ref{fig:toy}A include anthropogenic aerosol emission, the
-biosphere, fires, volcanoes, etc. For cloud, this includes synoptic
-forcing, atmospheric humdity, etc. For radiation, this includes
-variability of top of atmosphere radiation, etc. For the causal graph,
-as drawn, we assume that all of these sources of randomness are
-independent of each other. The representation of ramdomness in causal
-graphs is a powerful tool: by positing a causal graph, we are not
-stating that the variables in the graph are the only processes in the
-system. Instead, we are stating that all other processes not included
-in the graph induce variations in the causal variables that are
-independent of each other. For a deeper look at causal graphs and
-their underlying theory based on structural causal models (SCMs) we
-refer the reader to \citet{pearl2009}. We find that the causal graph
-representation is more intuitive to domain experts, so we focus on
-graph-based theory in our application of causal inference to earth
-science.
+surface sunlight/solar radiation (for the reader unfamiliar with basic
+probability calculations, a brief introduction is provided in Appendix
+XX). Interpreted causally, as in \citet{pearl1995causal} and this
+manuscript, the directed edges encode causal dependencies in addition
+to a factorization of the joint. More specifically, each node is
+causally determined by its parents, as well as some random variation
+due to processes not explicitly considered in the graph. For example,
+sources of aerosol variability not considered in Figure \ref{fig:toy}A
+include anthropogenic aerosol emission, the biosphere, fires,
+volcanoes, etc. For cloud, this includes synoptic forcing, atmospheric
+humdity, etc. For radiation, this includes variability of top of
+atmosphere radiation, etc. The causal graph, as drawn, encdoes the
+assumption that all of these sources of randomness are independent of
+each other. The representation of ramdomness in causal graphs is a
+powerful tool: by positing a causal graph, we are not stating that the
+variables in the graph are the only processes in the system. Instead,
+we are stating that all other processes not included in the graph
+induce variations in the causal variables that are independent of each
+other. For a deeper look at causal graphs and their underlying theory
+based on structural causal models (SCMs) we refer the reader to
+\citet{pearl2009}. We find that the causal graph representation is
+more intuitive to domain experts than the underlying SCM-based theory,
+so we focus on graph-based theory in our application of causal
+inference to earth science.
 
 We can apply causal graph theory
 \citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
@@ -236,8 +238,8 @@ dependencies consistent with Figure \ref{fig:toy}A.
   aerosol &\sim \text{uniform (0, 1]}\\
   cloud &\sim \text{bernoulli (aerosol)}\\
   sunlight &:= \begin{cases}
-    \text{Cloudy} &: 0.6 \cdot \text{clear sky radiation}  \\
-    \text{Clear} &: \text{clear sky radiation}
+    \text{Cloudy} &: 0.6 \cdot \text{downwelling clear sky radiation}  \\
+    \text{Clear} &: \text{downwelling clear sky radiation}
   \end{cases},
                    \label{eq:1}
 \end{align}
@@ -245,14 +247,14 @@ dependencies consistent with Figure \ref{fig:toy}A.
 and:
 
 \begin{equation*}
-  \text{clear sky radiation} = U_{sunlight} \cdot (1 - aerosol); \;
-  U_{sunlight} \sim \text{Normal(340 W m$^{-2}$, 30 \, W m$^{-2}$)}
+  \text{downwelling clear sky radiation} = TOA \, \cdot \, (1 - aerosol); \;
+  TOA \sim \text{Normal(340 W m$^{-2}$, 30 \, W m$^{-2}$)}
 \end{equation*}
 
 Now, consider not knowing the underlying generative processes, but
 instead just passively observing cloud and sunlight. If one were
 interested in calculating the effect of cloud on sunlight, and aerosol
-data were not available or one where very naive, one approach would be
+data were not available or one were very naive, one approach would be
 to bin the data by cloudy and clear conditions and compare the amount
 of sunlight between cloudy and clear observations (Figure
 \ref{fig:naive-cloud-sunlight}). This approach suggests that clouds
@@ -311,7 +313,7 @@ are tractable in Earth science using causal inference (Section
 
 Once we have established that a causal effect is identifiable from
 data, we must estimate the required observational distributions
-(Equation (\ref{eq:3}) from data. Often it may be more computationally
+(Equation (\ref{eq:3})) from data. Often it may be more computationally
 tractable to calculate an average causal effect, rather than the full
 causal distribution $P(S | do(C=c))$. Returning to our toy example
 (Figure \ref{fig:toy}(A)), the average effect is defined as:
@@ -388,7 +390,7 @@ models and \textit{do-}calculus:
   dependencies in a system (edges are drawn \emph{from} causes
   \emph{to} effects).
 \item In order to calculate an unbiased causal effect from data, we
-  must isolate the covariability between causal and effect that is due
+  must isolate the covariability between cause and effect that is due
   to the directed causal path from cause to effect. The presence of
   non-causal dependencies between the cause and effect can be deduced
   from the causal graph: the presence of an unblocked backdoor path
@@ -436,7 +438,9 @@ space and time, these other identification strategies are not as
 applicable, and an unblockable backdoor path is a sufficient condition
 for unidentifiability in the types of graphs that are representative
 of Earth science systems (Figure \ref{fig:generic})
-\citep{tian2002general}.
+\citep{tian2002general}. In other words, blocking backdoor paths is a
+requirement for calculating a causal effect in graphs of the form
+presented in Figure \ref{fig:generic}.
 
 \section{Relation to previous work, ``causal discovery'', and
   clarification on terminology}
