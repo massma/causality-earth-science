@@ -457,15 +457,19 @@ techniques:
   structure (e.g. the causal graph) of the system using data.
 \end{enumerate}
 
-This paper focuses on causal inference as (1): calculating causal
-effects from data (Section \ref{sec:causal-graphs-pearls}). Inferring
-the causal structure of the system (2), is generally much more
-difficult and also requires additional assumptions. For example, some
-causal structure discovery algorithms rely on assumptions that we
-observe all relevant variables to the system (violated because we
-partially observe the state space) and/or possibly arbitrary
-parameters for statistical independence tests
-\citep{runge2019inferring}. Additionally, some methods invoke
+To summarize, \textit{causal effect inference (1)} calculates the
+magnitude of a causal effect from data and a causal graph created by
+the domain expert, while \textit{causal structure discovery (2)} does
+not caclualte any causal effects but instead generates a causal graph
+from data.  This paper focuses on causal inference as (1): calculating
+causal effects from data (Section
+\ref{sec:causal-graphs-pearls}). Inferring the causal structure of the
+system (2), is generally much more difficult and also requires
+additional assumptions. For example, some causal structure discovery
+algorithms rely on assumptions that we observe all relevant variables
+to the system (violated because we partially observe the state space)
+and/or possibly arbitrary parameters for statistical independence
+tests \citep{runge2019inferring}. Additionally, some methods invoke
 linearity assumptions about the relationships between processes
 \citep{krich2019causal}, which is not generally true for the Earth
 system \citep{palmer-nonlinaer-1999}.
@@ -480,22 +484,29 @@ However, there has been considerable work and effort in applying
 causal structure discovery (2) in Earth science
 \citep[e.g.,][]{ebert-uphoff2012,
   samarasinghe-casuality,runge-causal-timeseries,runge2019inferring}. Causal
-discovery algorithms filter, remove, and infer the direction of causal
-links in the system, usually using conditional independence detection
-algorithms that rely on signficiance parameters. Causal inference of
-effects, as we explore here, represents a different approach where we
-do not rely on assumptions about the significance of effects, but
-instead make explicit assumptions about the causal structure of the
-system. Indeed, our persepctive here is that we have often acquired
-substantial understanding of the mechanisms at play and their causal
-relationships, which we want to explot: that is combining domain
+discovery algorithms filter and infer the direction of causal links in
+the system, usually using conditional independence detection
+algorithms that rely on signficiance parameters. In contrast to causal
+inference of effects, which we explore in this paper, causal discovery
+algoirthms do not directly incorporate domain knowledge on the causal
+dependencies of processes in the system (although domain knowledge may
+guide assumptions about linearity of processes, and the observations
+that must be included in the causal discovery algorithm). Indeed, our
+persepctive here is that we have often acquired substantial
+understanding of the mechanisms at play and their causal
+relationships, which we want to exploit: that is combining domain
 knowledge with data science. For example, given our domain knowledge
 of the Earth science system we generally have high confidence about
 the causal structure of the system, and as we see (Section
 \ref{sec:necess-cond-caus}) we can construct quite general graphs that
-are faithful to our knowledge about how dynamical systems evolve. It
-is possible some links in these graphs correspond to small effects,
-and these links would be removed through causal structure
+are faithful to our knowledge about how dynamical systems evolve. In
+the climate system we can identify the state variables and know that
+the state at time \(t\) determines the state at time \(t+1\), even if
+the exact functional form of the dependency through time is not
+known. Therefore, we can write down a causal graph and do not need to
+infer graph structure from data (Section \ref{sec:necess-cond-caus})
+It is possible some links in these causal graphs correspond to small
+effects, and these links would be removed through causal structure
 discovery. However, directly interpreting what constitutes a
 ``negligibly small'' effect calculation presented in physical units
 and probabilities, as calculated with causal effect inference, may be
@@ -503,29 +514,29 @@ more transparent than interpreting missing links derived from causal
 structure discovery significance parameters. In other words, direct
 calculation of effects may be more transparent and interpretable for
 many readers, relative to a causal graph derived from significance
-parameters with more abstract meaning. We hope to motivate further
-research effort in causal effect inference to match recent efforts in
-causal structure discovery. Ideally causal effect inference and causal
-structure discovery will co-evolve as complementary abstractions for
-causal interpretation; researchers and readers can choose the method
-that suits their assumptions and needs.
+parameters with more abstract meaning. Additionally, calculating an
+effect of some processes upon others illuminates more information
+about the system than the binary existence of a link or no link, as is
+output by causal structure discovery algorithms.
 
+However, ultimately we view causal effect inference and causal
+structure discovery as complementary tools. Causal effect inference is
+more useful in scnearios where elevated domain knowledge gives a
+priori confidence in causal graph structure, while causal structure
+discovery is more useful when we have very limited domain knowledge
+but access to observations of all relevant processes to a
+problem. Additionally, causal effect inference can be used as a second
+step after causal dsicovery to calculate individual causal effects. We
+hope to motivate further research effort in causal effect inference to
+match recent efforts in causal structure discovery in Earth
+science. Ideally causal effect inference and causal structure
+discovery will co-evolve as complementary abstractions for causal
+interpretation; researchers and readers can choose the method that
+suits their assumptions, available data, and level of domain
+knowledge.
 
-There are other reasons to focus on (1) rather than (2) in Earth
-science: often in Earth science we know or have a strong a priori
-belief about the causal structure of the system, so inferring the
-causal graph structure from data is unnecessary. For example, in the
-climate system we can identify the state variables and the state at
-time \(t\) determines the state at time \(t+1\), even if the exact
-functional form of the dependency through time is not
-known. Therefore, we can write down a causal graph and do not need to
-infer graph structure from data (Section
-\ref{sec:necess-cond-caus}). Additionally, calculating an effect of
-some processes upon others illuminates more information about the
-system than the binary existence of a link or no link, as is output by
-causal structure discovery algorithms.
-
-
+\textit{TODO: make a conceptual graph with amount of data and amount
+  of knowledge?}
 
 \textit{
   TODO: talk to Elias about ``no mixing'' theorem; from what he
@@ -533,7 +544,7 @@ causal structure discovery algorithms.
   discovery''
 }
 
-\section{Necessary conditions for causal identification in the Earth
+\section{Necessary conditions for causal identification in Earth
   systems}
 \label{sec:necess-cond-caus}
 
@@ -554,13 +565,14 @@ state space at every time (e.g. $S(t-1/2)$ in Figure
 \ref{fig:generic}), and at any given time, we do not observe the state
 space at all locations and for all state variables (e.g. $S(t)$ and
 $S(t-1)$ in Figure \ref{fig:generic}). So, if we are interested in the
-causal effect of any state variable on some variable ($E$) at time
-$t+1$, then the causal effect will be confounded by the unobserved
-portions of the state space, and calculating a causal effect is
-impossible (un-identifiable) without additional assumptions. We will
-apply causal graph theory to identify such additional assumptions that
-would make the calculations of causal effects tractable, and may be
-reasonable in many Earth science situations.
+causal effect of any state variable at time $t$ on some variable ($E$)
+at time $t+1$, then the causal effect will be confounded by the
+unobserved portions of the state space, and calculating a causal
+effect is impossible (un-identifiable) without additional
+assumptions. We will apply causal graph theory to identify such
+additional assumptions that would make the calculations of causal
+effects tractable, and may be reasonable in many Earth science
+situations.
 
 \begin{figure}
   \input{figs/generic-graph.tex}
@@ -579,7 +591,7 @@ reasonable in many Earth science situations.
     earth system graph under an assumption that we can reconstruct the
     state $S(t)$ from the observable portions of the state space at
     lagged times $< t$ (see Section
-    \ref{sec:stat-reconstr-state}. \textbf{C):} The reduction of the
+    \ref{sec:stat-reconstr-state}). \textbf{C):} The reduction of the
     earth system graph under an assumption that missing temporal
     observations (e.g. $S(t-1/2)$ in \textbf{A)}) induce independent
     random variations in the cause ($C(t)$) and effect
@@ -593,7 +605,7 @@ reasonable in many Earth science situations.
   lagged observations}
 \label{sec:stat-reconstr-state}
 
-Takens theorem implies that we can reconstruct the unobserved portions
+Takens' theorem implies that we can reconstruct the unobserved portions
 of the state space using lagged observations back in time. In this
 case, the causal graph is greatly simplified (Figure
 \ref{fig:reconstructed}). If we assume that the state is
@@ -854,7 +866,7 @@ To summarize:
   \begin{itemize}
   \item The state space of the system is reconstructable
     from lagged observations of the system, as allowed by
-    Takens theorem (Section \ref{sec:stat-reconstr-state}, Section \ref{sec:miss-temp-observ}), or
+    Takens' theorem (Section \ref{sec:stat-reconstr-state}, Section \ref{sec:miss-temp-observ}), or
   \item The effect of interest is only causally
     affected by the observed portion of the state space (Section
     \ref{sec:observ-port-state}), or
