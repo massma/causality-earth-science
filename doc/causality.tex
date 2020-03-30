@@ -559,20 +559,20 @@ temporal ordering of events: we know that future events can have no
 causal effect on the past.
 
 Causal identification and tractable causal inference to Earth science
-requires assumptions about the unobserved portion of the state
-space. For example, without assumptions the unobserved portion of the
-state space will introduce confounding for any causal affect of
-interest (Figure \ref{fig:generic}). We generally do not observe the
-state space at every time (e.g. $S(t-1/2)$ in Figure
-\ref{fig:generic}), and at any given time, we do not observe the state
-space at all locations and for all state variables (e.g. $S(t)$ and
-$S(t-1)$ in Figure \ref{fig:generic}). So, if we are interested in the
-causal effect of any state variable at time $t$ on some variable ($E$)
-at time $t+1$, then the causal effect will be confounded by the
-unobserved portions of the state space, and calculating a causal
-effect is impossible (un-identifiable) without additional
-assumptions. We will apply causal graph theory to identify such
-additional assumptions that would make the calculations of causal
+requires assumptions about the unobserved portions of the state
+space. Without assumptions the unobserved portions of the state space
+will introduce confounding for any causal affect of interest (Figure
+\ref{fig:generic}). For example, we generally do not observe the state
+space at every time (e.g. $S(t-1/2)$ in Figure \ref{fig:generic}), and
+at any given time, we do not observe the state space at all locations
+and for all state variables (e.g. $S(t)$ and $S(t-1)$ in Figure
+\ref{fig:generic}). So, if we are interested in the causal effect of
+any state variable at time $t$ on some variable at time $t+1$ (e.g.,
+$E$ in Figure \ref{fig:generic}), then the causal effect will be
+confounded by the unobserved portions of the state space, and
+calculating a causal effect is impossible (un-identifiable) without
+additional assumptions. We will apply causal graph theory to identify
+the additional assumptions that would make the calculations of causal
 effects tractable, and may be reasonable in many Earth science
 situations.
 
