@@ -648,26 +648,25 @@ interpretation (at the cost of an increased likelihood that the
 assumptions are violated; see Section \ref{sec:miss-temp-observ},
 \ref{sec:observ-port-state}, \ref{human}).
 
-In practice we also do not know the number of lagged observations of
-the state space that are required for reconstruction at time
-$t-1$. One approach is to use the data for guidance. This involves
-predicting the effect at time $t+1$ with iteratively increasing
-numbers of lags. When the addition of more time lags does not improve
-the prediction of variables at time $t$, we have some confidence that
-the relevant portions of state space at time $t$ has been
-reconstructed by the lagged time series and that we have defined the
-embedding dimension of the attractor . However even this approach can be
+In practice we also do not know the number of lagged observations that
+are required for reconstruction of the state space at time $t$. One
+approach is to use the data for guidance. This involves predicting the
+effect at time $t+1$ with iteratively increasing numbers of lags. When
+the addition of more time lags does not improve the prediction of
+variables at time $t$, we have some confidence that the relevant
+portions of state space at time $t$ has been reconstructed by the
+lagged time series (e.g., we have defined the embedding dimension of
+the attractor) \citep{Sugihara496}. However even this approach can be
 problematic; while predictive power may plateau as we add more
 temporal observations back in time, there are no guarantees that we
 would not gain causally relevant knowledge from observations further
 back in time. For example, a significant drought last year may impact
 ecosystem state in the current year, but predictive power may locally
 plateau going back in time two months (i.e. when the system exhibits
-long and short term memory). This example highlights the
-challenges associated with any method relying on state space
-reconstruction with lagged observations: to be sure we reconstruct the
-state space we must include observations from a potentially infinite
-temporal extent.
+long and short term memory). This example highlights the challenges
+associated with any method relying on state space reconstruction with
+lagged observations: to be sure we reconstruct the state space we must
+include observations from a potentially infinite temporal extent.
 
 \subsection{Missing temporal observations induce independent random
   variations in cause and effect}
