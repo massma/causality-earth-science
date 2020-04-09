@@ -607,6 +607,9 @@ situations.
   lagged observations}
 \label{sec:stat-reconstr-state}
 
+\textit{TODO: introduce soil moisture example so it does not come out
+  of nowhere}
+
 Takens' theorem implies that we can reconstruct the unobserved
 portions of the state space using lagged observations back in time. In
 this case, the causal graph is greatly simplified (Figure
@@ -693,24 +696,25 @@ block backdoor paths by conditioning on $S'(t)$. However, under these
 assumptions $S'(t)$ is incalculable because if we attempt to
 reconstruct $S'(t)$ using lagged observations of the state space, the
 reconstruction will estimate $S$ rather than $S'$, which includes
-$C(t)$ because $C$ is a part of the state space. So, our cause will be
-shadowed by our reconstruction of the state space and our causal
-effect will be biased.
+$C(t)$ because $C$ is a part of the state space. So, a portion of the
+cause's role in the system's evolution will be falsely incorporated
+into the reconstruction of the state sapce, and our causal effect will
+be biased.
 
 The assumption that missing temporal observations induce independent
 random variations in the cause and effect is required because
 otherwise there would be an open backdoor path between the cause and
-effect through the unobserved time slice (e.g. at time
-($t-1/2$)). Relative to Section \ref{sec:stat-reconstr-state}, the
-advantage of this approach to causal inference is that we can
-calculate the causal effects of individual observations (e.g. soil
-moisture), rather than needing to interpret the causal impact of the
-entire state holistically. However, this approach requires an
-additional assumption that the missing temporal observations do not
-induce dependencies between the cause and effect of interest. As with
-Section \ref{sec:stat-reconstr-state}, we must be able to reconstruct
-the state space, which may not always be possible, and may also
-confuse interpretation.
+effect through the unobserved time slice (e.g. at time $t-1/2$ in
+Figure \ref{fig:generic}a). Relative to Section
+\ref{sec:stat-reconstr-state}, the advantage of this approach to
+causal inference is that we can calculate the causal effects of
+individual observations (e.g. soil moisture), rather than needing to
+interpret the causal impact of the entire state holistically. However,
+this approach requires an additional assumption that the missing
+temporal observations do not induce dependencies between the cause and
+effect of interest. As with Section \ref{sec:stat-reconstr-state}, we
+must be able to reconstruct the state space, which may not always be
+possible, and may also confuse interpretation.
 
 
 \subsection{The unobserved portion of the state space does not affect
