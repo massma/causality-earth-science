@@ -731,14 +731,17 @@ observations at time $t$ then we can calculate the causal effect as:
 
 \begin{equation}
   P(E(t+1)| do(C(t)=c)) = \int_{S'(t)} P(E(t+1) \, | \, C(t)=c,
-  S'(t) = o
-  )\; P(S'(t-1)=o) \, d \, o,
+  S'(t) = s
+  )\; P(S'(t-1)=s) \, d \, s,
 \end{equation}
 
 where $S'(t)$ are all observations at time $t$, not including the
-cause $C(t)$. Whether or not there are interactions between
-observations at time $t$ is a function of the temporal and spatial
-extent of the observations. If observations are instantaneous point
+cause $C(t)$. However, when blocking backdoor paths with simultaneous
+observations it is important to consider whether there are
+interactions between observations at time $t$, and whether the
+observations are truely simultaneos. Whether tehre are interactions
+between observations is a function of the temporal and spatial extent
+of the observations. If observations are instantaneous point
 observations indexed in time, then interactions between them can
 likely be ignored. However, often the spatial and/or temporal extents
 of observations overlap, and in this case an assumption of zero
@@ -748,8 +751,8 @@ can still block backdoor paths by conditioning on past observations
 
 \begin{equation}
   P(E(t+1)| do(C(t)=c)) = \int_{S(t-1)} P(E(t+1) \, | \, C(t)=c,
-  S(t-1) = o
-  )\; P(S(t-1)=o) \, d \, o.
+  S(t-1) = s
+  )\; P(S(t-1)=s) \, d \, s.
 \end{equation}
 
 The assumption that we observe all variables relevant to an effect is
