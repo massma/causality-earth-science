@@ -766,28 +766,30 @@ much easier to interpret relative to an assumption about the degree to
 which we can (or cannot) reconstruct the relevant state space with
 lagged observations.
 
+\textit{TODO: make this section more minor as Pierre suggested?}
 \subsection{Applications at the human-Earth system interface: when the
   cause is approximately independent of the system}
 \label{human}
 
 Causal inference becomes substantially more tractable under an
 assumption that our causes of interest are independent from the
-evolution of the state space (Figure \ref{fig:forcing}). While the
-Earth system certainly affects all processes on Earth, historically
-some processes are approximately decoupled from the Earth system's
-state, paricularly at the human-climate interface. For example, recent
-human history demonstrates that global human actions are relatively
-independent of the climate state \citep{arto2014drivers}. That is, we
-have failed to reduce green house gas emissions even as global
-temperature increased. Instances of reduced rises in global green
-house gas emissions are usually due to global economic recession
-(e.g. the 2008 financial crisis) rather than factors directly tied to
-the climate state. In this example many global social, political and
+evolution of the state space (Figure \ref{fig:forcing}). While such a
+strong assumption may seem unjustifiable due to tight coupling within
+the earth system, recent historical examples suggest that this
+assumption may be applicable to some scenarios, particularly at the
+human-Earth system interface. For example, coordinated global human
+response to global warming and humanity's global actions are
+relatively independent of the climate state
+\citep{arto2014drivers}. We have failed to reduce green house gas
+emissions even as global temperature increased. Instances of reduced
+rises in global green house gas emissions are usually due to global
+economic recession (e.g. the 2008 financial crisis) or pandemic
+(COVID-19 crisis) rather than factors directly tied to the climate
+state. In these examples many global social, political, health, and
 economic factors are the primary causes of global green house gas
 emission, and while the climate system may effect these factors, the
 historical evidence suggests that the climate system exerts a
-relatively small impact (with tragic consequences)
-\citep{arto2014drivers}.
+relatively small impact \citep{arto2014drivers}.
 
 \begin{figure}
   \includegraphics[]{forcing-graph.pdf}
@@ -799,13 +801,14 @@ relatively small impact (with tragic consequences)
 Generally this logic applies to many scenarios on the "human-climate"
 interface, such as land-use land-cover change in urban centers where
 urban planning is relatively independent of recent climate
-history. The general graph in Figure \ref{fig:forcing} is
-representative of many such scenarios at the human-climate interface,
-and because the state space does not affect the cause, there are no
+history. The general graph in Figure \ref{fig:forcing} is applicable
+to any analyses for which: 1) we wish to examine the effect of human
+behavior on the environment, and 2) we can assume human behavior is
+approximately independent of the climate state. Because the climate
+state space does not affect the cause (human behavior), there are no
 unblocked backdoor paths through the unobserved portions of the state
 space. Causal inference is particularly tractable for this class of
 problems.
-
 
 \section{Discussion}
 
