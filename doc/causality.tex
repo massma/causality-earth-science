@@ -810,33 +810,35 @@ unblocked backdoor paths through the unobserved portions of the state
 space. Causal inference is particularly tractable for this class of
 problems.
 
-\section{Discussion}
-
-To summarize:
+\section{Summary and Conclusions}
 
 \begin{itemize}
 \item Causal inference from data is a new tool with the potential to
   complement traditional scientific methods, including numerical and
   real world experimentation. In Earth science, numerical models rely
-  on approximations that deviate their behavior from reality, and real
-  world experimentation may be intractable or unethical. Causal
-  inference is a third tool to calculate the effects of physical
-  processes that has a different set of advantages and
-  disadvantages, and is a powerful complement to numerical and real
-  world experimentation.
+  on approximations that deviate modeled physics from reality, and
+  real world experimentation may be intractable or unethical. Causal
+  inference is a third tool to estimate the effect of prescribed
+  experimentation on physical processes. Causal inference has a
+  different set of advantages and disadvantages, and is a powerful
+  complement to numerical and real world experimentation.
 \item Causal graphs concisely and clearly encode assumptions about
   causal dependencies between processes. Including a causal graph
   benefits any observational analysis, but particularly those that use
   regression. Depending on the observations available and the causal
   structure of the system, regression analyses can be interpreted as
-  an average causal effect.
+  an approximation to the average causal effect.
 \item Whether or not a causal effect can be calculated from data is
   determined exclusively by the causal graph. Thus the tractability of
   a causal analyses, or the strength of assumptions necessary to make
-  an analysis tractable, is determined and assessed before touching
-  data (which can be a significant time sink).
+  an analysis tractable, is determined and assessed before collecting,
+  generating, or manipulating data (which can cost a tremendous amount
+  in terms of researchers' time, computational resources, and/or
+  funding). We recommend early causal analyses to determine
+  tractability during a project's conception, before these resources
+  are spent.
 \item Because the Earth system evolves as a dynamical system through
-  time, we can construction generic Earth system causal graphs
+  time, we can construct generic Earth system causal graphs
   applicable to a wide range of scenarios. However, causal inference
   in Earth science also presents challenges: we only partially observe
   the state space of the system, so we must reconstruct the full state
