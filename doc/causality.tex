@@ -328,12 +328,12 @@ where $\mathbb{E}$ is the expected value. Substituting Equation
 (\ref{eq:3}) into Equation (\ref{eq:4}), and rearranging gives:
 
 \begin{equation}
-  \mathbb{E}(S | do(C = c))  = \int_{a} P(A=a) \; \mathbb{E}(S=s |
+  \mathbb{E}(S | do(C = c))  = \int_{a} P(A=a) \; \mathbb{E}(S \, | \,
   C=c, A=a) \, d a,
   \label{eq:5}
 \end{equation}
 
-Where $\mathbb{E}(S=s \, | \, C=c, A=a)$ is just a regression of sunlight on
+Where $\mathbb{E}(S \, | \, C=c, A=a)$ is just a regression of sunlight on
 cloud and aerosol. Estimating the marginal $P(A)$ is difficult, but
 if we assume that our observations are independent and identically
 distributed (IID) and we have a large enough sample, we can use the
@@ -348,18 +348,19 @@ function $f$:
 \end{equation}
 
 In Equation (\ref{eq:5}), $c$ is fixed by the intervention, so
-$\mathbb{E}(S=s | C=c, A=a)$ is just a function of $a$, and we can use
+$\mathbb{E}(S| C=c, A=a)$ is just a function of $a$, and we can use
 Equation (\ref{eq:lln}) to justify an approximation to Equation
 (\ref{eq:5}) with:
 
 \begin{equation}
-  \mathbb{E}(S | do(C = c))  \approx \frac{1}{n} \sum_{i=1}^n \mathbb{E}(S=s_i |
+  \mathbb{E}(S | do(C = c))  \approx \frac{1}{n} \sum_{i=1}^n
+  \mathbb{E}(S \, | \,
   C=c, A=a_i).
   \label{eq:6}
 \end{equation}
 
 Data or prior knowledge can inform the regression function for
-$\mathbb{E}(S=s_i | C=c, A=a_i)$. In the toy example, a linear model
+$\mathbb{E}(S | C=c, A=a_i)$. In the toy example, a linear model
 conditional on cloud appears to be a good choice of regression
 function (Figure \ref{fig:linear}). The causal effect of clouds on
 sunlight as calculated using Equation (\ref{eq:6})) (e.g.
@@ -862,25 +863,26 @@ problems.
 \end{itemize}
 
 Here we focus on the fundamentals of calculating causal effects from
-data. However, causal inference is a thriving active area of
-research, and there are many other causal inference techniques and
-abstractions that would benefit the Earth system research
-community. For example, there are techniques for representing
-variables observed under selection bias in the causal graph, and
-analyzing whether a causal effect can be calculated (e.g. identified)
-given the selection bias
+data. However, causal inference is a thriving active area of research,
+and there are many other causal inference techniques and abstractions
+that would benefit the Earth system research community. For example,
+there are techniques for representing variables observed under
+selection bias in the causal graph, and analyzing whether a causal
+effect can be calculated (i.e. identified) given the selection bias
 \citep[e.g.,][]{bareinboim2014recovering}. Selection bias is very
-relevant, for example satellite observations are almost always
-collected under selection bias (e.g. only certain times of day, clouds
-obscure surface data, etc.). Additionally, transportability
+relevant in Earth science. For example, satellite observations are
+almost always collected under selection bias (e.g. they sample at
+certain local times of the day, clouds obscure surface data,
+etc.). Additionally, transportability
 \citep[e.g.,][]{bareinboim2012transportability} identifies whether one
 can calculate a causal effect in a passively observed target domain,
 by merging experiments from source domains that may differ from the
-target domain. We are currently working to formally transport global
-Earth system model experiments to the real world, where numerical
-models are the source domains that differ from the target domain
-(``real world'') due to approximations \citep[][in
-prep]{massmann}. Given the limitations of explicit experiments in
+target domain. A potential aplication for transportability in earth
+sciences would be to merge numerical model experiments (e.g., global
+climate models, cloud models, etc.) and formally transport their
+results to the real world. In this case, numerical models are the
+source domains that differ from the target domain (``real world'') due
+to approximations. Given the limitations of explicit experiments in
 Earth science, we hope that causal methods gain wider adoption in
 Earth science and that this manuscript provides the necessary
 foundation for proper application of causal inference in Earth
