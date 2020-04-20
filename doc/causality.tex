@@ -7,8 +7,7 @@
 \title{Causal inference in Earth science}
 
 \author{Adam Massmann\thanks{Corresponding author:
-    akm2203@columbia.edu}, Pierre Gentine, need to contact: Elias
-  Bareinboim, Jakob Runge?}
+    akm2203@columbia.edu}, Pierre Gentine, Jakob Runge?}
 
 \maketitle
 
@@ -157,9 +156,9 @@ factors:
 \end{equation}
 
 where $A$ represents aerosol, $C$ represents cloud, and $S$ represents
-surface sunlight/solar radiation (for the reader unfamiliar with basic
-probability calculations, a brief introduction is provided in Appendix
-XX). Interpreted causally, as in \citet{pearl1995causal} and this
+surface sunlight/solar radiation (Appendix
+XX describes our noation used and a brief introduction to probability
+theory for unfamiliar readers). Interpreted causally, as in \citet{pearl1995causal} and this
 manuscript, the directed edges encode causal dependencies in addition
 to a factorization of the joint. More specifically, each node is
 causally determined by its parents, as well as some random variation
@@ -888,6 +887,74 @@ Earth science and that this manuscript provides the necessary
 foundation for proper application of causal inference in Earth
 science.
 
+
+
 \bibliography{references.bib}
+
+\appendix
+\section{Basic probability theory and syntax}
+\label{prob-theory}
+
+In this paper we use capital letters to represent random variables
+(e.g., ``X''). For example, $P(X)$ is the probability distribution of
+a random variable $X$. $P(X)$ is a function of one variable that
+outputs a probability (or density, in the case of ocntinuous
+variables) given a value for $X$, which we represent with lowercase
+letters (e.g., $x$). $P(X)$ is shorthand; a more descriptive but less
+concise way to write $P(X)$ is $P(X=x)$ which represents the fact that
+$P(X)$ is a function of a specific value of $X$, reprsented by $x$. We
+use both notations, and $P(X)$ has the same meaning as $P(X=x)$.
+
+For the unfamiliar reader, there are a few basic rules and definitions
+in probability that provide relatively complete foundations for
+building deeper understanding of probability. These are the \textbf{sum rule}:
+
+\begin{equation}
+  P(X=x) = \sum_Y P(X=x,\, Y=y)
+  \label{eq:2}
+\end{equation}
+
+and the \textbf{product rule}:
+
+\begin{equation}
+  P(X=x, \, Y=y) = P(X = x \, | \, Y=y ) P(Y=y) = P(Y = y \, | \, X=x ) P(X=x)
+  \label{eq:7}
+\end{equation}
+
+The \textit{joint probability distribution} ``$P(X=x,Y=y)$'' is the
+probability that the random variable $X$ equals some value $x$
+\textbf{and} the random variable $Y$ equals $y$. The joint
+distribution is a function of two variables, $x$ and $y$ which are
+values in the domains of the random variables $X$ and $Y$
+respectively. The \textit{conditional probability distribution}
+``$p(X = x \, | \, Y=y )$'' is also a function of two variables $x$
+and $y$, but it is the probability of observing $X$ equal to $x$,
+given that we have observed $Y$ equal to $y$. In other words, if we
+filter our domain to only values where $Y=y$, then
+``$p(X = x \, | \, Y=y )$'' is the probability of observing $X=x$ in
+this sub-domain where $Y=y$. The \textit{marginal probability
+  distribution} ``$P(Y=y)$'' is just the probability that $Y$ equals
+some value $y$, and is a function of only $y$. We can calculate the
+marginal probability from the joint distribution by summing over all
+possible values values of the other random variabiles in the joint
+(the ``sum rule'' - Equation (\ref{eq:2})). Additionally, the joint
+distribution can factorize into a product of conditional and marginal
+distributions (``the product rule'' - Equation (\ref{eq:7})). These
+two simple rules can be used to build much of the theory and
+applications of probability theory (e.g., Bayes' theorem
+$P(Y|X) =\frac{P(X|Y) P(Y)}{P(X)}$). While Equations (\ref{eq:2})
+deals with probability distributions of discrete random variables,
+there is also a sum rule analog for continuos random variables and
+probability density functions (the syntax of the product rule is the
+same):
+
+\begin{equation*}
+  P(X=x) = \int_Y P(X=x,\, Y=y) \, dy
+  \label{eq:2}
+\end{equation*}
+
+where $\int_{Y}$ represents an integral over the domain of $Y$ (e.g.,
+$\int_{-\infty}^{\infty}$ if $Y$ is a Gaussian random variable).
+
 
 \end{document}
