@@ -41,7 +41,7 @@ However, causal inference from data presents its own challenges; the
 causal effect must be identifiable from assumptions about the causal
 dependencies of system processes and available observations. If a
 causal effect is unidentifiable, then the causal effect cannot be
-calulated from data, even with samples spanning the entire joint
+calculated from data, even with samples spanning the entire joint
 distribution of observed variables \citep[][]{shpitser2006}. Specific
 to problems in Earth science, the identification of causal effects is
 challenging given two fundamental issues: 1) the system evolves
@@ -90,7 +90,7 @@ assumptions about the causal dependencies of a system. Causal graphs
 are useful tools because they can be drawn by any domain expert with
 no required knowledge of math or probability, but they also represent
 formal mathematical objects with specific meaning. A domain expert
-simply draws directed edges (e.g. arrows) from variables that are
+simply draws directed edges (i.e. arrows) from variables that are
 causes to effects. We illustrate causal graphs and their mathematical
 consequences with a simplified toy example examining clouds, aerosols,
 and surface solar radiation/sunlight (Figure \ref{fig:toy}A). Our
@@ -107,15 +107,15 @@ causal graph consists of:
     to denote the unobserved variable. \textbf{C)} presents an
     alternative notation for representing an unobserved or hidden
     common cause that is popular in causal literature \citep[e.g.,
-    ``semi-markovian graphs'',][]{shpitser2006} and usually only
-    includes observed quantites as nodes in the graph. However in
-    Earth Science we often observe much less of the system relative to
-    our knowledge of causal dependencies in the system, so we find it
-    more conceptually clear to include unobserved common causes
-    explicitly in the graph, and prefer the notation in \textbf{B)} to
-    \textbf{C}). Any semi-markovian graph can be represented as a
-    graph with unobserved nodes, and vice-versa
-    \citep[e.g.,][]{lee2019structural}.}
+    ``semi-markovian graphs'',][]{shpitser2006}. When using this
+    notation it is common practice to only include observed processes
+    as nodes in the graph. However in Earth Science we often observe
+    much less of the system relative to our knowledge of causal
+    dependencies in the system, so we find it more conceptually clear
+    to include unobserved common causes explicitly in the graph, and
+    prefer the notation in \textbf{B)} to \textbf{C}). Any
+    semi-markovian graph can be represented as a graph with unobserved
+    nodes, and vice-versa \citep[e.g.,][]{lee2019structural}.}
   \label{fig:toy}
 \end{figure}
 
@@ -144,8 +144,8 @@ readers, we will continue with the graph as drawn in Figure
 \ref{fig:toy} (Section \ref{sec:necess-cond-caus} explores realistic
 Earth system graphs).
 
-Even though probablistic reasoning is not required to construct a
-causal graph, the resulting graph encodes specific probablistic
+Even though probabilistic reasoning is not required to construct a
+causal graph, the resulting graph encodes specific probabilistic
 meaning. Interpreted as a general probabilistic graphical model, our
 example graph in Figure \ref{fig:toy}A represents a specific
 factorization of the joint distribution into conditional and marginal
@@ -156,36 +156,36 @@ factors:
 \end{equation}
 
 where $A$ represents aerosol, $C$ represents cloud, and $S$ represents
-surface sunlight/solar radiation (Appendix
-XX describes our noation used and a brief introduction to probability
-theory for unfamiliar readers). Interpreted causally, as in \citet{pearl1995causal} and this
-manuscript, the directed edges encode causal dependencies in addition
-to a factorization of the joint. More specifically, each node is
-causally determined by its parents, as well as some random variation
-due to processes not explicitly considered in the graph. For example,
-sources of aerosol variability not considered in Figure \ref{fig:toy}A
-include anthropogenic aerosol emission, the biosphere, fires,
-volcanoes, etc. For cloud, this includes synoptic forcing, atmospheric
-humdity, etc. For radiation, this includes variability of top of
-atmosphere radiation, etc. The causal graph, as drawn, encdoes the
-assumption that all of these sources of randomness are independent of
-each other. The representation of ramdomness in causal graphs is a
-powerful tool: by positing a causal graph, we are not stating that the
-variables in the graph are the only processes in the system. Instead,
-we are stating that all other processes not included in the graph
-induce variations in the causal variables that are independent of each
-other. For a deeper look at causal graphs and their underlying theory
-based on structural causal models (SCMs) we refer the reader to
-\citet{pearl2009}. We find that the causal graph representation is
-more intuitive to domain experts than the underlying SCM-based theory,
-so we focus on graph-based theory in our application of causal
-inference to earth science.
+surface sunlight/solar radiation (Appendix \ref{prob-theory} describes
+the notation used in this paper and a brief introduction to probability
+theory for unfamiliar readers). Interpreted causally, as in
+\citet{pearl1995causal} and this manuscript, the directed edges encode
+causal dependencies in addition to a factorization of the joint. More
+specifically, each node is causally determined by its parents, as well
+as some random variation due to processes not explicitly considered in
+the graph. For example, sources of aerosol variability not considered
+in Figure \ref{fig:toy}A include anthropogenic aerosol emission, the
+biosphere, fires, volcanoes, etc. For cloud, this includes synoptic
+forcing, atmospheric humidity, etc. For radiation, this includes
+variability of top of atmosphere radiation, etc. The causal graph, as
+drawn, encodes the assumption that all of these sources of randomness
+are independent of each other. The representation of randomness in
+causal graphs is a powerful tool: by positing a causal graph, we are
+not stating that the variables in the graph are the only processes in
+the system. Instead, we are stating that all other processes not
+included in the graph induce variations in the causal variables that
+are independent of each other. For a deeper look at causal graphs and
+their underlying theory based on structural causal models (SCMs) we
+refer the reader to \citet{pearl2009}. We find that the causal graph
+representation is more intuitive to domain experts than the underlying
+SCM-based theory, so we focus on graph-based theory in our application
+of causal inference to earth science.
 
 We can apply causal graph theory
 \citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
 encoded in our causal graph to identify which distributions we must
 estimate from data in order to calculate a causal effect of
-interest. More precisely, ``caluclating a causal effect'' refers to
+interest. More precisely, ``calculating a causal effect'' refers to
 estimating the probability distribution of a response (e.g. sunlight)
 to an experimental intervention on our cause where we artificially set
 it to a value of our choosing (e.g. presence or absence of a
@@ -227,11 +227,11 @@ example. Returning to our toy example (Figure \ref{fig:toy}A), we
 attempt to calculate the causal effect of clouds on sunlight. In other
 words, we want to isolate the variability of sunlight due to the
 causal link from cloud to sunlight (Figure \ref{fig:toy}A). However,
-aerosols both affect cloud (edge from aerosol to cloud), and sunlight,
-so if we naively calculate a causal effect we would get a biased
-estimate of the mean effect of cloud on sunlight. To demonstrate this,
-consider simulated cloud, aerosol, and sunlight data with causal
-dependencies consistent with Figure \ref{fig:toy}A.
+aerosols both affect cloud and sunlight, so if we naively calculate a
+causal effect using correlations between sunlight and cloud, we would
+get a biased estimate. To demonstrate this, consider simulated cloud,
+aerosol, and sunlight data with causal dependencies consistent with
+Figure \ref{fig:toy}A.
 
 \begin{align}
   aerosol &\sim \text{uniform (0, 1]}\\
@@ -267,14 +267,17 @@ sunlight) to create a ``mutilated'' graph (Figure
 \ref{fig:mutilated-toy}). We see that clouds are not independent of
 surface solar radiation in the mutilated graph.  However if aerosol
 were fixed (e.g. observed or not varying), cloud and sunlight would be
-independent of each other in Figure \ref{fig:mutilated-toy}. So with
-aerosol fixed, all co-variability between cloud and sunlight is only
-due to the causal edge between cloud and sunlight in Figure
-\ref{fig:toy}(A).  Mathematically incorporating the requirement that
-we must condition on aerosol to isolate the causal effect of cloud on
-radiation gives the identification of the causal effect of cloud and
-aerosol according by satisfying the backdoor criterion with
-\textit{adjustment} on aerosol:
+independent of each other in Figure \ref{fig:mutilated-toy}. In other
+words, conditional on aerosol, cloud and sunlight are independent in
+the mutilated graph (Figure \ref{fig:mutilated-toy}), which does not
+include the causal path from cloud to sunlight. And, conditional on
+aerosol in the true system (Figure \ref{fig:toy}(A)), all
+co-variability between cloud and sunlight is only due to the causal
+edge between cloud and sunlight.  We can mathematically incorporating
+the requirement that we must condition on aerosol to isolate the
+causal effect of cloud on radiation. Doing so gives the identification
+of the causal effect of cloud and aerosol and satisfies the backdoor
+criterion with \textit{adjustment} on aerosol:
 
 \begin{figure}
   \includegraphics[]{naiveCloudSunlight.pdf}
@@ -397,14 +400,14 @@ models and \textit{do-}calculus:
   from the cause to the effect leads to non-causal dependencies (and
   co-variation).
 \item The backdoor criterion identifies the distributions we must
-  calculate from data in order to block a backdoor path, remove
+  calculate from data in order to block all backdoor paths, remove
   non-causal dependence between the cause and effect, and calculate an
   unbiased causal effect from data.
 \item The \emph{average} causal effect can be reliably approximated
   with regression (Equation (\ref{eq:6})) derived from the backdoor
   criterion. In this scenario, causal theory and graphs identify the
   variables that should (and should not be) included in the regression
-  to calculate an unbiased causal effect.
+  in order to calculate an unbiased causal effect.
 \item Causal identification is a flexible tool that provides the
   distributions that must be estimated from data, while making no
   assumptions about the forms of those distributions. However,
@@ -446,6 +449,16 @@ presented in Figure \ref{fig:generic}.
   clarification on terminology}
 \label{sec:discovery}
 
+
+\textit{/ TODO: a messy start to compare and contrast with causal
+  discovery is here; clean this up. I think pierre wanted it here.
+  also ask Jakob if he wants to be a coauthor and fill this out or
+  rewrite it, especially re: the motivation of causal discovery. goal
+  is for readers to: 1) understand the difference between
+  ``discovery'' and ``estimating effects,'' and 2) appreciate that we
+  may often know the causal dependencies of physical systems, and when
+  we do, ``estimating effects'' is a tractable path of analysis./}
+
 The term ``causal inference'' has been used to describe two
 techniques:
 
@@ -460,27 +473,19 @@ techniques:
 To summarize, \textit{causal effect inference (1)} calculates the
 magnitude of a causal effect given: 1) a causal graph drawn by a
 domain expert, and 2) data. On the other hand, \textit{causal
-  structure discovery (2)} does not caclualte any causal effects at
+  structure discovery (2)} does not calculate any causal effects at
 all, but instead generates a causal graph from data.  This paper
 focuses on causal inference as (1): calculating causal effects from
 data (Section \ref{sec:causal-graphs-pearls}). Inferring the causal
 structure of the system (2), is generally much more difficult and also
 requires additional assumptions. For example, some causal structure
 discovery algorithms rely on assumptions that we observe all relevant
-variables to the system (violated because we partially observe the
-state space) and/or possibly arbitrary parameters for statistical
-independence tests \citep{runge2019inferring}. Additionally, some
-methods invoke linearity assumptions about the relationships between
-processes \citep{krich2019causal}, which is not generally true for the
-Earth system \citep{palmer-nonlinaer-1999}.
-
-\textit{/ TODO: a messy start to tactfully critique causal discovery
-  is here; clean this up. think pierre wanted it here, but I rewrote
-  both so see how it all flows together and reorganize as
-  necessary. also add jakob to maybe fill this out, especially re: the
-  motivation of causal discovery. not sure how hard to come down on
-  causal discovery. my heart wants to hammer it, but my brain tells me
-  that is a bad idea.}
+variables to the system and/or possibly arbitrary parameters for
+statistical independence tests
+\citep{runge2019inferring}. Additionally, some methods invoke
+linearity assumptions about the relationships between processes
+\citep{krich2019causal}, which is not generally true for the Earth
+system \citep{palmer-nonlinaer-1999}.
 
 However, there has been considerable work and effort in applying
 causal structure discovery (2) in Earth science
@@ -488,17 +493,17 @@ causal structure discovery (2) in Earth science
   samarasinghe-casuality,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}. Causal
 discovery algorithms filter and infer the direction of causal links in
 the system, usually using conditional independence detection
-algorithms that rely on signficiance parameters. In contrast to causal
+algorithms that rely on significance parameters. In contrast to causal
 inference of effects, which we explore in this paper, causal discovery
-algoirthms do not directly incorporate domain knowledge on the causal
+algorithms do not directly incorporate domain knowledge on the causal
 dependencies of processes in the system (although domain knowledge may
 guide assumptions about linearity of processes, and the observations
 that must be included in the causal discovery algorithm). Indeed, our
-persepctive here is that we have often acquired substantial
+perspective here is that we have often acquired substantial
 understanding of the mechanisms at play and their causal
 relationships, which we want to exploit: that is formally combine
-domain knowledge with data science. For example, given our domain
-knowledge of the Earth science system we generally have high
+domain knowledge with inferences from data. For example, given our
+domain knowledge of the Earth science system we generally have high
 confidence about the causal structure of the system. We can identify
 the state variables and know that the state at time \(t\) determines
 the state at time \(t+1\), even if the exact functional form of the
@@ -516,17 +521,17 @@ may be more transparent and interpretable for many readers, relative
 to a causal graph derived from significance parameters with more
 abstract meaning. Additionally, calculating an effect of some
 processes upon others illuminates more information about the system
-than the binary existence of a link or no link, as is output by causal
-structure discovery algorithms.
+than just he presence and direction of a causal edge, as is output by
+causal structure discovery algorithms.
 
 However, ultimately we view causal effect inference and causal
 structure discovery as complementary tools. Causal effect inference is
-more useful in scnearios where elevated domain knowledge gives a
+more useful in scenarios where elevated domain knowledge gives a
 priori confidence in causal graph structure, while causal structure
 discovery is more useful when we have very limited domain knowledge
 but access to observations of all relevant processes to a
 problem. Additionally, causal effect inference can be used as a second
-step after causal dsicovery to calculate individual causal effects. We
+step after causal discovery to calculate individual causal effects. We
 hope to motivate further research effort in causal effect inference to
 match recent efforts in causal structure discovery in Earth
 science. Ideally causal effect inference and causal structure
@@ -535,20 +540,13 @@ interpretation; researchers and readers can choose the method that
 suits their assumptions, available data, and level of domain
 knowledge.
 
-\textit{TODO: make a conceptual graph with amount of data and amount
-  of knowledge?}
-
-\textit{ TODO: talk to Elias about ``no mixing'' theorem; from what he
-  described it seems like it could lead to the invalidation of
-  ``causal discovery''}
-
 \section{Necessary conditions for causal identification in Earth
   systems}
 \label{sec:necess-cond-caus}
 
-\textit{pierre gave it to me, but in coronavirus chaos I lost the
-  ``lorenz 1995/6'' citation. think it was a different year, maybe
-  2005. check w/ pierre}
+\textit{/TODO: pierre gave it to me, but in coronavirus chaos I lost
+  the second ``lorenz'' citation (note on my desk?). think it was a
+  different year, maybe (1995/6, or 2005). check w/ pierre./}
 
 Earth science systems are dynamical systems evolving through time
 according to an underlying system state
@@ -562,19 +560,26 @@ Causal identification and tractable causal inference to Earth science
 requires assumptions about the unobserved portions of the state
 space. Without assumptions the unobserved portions of the state space
 will introduce confounding for any causal affect of interest (Figure
-\ref{fig:generic}a). For example, we generally do not observe the state
-space at every time (e.g. $S(t-1/2)$ in Figure \ref{fig:generic}a), and
-at any given time, we do not observe the state space at all locations
-and for all state variables (e.g. $S(t)$ and $S(t-1)$ in Figure
-\ref{fig:generic}a). So, if we are interested in the causal effect of
-any state variable at time $t$ on some variable at time $t+1$ (e.g.,
-$E$ in Figure \ref{fig:generic}a), then the causal effect will be
-confounded by the unobserved portions of the state space, and
-calculating a causal effect is impossible (un-identifiable) without
-additional assumptions. We will apply causal graph theory to identify
-the additional assumptions that would make the calculations of causal
-effects tractable, and may be reasonable in many Earth science
-situations.
+\ref{fig:generic}a). For example, we generally do not observe the
+state space at every time (e.g. $S(t-1/2)$ in Figure
+\ref{fig:generic}a), and at any given time, we do not observe the
+state space at all locations and for all state variables (e.g. $S(t)$
+and $S(t-1)$ in Figure \ref{fig:generic}a). So, if we are interested
+in the causal effect of any state variable at time $t$ on some
+variable at time $t+1$ (e.g., $E$ in Figure \ref{fig:generic}a), then
+the causal effect will be confounded by the unobserved portions of the
+state space, and calculating a causal effect is impossible
+(un-identifiable) without additional assumptions. We will apply causal
+graph theory to identify the additional assumptions that would make
+the calculations of causal effects tractable, and may be reasonable in
+many Earth science situations. To make the graphs more relatable, we
+will occasionally refer to an example where the cause ($C(t)$) is soil
+moisture and the effect ($E(t+1)$) is evapotranspiration because this
+is a potentially rewarding of application for causal inference and one
+that is near to our research interest. However, what we discuss is
+generic to any problem in earth science where the system is assumed to
+evolve according to an underlying dynamical system and associated
+state.
 
 \begin{figure}
   \input{figs/generic-graph.tex}
@@ -607,9 +612,6 @@ situations.
   lagged observations}
 \label{sec:stat-reconstr-state}
 
-\textit{TODO: introduce soil moisture example so it does not come out
-  of nowhere}
-
 Takens' theorem implies that we can reconstruct the unobserved
 portions of the state space using lagged observations back in time. In
 this case, the causal graph is greatly simplified (Figure
@@ -621,16 +623,18 @@ causal effect in the generic Earth system graph proposed in Figure
 \ref{fig:generic}a. However there is no free lunch: the significant
 disadvantage of this approach is that we cannot examine the causal
 effect of a specific variable (e.g. soil moisture at time $t$) on
-another (e.g. evapotranspiration at time $t+1$), because individual
-observations used to reconstruct the state space represent the
-unknowable unobserved subsets of the state space, so an intervention
-on any indiviual observation is of ambiguous meaning (e.g. we do not
-know what are the unobserved variables we are intervening
-on). Instead, we limit ourselves to only examining the causal effect
-of changes in the entire state holistically. Additionally, this
-approach requires a shift in interpretation from the relatively
-straightforward interventions on observable variables we have
-considered thus far to one where we intervene on the entire state.
+another (e.g. evapotranspiration at time $t+1$), because the mapping
+from individual observations to a state space reconstruction
+transforms the individual observation's importance to additionally
+include the unknowable and observed portions of the state space. So,
+an intervention on any individual observation is of ambiguous meaning
+(e.g. we do not know what are the unobserved variables we are
+intervening on). Instead, we limit ourselves to only examining the
+causal effect of changes in the entire state
+holistically. Additionally, this approach requires a shift in
+interpretation from the relatively straightforward interventions on
+observable variables we have considered thus far to one where we
+intervene on the entire state.
 
 For example, consider that we reconstructed our state space from
 available observations, and this reconstruction reduced to a discrete
@@ -647,8 +651,7 @@ intervening on the observed variables \emph{and all unobserved
   $2$.}  Conceptualizing unknowable changes in unobserved variables
 represents a significant barrier to interpretation, and motivates the
 exploration of stronger assumptions that result in a clearer
-interpretation (at the cost of an increased likelihood that the
-assumptions are violated; see Section \ref{sec:miss-temp-observ},
+interpretation (see Section \ref{sec:miss-temp-observ},
 \ref{sec:observ-port-state}, \ref{human}).
 
 In practice we also do not know the number of lagged observations that
@@ -656,7 +659,7 @@ are required for reconstruction of the state space at time $t$. One
 approach is to use the data for guidance. This involves predicting the
 effect at time $t+1$ with iteratively increasing numbers of lags. When
 the addition of more time lags does not improve the prediction of
-variables at time $t$, we have some confidence that the relevant
+variables at time $t+1$, we have some confidence that the relevant
 portions of state space at time $t$ has been reconstructed by the
 lagged time series (e.g., we have defined the embedding dimension of
 the attractor) \citep{Sugihara496}. However even this approach can be
@@ -666,10 +669,12 @@ would not gain causally relevant knowledge from observations further
 back in time. For example, a significant drought last year may impact
 ecosystem state in the current year, but predictive power may locally
 plateau going back in time two months (i.e. when the system exhibits
-long and short term memory). This example highlights the challenges
-associated with any method relying on state space reconstruction with
-lagged observations: to be sure we reconstruct the state space we must
-include observations from a potentially infinite temporal extent.
+both long and short term memory). This example highlights the
+challenges associated with any method relying on state space
+reconstruction with lagged observations: to be sure we reconstruct the
+state space we must include observations from a potentially infinite
+temporal extent, and there might not be any way to check that we
+successfully reconstructed the state space.
 
 \subsection{Missing temporal observations induce independent random
   variations in cause and effect}
@@ -698,7 +703,7 @@ reconstruct $S'(t)$ using lagged observations of the state space, the
 reconstruction will estimate $S$ rather than $S'$, which includes
 $C(t)$ because $C$ is a part of the state space. So, a portion of the
 cause's role in the system's evolution will be falsely incorporated
-into the reconstruction of the state sapce, and our causal effect will
+into the reconstruction of the state space, and our causal effect will
 be biased.
 
 The assumption that missing temporal observations induce independent
@@ -718,13 +723,13 @@ possible, and may also confuse interpretation.
 
 
 \subsection{The unobserved portion of the state space does not affect
-  the cause}
+  the effect}
 \label{sec:observ-port-state}
 
 If we assume that we observe all portions of the state space that
 affect the effect, then we can calculate the effect of any state
 variable on future processes. In this case, the graph is as in Figure
-\ref{fig:generic}c, but $S'(t)$ correspondes to all observations at
+\ref{fig:generic}c, but $S'(t)$ corresponds to all observations at
 time $t$ not including $C$, and so can be used to block all backdoor
 paths. If we can assume that there are no interactions between
 observations at time $t$ then we can calculate the causal effect as:
@@ -739,7 +744,7 @@ where $S'(t)$ are all observations at time $t$, not including the
 cause $C(t)$. However, when blocking backdoor paths with simultaneous
 observations it is important to consider whether there are
 interactions between observations at time $t$, and whether the
-observations are truely simultaneos. Whether tehre are interactions
+observations are truly simultaneous. Whether there are interactions
 between observations is a function of the temporal and spatial extent
 of the observations. If observations are instantaneous point
 observations indexed in time, then interactions between them can
@@ -766,9 +771,8 @@ much easier to interpret relative to an assumption about the degree to
 which we can (or cannot) reconstruct the relevant state space with
 lagged observations.
 
-\textit{TODO: make this section more minor as Pierre suggested?}
 \subsection{Applications at the human-Earth system interface: when the
-  cause is approximately independent of the system}
+  cause is approximately independent of the system.}
 \label{human}
 
 Causal inference becomes substantially more tractable under an
@@ -778,12 +782,11 @@ strong assumption may seem unjustifiable due to tight coupling within
 the earth system, recent historical examples suggest that this
 assumption may be applicable to some scenarios, particularly at the
 human-Earth system interface. For example, coordinated global human
-response to global warming and humanity's global actions are
-relatively independent of the climate state
-\citep{arto2014drivers}. We have failed to reduce green house gas
-emissions even as global temperature increased. Instances of reduced
-rises in global green house gas emissions are usually due to global
-economic recession (e.g. the 2008 financial crisis) or pandemic
+response to global warming is relatively independent of the climate
+state \citep{arto2014drivers}. We have failed to reduce green house
+gas emissions even as global temperature increased. Instances of
+reduced rises in global green house gas emissions are usually due to
+global economic recession (e.g. the 2008 financial crisis) or pandemic
 (COVID-19 crisis) rather than factors directly tied to the climate
 state. In these examples many global social, political, health, and
 economic factors are the primary causes of global green house gas
@@ -814,7 +817,7 @@ problems.
 
 \begin{itemize}
 \item Causal inference from data is a new tool with the potential to
-  complement traditional scientific methods, including numerical and
+  complement traditional scientific methods, such as numerical and
   real world experimentation. In Earth science, numerical models rely
   on approximations that deviate modeled physics from reality, and
   real world experimentation may be intractable or unethical. Causal
@@ -824,7 +827,7 @@ problems.
   complement to numerical and real world experimentation.
 \item Causal graphs concisely and clearly encode assumptions about
   causal dependencies between processes. Including a causal graph
-  benefits any observational analysis, but particularly those that use
+  benefits any observational analysis, including those that use
   regression. Depending on the observations available and the causal
   structure of the system, regression analyses can be interpreted as
   an approximation to the average causal effect.
@@ -835,19 +838,17 @@ problems.
   generating, or manipulating data (which can cost a tremendous amount
   in terms of researchers' time, computational resources, and/or
   funding). We recommend early causal analyses to determine
-  tractability during a project's conception, before these resources
-  are spent.
+  tractability during a project's conception, before resources are
+  spent obtaining or analyzing data.
 \item Because the Earth system evolves as a dynamical system through
   time, we can construct generic Earth system causal graphs
   applicable to a wide range of scenarios. However, causal inference
   in Earth science also presents challenges: we only partially observe
-  the state space of the system, so we must reconstruct the full state
-  space using time lagged observations or make strong assumptions
-  about the independence of processes from the unobserved portions of
-  the state space.
-\item We apply causal theory to generic causal graphs of the Earth
-  system to identify the assumptions necessary for causal inference
-  from data. These are assumption that:
+  the state space of the system.
+\item We overcame these challenges by applying causal theory to
+  generic causal graphs of the Earth system and identified the
+  assumptions necessary for causal inference from data. These are
+  assumption that:
   \begin{itemize}
   \item The state space of the system is reconstructable
     from lagged observations of the system, as allowed by
@@ -866,7 +867,7 @@ data. However, causal inference is a thriving active area of research,
 and there are many other causal inference techniques and abstractions
 that would benefit the Earth system research community. For example,
 there are techniques for representing variables observed under
-selection bias in the causal graph, and analyzing whether a causal
+selection bias in the causal graph and analyzing whether a causal
 effect can be calculated (i.e. identified) given the selection bias
 \citep[e.g.,][]{bareinboim2014recovering}. Selection bias is very
 relevant in Earth science. For example, satellite observations are
@@ -876,7 +877,7 @@ etc.). Additionally, transportability
 \citep[e.g.,][]{bareinboim2012transportability} identifies whether one
 can calculate a causal effect in a passively observed target domain,
 by merging experiments from source domains that may differ from the
-target domain. A potential aplication for transportability in earth
+target domain. A potential application for transportability in earth
 sciences would be to merge numerical model experiments (e.g., global
 climate models, cloud models, etc.) and formally transport their
 results to the real world. In this case, numerical models are the
@@ -892,18 +893,20 @@ science.
 \bibliography{references.bib}
 
 \appendix
-\section{Basic probability theory and syntax}
+\section{Basic probability and syntax}
 \label{prob-theory}
 
 In this paper we use capital letters to represent random variables
-(e.g., ``X''). For example, $P(X)$ is the probability distribution of
-a random variable $X$. $P(X)$ is a function of one variable that
-outputs a probability (or density, in the case of ocntinuous
-variables) given a value for $X$, which we represent with lowercase
-letters (e.g., $x$). $P(X)$ is shorthand; a more descriptive but less
-concise way to write $P(X)$ is $P(X=x)$ which represents the fact that
-$P(X)$ is a function of a specific value of $X$, reprsented by $x$. We
-use both notations, and $P(X)$ has the same meaning as $P(X=x)$.
+(e.g., ``$X$''). For example, $P(X)$ is the probability distribution
+of a random variable $X$. $P(X)$ is a function of one variable that
+outputs a probability (or density, in the case of continuous
+variables) given a specific value for $X$. We represent specific
+values that a random variable can take with lowercase letters (e.g.,
+$x$ in the case of $X$). $P(X)$ is shorthand; a more descriptive but
+less concise way to write $P(X)$ is $P(X=x)$ which represents the fact
+that $P(X)$ is a function of a specific value of $X$, represented by
+$x$. We use both notations, and $P(X)$ has the same meaning as
+$P(X=x)$.
 
 For the unfamiliar reader, there are a few basic rules and definitions
 in probability that provide relatively complete foundations for
@@ -911,46 +914,44 @@ building deeper understanding of probability. These are the \textbf{sum rule}:
 
 \begin{equation}
   P(X=x) = \sum_Y P(X=x,\, Y=y)
-  \label{eq:2}
+  \label{eq:sum}
 \end{equation}
 
 and the \textbf{product rule}:
 
 \begin{equation}
   P(X=x, \, Y=y) = P(X = x \, | \, Y=y ) P(Y=y) = P(Y = y \, | \, X=x ) P(X=x)
-  \label{eq:7}
+  \label{eq:product}
 \end{equation}
 
-The \textit{joint probability distribution} ``$P(X=x,Y=y)$'' is the
-probability that the random variable $X$ equals some value $x$
-\textbf{and} the random variable $Y$ equals $y$. The joint
-distribution is a function of two variables, $x$ and $y$ which are
-values in the domains of the random variables $X$ and $Y$
-respectively. The \textit{conditional probability distribution}
-``$p(X = x \, | \, Y=y )$'' is also a function of two variables $x$
-and $y$, but it is the probability of observing $X$ equal to $x$,
-given that we have observed $Y$ equal to $y$. In other words, if we
-filter our domain to only values where $Y=y$, then
-``$p(X = x \, | \, Y=y )$'' is the probability of observing $X=x$ in
-this sub-domain where $Y=y$. The \textit{marginal probability
-  distribution} ``$P(Y=y)$'' is just the probability that $Y$ equals
-some value $y$, and is a function of only $y$. We can calculate the
-marginal probability from the joint distribution by summing over all
-possible values values of the other random variabiles in the joint
-(the ``sum rule'' - Equation (\ref{eq:2})). Additionally, the joint
-distribution can factorize into a product of conditional and marginal
-distributions (``the product rule'' - Equation (\ref{eq:7})). These
-two simple rules can be used to build much of the theory and
-applications of probability theory (e.g., Bayes' theorem
-$P(Y|X) =\frac{P(X|Y) P(Y)}{P(X)}$). While Equations (\ref{eq:2})
+The \textit{joint probability distribution} ($P(X=x,Y=y)$) is the
+probability that the random variable $X$ equals some value $x$ \emph{and} the
+random variable $Y$ equals $y$. The joint distribution is a function
+of two variables, $x$ and $y$ which are values in the domains of the
+random variables $X$ and $Y$ respectively. The \textit{conditional
+  probability distribution} ($p(X = x \, | \, Y=y )$) is also a
+function of two variables $x$ and $y$, but it is the probability of
+observing $X$ equal to $x$, given that we have observed $Y$ equal to
+$y$. In other words, if we filter our domain to only values where
+$Y=y$, then $p(X = x \, | \, Y=y )$ is the probability of
+observing $X=x$ in this sub-domain where $Y=y$. The \textit{marginal
+  probability distribution} ($P(Y=y)$) is just the probability that
+$Y$ equals some value $y$, and is a function of only $y$. We can
+calculate the marginal probability from the joint distribution by
+summing over all possible values values of the other random variables
+in the joint (the ``sum rule'' - Equation (\ref{eq:sum})). Additionally,
+the joint distribution can factorize into a product of conditional and
+marginal distributions (``the product rule'' - Equation
+(\ref{eq:product})). These two simple rules can be used to build much of the
+theory and applications of probability theory (e.g., Bayes' theorem
+$P(Y|X) =\frac{P(X|Y) P(Y)}{P(X)}$). While Equations (\ref{eq:sum})
 deals with probability distributions of discrete random variables,
-there is also a sum rule analog for continuos random variables and
+there is also a sum rule analog for continuous random variables and
 probability density functions (the syntax of the product rule is the
 same):
 
 \begin{equation*}
   P(X=x) = \int_Y P(X=x,\, Y=y) \, dy
-  \label{eq:2}
 \end{equation*}
 
 where $\int_{Y}$ represents an integral over the domain of $Y$ (e.g.,
