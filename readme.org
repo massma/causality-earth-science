@@ -32,3 +32,7 @@
    #+END_SRC
 
    This should also probably work on OSX, but I haven't tested it.
+
+* Directory structure
+  ~doc/~ contains the paper, ~src/~ contains haskell code for
+  generating data and figures.
