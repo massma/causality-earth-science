@@ -1,4 +1,4 @@
-* Reproduce the manuscript "Causal Inference in Earth Science" by Adam Massmann
+* Reproduce the manuscript "Causal Inference in Earth Science" by Adam Massmann, Pierre Gentine, and Jakob Runge
 
 * Required software
 
