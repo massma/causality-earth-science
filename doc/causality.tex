@@ -10,6 +10,26 @@
     akm2203@columbia.edu}, Pierre Gentine, Jakob Runge?}
 
 \maketitle
+\begin{abstract}
+  Causal inference uses data, rather than experiments, to calculate
+  the effect of experimental interventions on causes. In Earth
+  science, causal inference could be an important tool to complement
+  more traditional methods of experimentation. Traditional tools like
+  numerical models suffer from approximations that may bias results,
+  and real world experiments may be logistically impossible or
+  unethical to execute. While causal inference does not suffer from
+  the same limitations as numerical and real world experimentation,
+  the assumptions behind causal inference must be theoretically
+  justified prior to application. Here, we apply causal theory to
+  identify the necessary assumptions for calculating causal effects in
+  generic Earth sceince systems. Causal inference is justified under
+  three different assumptions that: (1) the state space of the system
+  is reconstructable from lagged observations of the system;
+  alternatively: (2) the effect of interest is only causally affected
+  by the observed portion of the state space; alternatively: (3) The
+  cause of interest can be assumed to be independent of the evolution
+  of the system’s state.
+\end{abstract}
 
 \section{Introduction}
 
@@ -20,11 +40,12 @@ response. Climate and Earth system scientists primarily use numerical
 models for experimentation \citep[e.g.,][]{eyring-cmip6-2016}, but
 real world experiment is also used to a lesser degree
 \citep[e.g.,][]{ainsworth-face-2005}. However, it may be logistically
-impossible or unethical to execute many real world experiments, and
-numerical experiments may rely on approximations that bias
-experimental results relative to the real world
+impossible or unethical to execute many real world experiments (e.g.,
+geoengineering), and numerical experiments (e.g., climate modeling)
+may rely on approximations that bias experimental results relative to
+the real world
 \citep[e.g.,][]{kim-cmip5,stillmann-cmip5-extremes}. Given the
-limitations of real world and numerical experiments in Earth science,
+limitations of real world and numerical experiments in Earth sciences,
 researchers require additional tools for scientific discovery.
 \citet{pearl-1994-do-calculus} introduced one such tool: the
 \textit{do-}calculus for calculating the causal effects of
@@ -45,8 +66,8 @@ calculated from data, even with samples spanning the entire joint
 distribution of observed variables \citep[][]{shpitser2006}. Specific
 to problems in Earth science, the identification of causal effects is
 challenging given two fundamental issues: 1) the system evolves
-through time according to an underlying dynamical system, and 2) we
-only partially observe the state space of that dynamical system
+through time according to the underlying dynamics, and 2) we only
+partially observe the state space of that dynamical system
 \citep{majda-state}. The main contribution of this paper is the
 identification of the necessary assumptions for applying causal
 inference in Earth systems. We identify these assumptions by applying
@@ -57,8 +78,10 @@ inference when we can assume:
 \begin{itemize}
 \item The effect of interest is only causally affected by the observed
   portion of the state space (Section \ref{sec:observ-port-state}), or
-\item The cause of interest is independent of the evolution of the
-  system's state (e.g. forcing) (Section \ref{human}), or
+\item The cause of interest is external to the system's evolution, as
+  is the case with common ``radiative forcing'' experiments in climate
+  modeling. In other more technical terms, the cause is independent of
+  the evolution system's state (Section \ref{human}). Or,
 \item The state space of the system is statistically reconstructable
   from available observations (Section \ref{sec:stat-reconstr-state},
   Section \ref{sec:miss-temp-observ})
@@ -70,11 +93,11 @@ science require a few fundamentals from the causal inference
 literature, so we introduce causal inference theory, causal graphs,
 and \citet{pearl2009}'s \textit{do-}calculus for the unfamiliar reader
 (Section \ref{sec:causal-graphs-pearls}), and compare with recent
-Earth science literature on the related field of causal discovery
-(causal discovery attempts to ``discover'' the causal graph from
-observations, see Section \ref{sec:discovery}). Causal effects, due to
-their underlying logic and clear interpretation, are an exciting tool
-for scientific discovery and understanding
+Earth science literature on the related but different field of causal
+discovery (causal discovery attempts to ``discover'' the causal graph
+from observations, see Section \ref{sec:discovery}). Causal effects,
+due to their underlying logic and clear interpretation, are an
+exciting tool for scientific discovery and understanding
 \citep{hannart-da,naveau-2020}. This manuscript establishes the
 conditions required for the proper application of causal inference in
 Earth science.
@@ -92,9 +115,10 @@ no required knowledge of math or probability, but they also represent
 formal mathematical objects with specific meaning. A domain expert
 simply draws directed edges (i.e. arrows) from variables that are
 causes to effects. We illustrate causal graphs and their mathematical
-consequences with a simplified toy example examining clouds, aerosols,
-and surface solar radiation/sunlight (Figure \ref{fig:toy}A). Our
-causal graph consists of:
+consequences with a simplified toy example examining the causal
+interaction between clouds, aerosols, and surface solar
+radiation/sunlight (Figure \ref{fig:toy}A). Our causal graph consists
+of:
 
 \begin{figure}
   % % consider \noindent\include... [width=0.75\textwidth]...
@@ -135,8 +159,8 @@ the nodes and edges that are \textit{missing} from the graph often
 represent strong assumptions. For example, in the
 cloud-aerosol-sunlight example, clouds also affect aerosols; e.g., by
 increasing the likelihood that aerosol will be scavenged from the
-atmosphere during precipitation
-\citep[e.g.,][]{radke-scavenge-1980}. By not including an edge from
+atmosphere during precipitation \citep[e.g.,][]{radke-scavenge-1980,
+  JURADO20087931, blanco-alegre2018}. By not including an edge from
 cloud to aerosol, we are making a strong assumption that we are
 ignoring the effect of clouds on aerosols. Considering this example is
 intended to be pedagogical for introducing causal theory to the
@@ -155,10 +179,11 @@ factors:
   P(A, C, S) = P(S \, | \,C, A) \, P(C \, | \, A) \, P(A),
 \end{equation}
 
-where $A$ represents aerosol, $C$ represents cloud, and $S$ represents
-surface sunlight/solar radiation (Appendix \ref{prob-theory} describes
-the notation used in this paper and a brief introduction to probability
-theory for unfamiliar readers). Interpreted causally, as in
+where $A$ represents aerosol, $C$ represents cloud, $S$ represents
+surface sunlight/solar radiation, and $|$ denotes conditional
+probability (Appendix \ref{prob-theory} describes the notation used in
+this paper and a brief introduction to probability theory for
+unfamiliar readers). Interpreted causally, as in
 \citet{pearl1995causal} and this manuscript, the directed edges encode
 causal dependencies in addition to a factorization of the joint. More
 specifically, each node is causally determined by its parents, as well
@@ -183,8 +208,8 @@ of causal inference to earth science.
 
 We can apply causal graph theory
 \citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
-encoded in our causal graph to identify which distributions we must
-estimate from data in order to calculate a causal effect of
+encoded in our causal graph to identify which distributions must be
+estimated from data in order to calculate a causal effect of
 interest. More precisely, ``calculating a causal effect'' refers to
 estimating the probability distribution of a response (e.g. sunlight)
 to an experimental intervention on our cause where we artificially set
@@ -257,7 +282,7 @@ data were not available or one were very naive, one approach would be
 to bin the data by cloudy and clear conditions and compare the amount
 of sunlight between cloudy and clear observations (Figure
 \ref{fig:naive-cloud-sunlight}). This approach suggests that clouds
-reduce sunlight by, on average, 160 W m$^{-2}$, which is a strong
+reduce sunlight by, on average, 160 W m$^{-2}$; this is is a strong
 overestimation of the true average effect of clouds (-68 W m$^{-2}$),
 derived from Equation (\ref{eq:1}). Aerosol induces co-variability
 between cloud and aerosol that is unrelated to the causal link from
