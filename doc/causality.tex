@@ -204,7 +204,7 @@ their underlying theory based on structural causal models (SCMs) we
 refer the reader to \citet{pearl2009}. We find that the causal graph
 representation is more intuitive to domain experts than the underlying
 SCM-based theory, so we focus on graph-based theory in our application
-of causal inference to earth science.
+of causal inference to Earth science.
 
 We can apply causal graph theory
 \citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
@@ -600,14 +600,7 @@ state space, and calculating a causal effect is impossible
 (un-identifiable) without additional assumptions. We will apply causal
 graph theory to identify the additional assumptions that would make
 the calculations of causal effects tractable, and may be reasonable in
-many Earth science situations. To make the graphs more relatable, we
-will occasionally refer to an example where the cause ($C(t)$) is soil
-moisture and the effect ($E(t+1)$) is evapotranspiration because this
-is a potentially rewarding of application for causal inference and one
-that is near to our research interest. However, what we discuss is
-generic to any problem in earth science where the system is assumed to
-evolve according to an underlying dynamical system and associated
-state.
+many Earth science situations.
 
 \begin{figure}
   \input{figs/generic-graph.tex}
@@ -641,8 +634,9 @@ state.
 \label{sec:stat-reconstr-state}
 
 Takens' theorem implies that we can reconstruct the unobserved
-portions of the state space using lagged observations back in time. In
-this case, the causal graph is greatly simplified (Figure
+portions of the state space using lagged observations back in time
+\citep{takens1981detecting,deyle2011generalized,Sugihara496}. In this
+case, the causal graph is greatly simplified (Figure
 \ref{fig:generic}b). If we assume that the state is reconstructable,
 then we can calculate the causal effect of any reconstructed state on
 any future variable or process. The primary advantages of this
@@ -650,16 +644,15 @@ approach is that it is the minimum assumption required to calculate a
 causal effect in the generic Earth system graph proposed in Figure
 \ref{fig:generic}a. However there is no free lunch: the significant
 disadvantage of this approach is that we cannot examine the causal
-effect of a specific variable (e.g. soil moisture at time $t$) on
-another (e.g. evapotranspiration at time $t+1$), because the mapping
-from individual observations to a state space reconstruction
-transforms the individual observation's importance to additionally
-include the unknowable and observed portions of the state space. So,
-an intervention on any individual observation is of ambiguous meaning
-(e.g. we do not know what are the unobserved variables we are
-intervening on). Instead, we limit ourselves to only examining the
-causal effect of changes in the entire state
-holistically. Additionally, this approach requires a shift in
+effect of a specific variable (e.g. $C(t)$) on another
+(e.g. $E(t+1)$), because the mapping from individual observations to a
+state space reconstruction transforms the individual observation's
+importance to additionally include the unknowable and observed
+portions of the state space. So, an intervention on any individual
+observation is of ambiguous meaning (e.g. we do not know what are the
+unobserved variables we are intervening on). Instead, we limit
+ourselves to only examining the causal effect of changes in the entire
+state holistically. Additionally, this approach requires a shift in
 interpretation from the relatively straightforward interventions on
 observable variables we have considered thus far to one where we
 intervene on the entire state.
@@ -741,13 +734,14 @@ effect through the unobserved time slice (e.g. at time $t-1/2$ in
 Figure \ref{fig:generic}a). Relative to Section
 \ref{sec:stat-reconstr-state}, the advantage of this approach to
 causal inference is that we can calculate the causal effects of
-individual observations (e.g. soil moisture), rather than needing to
-interpret the causal impact of the entire state holistically. However,
-this approach requires an additional assumption that the missing
-temporal observations do not induce dependencies between the cause and
-effect of interest. As with Section \ref{sec:stat-reconstr-state}, we
-must be able to reconstruct the state space, which may not always be
-possible, and may also confuse interpretation.
+individual observations (e.g, $C(t)$ on $E(T)$), rather than needing
+to interpret the causal impact of the entire state holistically (e.g.,
+$S(t)$ on $E(T)$). However, this approach requires an additional
+assumption that the missing temporal observations do not induce
+dependencies between the cause and effect of interest. As with Section
+\ref{sec:stat-reconstr-state}, we must be able to reconstruct the
+state space, which may not always be possible, and may also confuse
+interpretation.
 
 
 \subsection{The unobserved portion of the state space does not affect
@@ -807,20 +801,20 @@ Causal inference becomes substantially more tractable under an
 assumption that our causes of interest are independent from the
 evolution of the state space (Figure \ref{fig:forcing}). While such a
 strong assumption may seem unjustifiable due to tight coupling within
-the earth system, recent historical examples suggest that this
-assumption may be applicable to some scenarios, particularly at the
-human-Earth system interface. For example, coordinated global human
-response to global warming is relatively independent of the climate
-state \citep{arto2014drivers}. We have failed to reduce green house
-gas emissions even as global temperature increased. Instances of
-reduced rises in global green house gas emissions are usually due to
-global economic recession (e.g. the 2008 financial crisis) or pandemic
-(COVID-19 crisis) rather than factors directly tied to the climate
-state. In these examples many global social, political, health, and
-economic factors are the primary causes of global green house gas
-emission, and while the climate system may effect these factors, the
-historical evidence suggests that the climate system exerts a
-relatively small impact \citep{arto2014drivers}.
+the Earth system, recent historical examples suggest that this
+assumption may be applicable to some scenarios. For example,
+coordinated global human response to global warming is relatively
+independent of the climate state \citep{arto2014drivers}. We have
+failed to reduce green house gas emissions even as global temperature
+increased. Instances of reduced rises in global green house gas
+emissions are usually due to global economic recession (e.g. the 2008
+financial crisis) or pandemic (COVID-19 crisis) rather than factors
+directly tied to the climate state. In these examples many global
+social, political, health, and economic factors are the primary causes
+of global green house gas emission, and while the climate system may
+affect these factors, the historical evidence suggests that the
+climate system exerts a relatively small impact
+\citep{arto2014drivers}.
 
 \begin{figure}
   \includegraphics[]{forcing-graph.pdf}
@@ -841,7 +835,9 @@ unblocked backdoor paths through the unobserved portions of the state
 space. Causal inference is particularly tractable for this class of
 problems.
 
-\section{Summary and Conclusions}
+\section{Conclusions}
+
+In summary, we conclude that:
 
 \begin{itemize}
 \item Causal inference from data is a new tool with the potential to
@@ -873,10 +869,10 @@ problems.
   applicable to a wide range of scenarios. However, causal inference
   in Earth science also presents challenges: we only partially observe
   the state space of the system.
-\item We overcame these challenges by applying causal theory to
-  generic causal graphs of the Earth system and identified the
+\item These challenges can be alleviated by applying causal theory to
+  generic causal graphs of the Earth system and identifying the
   assumptions necessary for causal inference from data. These are
-  assumption that:
+  assumptions that:
   \begin{itemize}
   \item The state space of the system is reconstructable
     from lagged observations of the system, as allowed by
