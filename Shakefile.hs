@@ -88,7 +88,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
   ["//*/cloud-aerosol.tex", "//*/mutilated-cloud-aerosol.tex"] &%> \[c, mc] ->
     do
       need ["src/GraphDiagrams.hs"]
-      putInfo (printf "# GraphDiagrams.cloudAeorosl for %s, %s" c mc)
+      liftIO $ putStrLn (printf "# GraphDiagrams.cloudAeorosl for %s, %s" c mc)
       liftIO $ GraphDiagrams.cloudAerosol c mc
 
   "doc/causality.bbl" %> \out -> do
@@ -109,7 +109,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
   "//*generic-graph*" %> \out -> do
     need ["src/GraphDiagrams.hs"]
-    putInfo (printf "# GraphDiagrams.genericGraph for %s" out)
+    liftIO $ putStrLn (printf "# GraphDiagrams.genericGraph for %s" out)
     liftIO $ GraphDiagrams.genericGraphs out
 
 

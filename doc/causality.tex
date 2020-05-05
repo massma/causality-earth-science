@@ -72,7 +72,7 @@ partially observe the state space of that dynamical system
 identification of the necessary assumptions for applying causal
 inference in Earth systems. We identify these assumptions by applying
 graph theory developed in \citet{pearl1995causal} to generic Earth
-science scenarios. There is the potential for applying causal
+science systems. There is the potential for applying causal
 inference when we can assume:
 
 \begin{itemize}
@@ -190,16 +190,18 @@ specifically, each node is causally determined by its parents, as well
 as some random variation due to processes not explicitly considered in
 the graph. For example, sources of aerosol variability not considered
 in Figure \ref{fig:toy}A include anthropogenic aerosol emission, the
-biosphere, fires, volcanoes, etc. For cloud, this includes synoptic
-forcing, atmospheric humidity, etc. For radiation, this includes
-variability of top of atmosphere radiation, etc. The causal graph, as
-drawn, encodes the assumption that all of these sources of randomness
-are independent of each other. The representation of randomness in
-causal graphs is a powerful tool: by positing a causal graph, we are
-not stating that the variables in the graph are the only processes in
-the system. Instead, we are stating that all other processes not
-included in the graph induce variations in the causal variables that
-are independent of each other. For a deeper look at causal graphs and
+biosphere, fires, volcanoes, etc. \citep[e.g.,][]{Boucher2015}. For
+cloud, this includes synoptic forcing, atmospheric humidity,
+etc. \citep[e.g.,][]{wallace2006atmospheric}. For radiation, this
+includes variability of top of atmosphere radiation,
+etc. \citep[e.g.,][]{hartmann2015global}. The causal graph, as drawn,
+encodes the assumption that all of these sources of randomness are
+independent of each other. The representation of randomness in causal
+graphs is a powerful tool: by positing a causal graph, we are not
+stating that the variables in the graph are the only processes in the
+system. Instead, we are stating that all other processes not included
+in the graph induce variations in the causal variables that are
+independent of each other. For a deeper look at causal graphs and
 their underlying theory based on structural causal models (SCMs) we
 refer the reader to \citet{pearl2009}. We find that the causal graph
 representation is more intuitive to domain experts than the underlying
@@ -659,10 +661,10 @@ intervene on the entire state.
 
 For example, consider that we reconstructed our state space from
 available observations, and this reconstruction reduced to a discrete
-state space of 10 states, with associated patterns in the observations
-at time $\leq t$. If we are interested in the effect of a change in
-state on a process at time $t+1$, for example a change from state $1$
-to state $2$, this corresponds to an intervention on the
+state space of 10$^{N}$ states, with associated patterns in the
+observations at time $\leq t$. If we are interested in the effect of a
+change in state on a process at time $t+1$, for example a change from
+state $1$ to state $2$, this corresponds to an intervention on the
 \textit{entire state space at time $t$}. This includes the unobserved
 portions of the state space. So, the intervention no longer consists
 of just intervening on the observed variables to change them from
@@ -802,7 +804,7 @@ assumption that our causes of interest are independent from the
 evolution of the state space (Figure \ref{fig:forcing}). While such a
 strong assumption may seem unjustifiable due to tight coupling within
 the Earth system, recent historical examples suggest that this
-assumption may be applicable to some scenarios. For example,
+assumption may be applicable to some situations. For example,
 coordinated global human response to global warming is relatively
 independent of the climate state \citep{arto2014drivers}. We have
 failed to reduce green house gas emissions even as global temperature
@@ -823,7 +825,7 @@ climate system exerts a relatively small impact
   \label{fig:forcing}
 \end{figure}
 
-Generally this logic applies to many scenarios on the "human-climate"
+Generally this logic applies to many systems on the "human-climate"
 interface, such as land-use land-cover change in urban centers where
 urban planning is relatively independent of recent climate
 history. The general graph in Figure \ref{fig:forcing} is applicable
@@ -865,10 +867,10 @@ In summary, we conclude that:
   tractability during a project's conception, before resources are
   spent obtaining or analyzing data.
 \item Because the Earth system evolves as a dynamical system through
-  time, we can construct generic Earth system causal graphs
-  applicable to a wide range of scenarios. However, causal inference
-  in Earth science also presents challenges: we only partially observe
-  the state space of the system.
+  time, we can construct broadly applicable, generic Earth system
+  causal graphs. However, causal inference in Earth science also
+  presents challenges: we only partially observe the state space of
+  the system.
 \item These challenges can be alleviated by applying causal theory to
   generic causal graphs of the Earth system and identifying the
   assumptions necessary for causal inference from data. These are
