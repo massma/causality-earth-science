@@ -7,7 +7,7 @@
 \title{Causal inference in Earth science}
 
 \author{Adam Massmann\thanks{Corresponding author:
-    akm2203@columbia.edu}, Pierre Gentine, Jakob Runge?}
+    akm2203@columbia.edu}, Pierre Gentine, Jakob Runge, Elias Bareinboim}
 
 \maketitle
 \begin{abstract}
@@ -21,14 +21,14 @@
   the same limitations as numerical and real world experimentation,
   the assumptions behind causal inference must be theoretically
   justified prior to application. Here, we apply causal theory to
-  identify the necessary assumptions for calculating causal effects in
-  generic Earth sceince systems. Causal inference is justified under
-  three different assumptions that: (1) the state space of the system
-  is reconstructable from lagged observations of the system;
-  alternatively: (2) the effect of interest is only causally affected
-  by the observed portion of the state space; alternatively: (3) The
-  cause of interest can be assumed to be independent of the evolution
-  of the system’s state.
+  identify assumptions that allow for causal effects to be calculated
+  from data in generic Earth science systems. Causal inference is
+  justified under three different sets of assumptions: (1) the state
+  space of the system is reconstructable from lagged observations of
+  the system; alternatively: (2) the effect of interest is only
+  causally affected by the observed portion of the state space;
+  alternatively: (3) The cause of interest can be assumed to be
+  independent of the evolution of the system’s state.
 \end{abstract}
 
 \section{Introduction}
@@ -69,10 +69,11 @@ challenging given two fundamental issues: 1) the system evolves
 through time according to the underlying dynamics, and 2) we only
 partially observe the state space of that dynamical system
 \citep{majda-state}. The main contribution of this paper is the
-identification of the necessary assumptions for applying causal
-inference in Earth systems. We identify these assumptions by applying
-graph theory developed in \citet{pearl1995causal} to generic Earth
-science systems. There is the potential for applying causal
+identification of assumptions that overcome these issues in Earth
+science systems. When applied, these assumptions allow causal effects
+to be calculated from passive data. We identify these assumptions by
+applying graph theory developed in \citet{pearl1995causal} to generic
+Earth science systems. There is the potential for applying causal
 inference when we can assume:
 
 \begin{itemize}
@@ -81,7 +82,7 @@ inference when we can assume:
 \item The cause of interest is external to the system's evolution, as
   is the case with common ``radiative forcing'' experiments in climate
   modeling. In other more technical terms, the cause is independent of
-  the evolution system's state (Section \ref{human}). Or,
+  the evolution of the system's state (Section \ref{human}). Or,
 \item The state space of the system is statistically reconstructable
   from available observations (Section \ref{sec:stat-reconstr-state},
   Section \ref{sec:miss-temp-observ})
@@ -101,7 +102,6 @@ exciting tool for scientific discovery and understanding
 \citep{hannart-da,naveau-2020}. This manuscript establishes the
 conditions required for the proper application of causal inference in
 Earth science.
-
 
 \section{Causal graphs and Pearl's do calculus}
 \label{sec:causal-graphs-pearls}
@@ -254,9 +254,9 @@ example. Returning to our toy example (Figure \ref{fig:toy}A), we
 attempt to calculate the causal effect of clouds on sunlight. In other
 words, we want to isolate the variability of sunlight due to the
 causal link from cloud to sunlight (Figure \ref{fig:toy}A). However,
-aerosols both affect cloud and sunlight, so if we naively calculate a
-causal effect using correlations between sunlight and cloud, we would
-get a biased estimate. To demonstrate this, consider simulated cloud,
+affect both cloud and sunlight, so if we naively calculate a causal
+effect using correlations between sunlight and cloud, we would get a
+biased estimate. To demonstrate this, consider simulated cloud,
 aerosol, and sunlight data with causal dependencies consistent with
 Figure \ref{fig:toy}A.
 
@@ -292,19 +292,21 @@ cloud to aerosol. Graphically, this is clarified by removing all edges
 from our cause (cloud) to children of our cause (in this case
 sunlight) to create a ``mutilated'' graph (Figure
 \ref{fig:mutilated-toy}). We see that clouds are not independent of
-surface solar radiation in the mutilated graph.  However if aerosol
-were fixed (e.g. observed or not varying), cloud and sunlight would be
-independent of each other in Figure \ref{fig:mutilated-toy}. In other
-words, conditional on aerosol, cloud and sunlight are independent in
-the mutilated graph (Figure \ref{fig:mutilated-toy}), which does not
-include the causal path from cloud to sunlight. And, conditional on
-aerosol in the true system (Figure \ref{fig:toy}(A)), all
-co-variability between cloud and sunlight is only due to the causal
-edge between cloud and sunlight.  We can mathematically incorporate
-the requirement that we must condition on aerosol to isolate the
-causal effect of cloud on radiation. Doing so gives the identification
-of the causal effect of cloud and aerosol and satisfies the backdoor
-criterion with \textit{adjustment} on aerosol:
+surface solar radiation in the mutilated graph; aerosol induces
+variability in both cloud and surface solar radiation.  However if
+aerosol were fixed (e.g. observed or not varying), cloud and sunlight
+would be independent of each other in Figure
+\ref{fig:mutilated-toy}. In other words, conditional on aerosol, cloud
+and sunlight are independent in the mutilated graph (Figure
+\ref{fig:mutilated-toy}), which does not include the causal path from
+cloud to sunlight. And, conditional on aerosol in the true system
+(Figure \ref{fig:toy}(A)), all co-variability between cloud and
+sunlight is only due to the causal edge between cloud and sunlight.
+We can mathematically incorporate the requirement that we must
+condition on aerosol to isolate the causal effect of cloud on
+radiation. Doing so gives the identification of the causal effect of
+cloud and aerosol and satisfies the backdoor criterion with
+\textit{adjustment} on aerosol:
 
 \begin{figure}
   \includegraphics[]{naiveCloudSunlight.pdf}
@@ -330,16 +332,15 @@ of our choosing (in this case $c$, which could be ``True'' for the
 presence of a cloud, or ``False'' for no cloud). In the case that
 observations of aerosols are not available (e.g., Figure
 \ref{fig:toy}B, C), our causal effect is not identifiable and we
-cannot use causal inference no matter how large the sample sizes of
-clouds and sunlight. This is a powerful research tool: after encoding
-our domain knowledge in a causal graph, we can analyze the causal
-graph and available observations to determine whether a causal
-calculation is possible, \textit{without needing to collect, download,
-  or manipulate any data}. For more complicated graphs, causal
-identification can be automated \citep{shpitser2006}. We later use
-this theory to theoretically assess which general problems are
-tractable in Earth science using causal inference (Section
-\ref{sec:necess-cond-caus}).
+cannot use causal inference no matter how large the sample size of our
+data. This is a powerful research tool: after encoding our domain
+knowledge in a causal graph, we can analyze the causal graph and
+available observations to determine whether a causal calculation is
+possible, \textit{without needing to collect, download, or manipulate
+  any data}. For more complicated graphs, causal identification can be
+automated \citep{shpitser2006}. We later use this theory to
+theoretically assess which general problems are tractable in Earth
+science using causal inference (Section \ref{sec:necess-cond-caus}).
 
 Once we have established that a causal effect is identifiable from
 data, we must estimate the required observational distributions
@@ -477,16 +478,6 @@ presented in Figure \ref{fig:generic}.
   clarification on terminology}
 \label{sec:discovery}
 
-
-\textit{/ TODO: a messy start to compare and contrast with causal
-  discovery is here; clean this up. Also ask Jakob if he wants to be a
-  coauthor and fill this out or rewrite it, especially for
-  perspectives on causal discovery. The goal is for readers to: 1)
-  understand the difference between ``discovery'' and ``estimating
-  effects,'' and 2) appreciate that we may often know the causal
-  dependencies of physical systems, and when we do, ``estimating
-  effects'' is a tractable path of analysis./}
-
 The term ``causal inference'' has been used to describe two
 techniques:
 
@@ -549,7 +540,7 @@ may be more transparent and interpretable for many readers, relative
 to a causal graph derived from significance parameters with more
 abstract meaning. Additionally, calculating an effect of some
 processes upon others illuminates more information about the system
-than just he presence and direction of a causal edge, as is output by
+than just the presence and direction of a causal edge, as is output by
 causal structure discovery algorithms.
 
 However, ultimately we view causal effect inference and causal
@@ -568,13 +559,9 @@ interpretation; researchers and readers can choose the method that
 suits their assumptions, available data, and level of domain
 knowledge.
 
-\section{Necessary conditions for causal identification in Earth
+\section{Assumptions leading to causal identification in Earth
   systems}
 \label{sec:necess-cond-caus}
-
-\textit{/TODO: pierre gave it to me, but in coronavirus chaos I lost
-  the second ``lorenz'' citation (note on my desk?). think it was a
-  different year, maybe (1995/6, or 2005). check w/ pierre./}
 
 Earth science systems are dynamical systems evolving through time
 according to an underlying system state
@@ -644,27 +631,28 @@ then we can calculate the causal effect of any reconstructed state on
 any future variable or process. The primary advantages of this
 approach is that it is the minimum assumption required to calculate a
 causal effect in the generic Earth system graph proposed in Figure
-\ref{fig:generic}a. However there is no free lunch: the significant
-disadvantage of this approach is that we cannot examine the causal
-effect of a specific variable (e.g. $C(t)$) on another
-(e.g. $E(t+1)$), because the mapping from individual observations to a
-state space reconstruction transforms the individual observation's
-importance to additionally include the unknowable and observed
-portions of the state space. So, an intervention on any individual
-observation is of ambiguous meaning (e.g. we do not know what are the
-unobserved variables we are intervening on). Instead, we limit
-ourselves to only examining the causal effect of changes in the entire
-state holistically. Additionally, this approach requires a shift in
+\ref{fig:generic}a. However this simplification comes at a cost: we
+can only examine the effect of different global states on future
+variables, and we cannot examine the causal effect of a specific
+variable (e.g. $C(t)$) on another (e.g. $E(t+1)$), because the mapping
+from individual observations to a state space reconstruction
+transforms the individual observation's importance to additionally
+include the unknowable and unobserved portions of the state space. So,
+an intervention on any individual observation is of ambiguous meaning
+(e.g. we do not know what are the unobserved variables we are
+intervening on). Instead, we limit ourselves to only examining the
+causal effect of changes in the entire state
+holistically. Additionally, this approach requires a shift in
 interpretation from the relatively straightforward interventions on
 observable variables we have considered thus far to one where we
 intervene on the entire state.
 
 For example, consider that we reconstructed our state space from
 available observations, and this reconstruction reduced to a discrete
-state space of 10$^{N}$ states, with associated patterns in the
-observations at time $\leq t$. If we are interested in the effect of a
-change in state on a process at time $t+1$, for example a change from
-state $1$ to state $2$, this corresponds to an intervention on the
+state space of $N$ states, with associated patterns in the observations
+at time $\leq t$. If we are interested in the effect of a change in
+state on a process at time $t+1$, for example a change from state $1$
+to state $2$, this corresponds to an intervention on the
 \textit{entire state space at time $t$}. This includes the unobserved
 portions of the state space. So, the intervention no longer consists
 of just intervening on the observed variables to change them from
@@ -681,23 +669,24 @@ In practice we also do not know the number of lagged observations that
 are required for reconstruction of the state space at time $t$. One
 approach is to use the data for guidance. This involves predicting the
 effect at time $t+1$ with iteratively increasing numbers of lags. When
-the addition of more time lags does not improve the prediction of
-variables at time $t+1$, we have some confidence that the relevant
-portions of state space at time $t$ has been reconstructed by the
-lagged time series (e.g., we have defined the embedding dimension of
-the attractor) \citep{Sugihara496}. However even this approach can be
-problematic; while predictive power may plateau as we add more
-temporal observations back in time, there are no guarantees that we
-would not gain causally relevant knowledge from observations further
-back in time. For example, a significant drought last year may impact
+using $L$ lagged observations, if the addition of more time lags does
+not improve the prediction of variables at time $t+1$, then we have
+some confidence that the relevant portions of state space at time $t$
+has been reconstructed by the lagged time series of length $L$ (e.g.,
+we have defined the embedding dimension $L$ of the attractor)
+\citep{Sugihara496}. However even this approach can be problematic;
+while predictive power may plateau as we add more temporal
+observations back in time, there are no guarantees that we would not
+gain causally relevant knowledge from observations further back in
+time. For example, a significant drought last year may impact
 ecosystem state in the current year, but predictive power may locally
-plateau going back in time two months (i.e. when the system exhibits
-both long and short term memory). This example highlights the
-challenges associated with any method relying on state space
-reconstruction with lagged observations: to be sure we reconstruct the
-state space we must include observations from a potentially infinite
-temporal extent, and there might not be any way to check that we
-successfully reconstructed the state space.
+plateau going back in time two months (i.e. in pathological conditions
+when the system exhibits both long and short term memory). This
+example highlights the challenges associated with any method relying
+on state space reconstruction with lagged observations: to be sure we
+reconstruct the state space we must include observations from a
+potentially infinite temporal extent, and there might not be any way
+to check that we successfully reconstructed the state space.
 
 \subsection{Missing temporal observations induce independent random
   variations in cause and effect}
@@ -873,7 +862,7 @@ In summary, we conclude that:
   the system.
 \item These challenges can be alleviated by applying causal theory to
   generic causal graphs of the Earth system and identifying the
-  assumptions necessary for causal inference from data. These are
+  assumptions that allow for causal inference from data. These are
   assumptions that:
   \begin{itemize}
   \item The state space of the system is reconstructable
