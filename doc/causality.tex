@@ -287,9 +287,9 @@ of sunlight between cloudy and clear observations (Figure
 reduce sunlight by, on average, 160 W m$^{-2}$; this is is a strong
 overestimation of the true average effect of clouds (-68 W m$^{-2}$),
 derived from Equation (\ref{eq:1}). Aerosol induces co-variability
-between cloud and aerosol that is unrelated to the causal link from
-cloud to aerosol. Graphically, this is clarified by removing all edges
-from our cause (cloud) to children of our cause (in this case
+between cloud and sunlight that is unrelated to the causal link from
+cloud to sunlight. Graphically, this is clarified by removing all
+edges from our cause (cloud) to children of our cause (in this case
 sunlight) to create a ``mutilated'' graph (Figure
 \ref{fig:mutilated-toy}). We see that clouds are not independent of
 surface solar radiation in the mutilated graph; aerosol induces
@@ -371,7 +371,7 @@ distributed (IID) and we have a large enough sample, we can use the
 law of large numbers to approximate Equation (\ref{eq:5}). The law of
 large numbers states that if we observe $n$ IID samples of some process, in
 this case $A$ (e.g., $a_1$, $a_2$, $\ldots$, $a_n$), then for any
-function $f$:
+function $f$ \citep{shalizi2013}:
 
 \begin{equation}
   \frac{1}{n} \sum_{i=1}^n f(a_i) \to \int_a P(A=a) f(a) \, d a.
