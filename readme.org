@@ -3,7 +3,7 @@
 * Required software
 
    - [[https://www.tug.org/texlive/][texlive]] (tested on 2019)
-   - [[https://docs.haskellstack.org/en/stable/README/][Haskell Stack]]
+  -  [[https://www.haskell.org/downloads/#minimal][Haskell GHC compiler and Cabal build tool]]
    - [[https://www.graphviz.org/][Graphviz]]
    - [[http://www.gnuplot.info/][gnuplot]]
    - [[https://www.ghostscript.com/][ghostscript]]
@@ -14,7 +14,7 @@
    Clone this repository, enter directory, and run:
 
    #+BEGIN_SRC bash
-  stack build && stack exec build
+   cabal v2-run build
    #+END_SRC
 
 ** GNU/Linux instructions
@@ -22,13 +22,13 @@
    Clone this repository, enter directory, and run:
 
    #+BEGIN_SRC bash
-  stack build && stack exec build
+   cabal v2-run build
    #+END_SRC
 
    or, with GNU Make:
 
    #+BEGIN_SRC bash
- make
+   make
    #+END_SRC
 
    This should also probably work on OSX, but I haven't tested it.
