@@ -63,70 +63,61 @@ the above questions with respect to causal tools used in Earth science
 applications. This is particularly relevant because the use of causal
 tools is booming across Earth science (CITATION DUMP). However, most
 of the recent use has focused on causal discovery, or the inference
-(using data) of causal ``links'' and directions between
-variables. This is a shame, because for most application in climate
-science we believe that the assumptions behind many causal discovery
-algorithms are not well justified, and/or are difficult to interpret
-(Section XX, also cite Friedman). In some sense, we believe that the
-current use of causal inference in Earth science has us on a path
-towards confusion.
+(using data) of causal ``links'' and directions between variables (for
+example ``does X cause Y?'', instead of ``how would changing X cause Y
+to change?''. This focus on causal discovery is perhaps a missed
+opportunity: for many applications in climate science the assumptions
+behind many causal discovery algorithms are not well justified, and/or
+are difficult to interpret (Section XX, also cite Friedman). We also
+usually have strong a priori knowledge of the functional connections
+in the Earth system, so have less of a need for ``causal discovery'',
+but we \textit{are} often interested in inferring the functional form
+of causal connections from data (i.e., a need to infer how changing X
+would cause Y to change), which is not addressed with causal
+discovery. In some sense, we believe that the current focus on causal
+discovery in Earth science has us on a path towards confusion.
 
-The irony of this path to confusion is that the fundamentals of causal
-inference are particularly well suited to clarifying assumptions and
-yielding more interpretable results. The main contribution of this
-paper is to demonstrate how causal graphs, a fundamental tool of
-causal inference introduced in Section XX, can be used to communicate
-assumptions, organize analyses, and ultimately improve scientific
-understanding. Using examples, we will show how pretty much any
-analysis could benefit from inclusion of a causal graph because of
-their role in clarifying assumptions (Section XX). However, an added
-benefit of using a causal graph is that, while they are intuitive and
-easy to draw for a domain expert, they are also mathematical objects
-with a corresponding rigorous theory (which we introduce in Section
-XX). Using this theory, we can analyze the causal graph to determine
-whether or not we can infer causal effect(s) from the data available,
-potentially lending a rigorously justified ``causal'' interpretation
-to our analysis. (introduce that this is done up front, to quote dave
-``think a little bit before hand in your analysis'')
-
-For many generic problems in Earth science, meeting the conditions
-required for causal inference is challenging given two fundamental
-issues: 1) the system evolves through time according to the underlying
-dynamics, and 2) we only partially observe the state space of that
-dynamical system \citep{majda-state}. So, we apply causal theory to
-identify assumptions that overcome these issues in generic Earth
-science systems. Specificcally, there is the potential
-for applying causal inference when we can assume:
+The irony of this path to confusion is that some fundamentals of
+causal inference are particularly well suited to clarifying
+assumptions, \textit{and} in some cases these fundamentals can be used
+to calculate the functional form of relationships between Earth
+science variables. The main contribution of this paper is to
+demonstrate how causal graphs, a fundamental tool of causal inference
+introduced in Section XX, can be used to communicate assumptions,
+organize analyses, and ultimately improve scientific understanding. We
+want to hammer home that pretty much any study could benefit from
+inclusion of a causal graph in terms of communication and
+clarification, even if in the end the results cannot be interpreted
+causally. These points require a fair bit of background and
+discussion, and may have ended up a bit long winded, so here is a
+table of contents so you can pick those sections that are most
+relevant to you given your background knowledge and interests:
 
 \begin{itemize}
-\item The effect of interest is only causally affected by the observed
-  portion of the state space (Section \ref{sec:observ-port-state}), or
-\item The cause of interest is external to the system's evolution, as
-  is the case with common ``radiative forcing'' experiments in climate
-  modeling. In other more technical terms, the cause is independent of
-  the evolution of the system's state (Section \ref{human}). Or,
-\item The state space of the system is statistically reconstructable
-  from available observations (Section \ref{sec:stat-reconstr-state},
-  Section \ref{sec:miss-temp-observ})
+\item Section XX: Introduce and discuss causal graphs within the
+  general philosophy of causality.
+\item Section XX: Using a simple relatable example we will explain
+  the problem of confounding and how causal graphs can be used to
+  isolate the functional mapping between interventions on some
+  variable(s) to their effect on other variable(s).
+\item Section XX: We draw on past examples from our own research that
+  would have benefitted from inclusion of a causal graph, in terms of
+  communicating assuptions, and organizing and justifying analyses.
+\item Section XX: We turn to more generic examples of graphs that are
+  generally constistent with a wide variety of systems in Earth
+  science, to highlight some of the difficulties we confront when
+  using causal inference in Earth science and how we may be able to
+  overcome those difficulties (Section XX).
+\item Section XX: A qualitative discussion of causality in Earth
+  science, including recommendations for authors on incorporating
+  causality into their research, and for reviewers/readers reviewing
+  and interpreting causal studies.
 \end{itemize}
 
-We hope that identifying these assumptions demonstrates how causal
-inference can be applied successfuly for Earth science
-understanding. However, we do not want that to detract from our other
-goals of advocating for the use of causal graphs as a tool to
-communicate assumptiosn and organize analysis. Causal graphs encourage
-deep thought at the start of an analysis that can prevent us from
-accidentally undertaking a flawed analysis. If we realize our analysis
-is flawed before dissemination fo results, we wasted a bunch of time
-working on the flawed analysis. But, if we do not realize until after
-dissemination of results (or never), we have introduced confused into
-the scientific community. We hope that this paper will increase
-understanding of fundamental causal tools and shift more focus towards
-using said tools. We believe wider adoption will set us on a path to
-scientific clarity, rather than conusion.
-
-(introduce guide for reviewers and authors? how causal discovery is
-not justified?)
+We hope that this paper will increase understanding of causal graphs
+and shift more focus towards using causal fundamentals. We believe
+wider adoption will set us on a path towards scientific clarity,
+rather than conusion.
 
 \section{Philosophy?}
 
