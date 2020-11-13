@@ -818,94 +818,16 @@ systems. Additionally, as we will see in the next section, we can draw
 quite general graphs that are reprentative of many problems in Earth
 science.
 
-\section{Relation to previous work, ``causal discovery'', and
-  clarification on terminology}
-\label{sec:discovery}
-
-The term ``causal inference'' has been used to describe two
-techniques:
-
-\begin{enumerate}
-\item \textbf{Causal effect inference}: Calculating the causal effect
-  of some processes on other, given data and assumptions about the
-  causal structure of the system.
-\item \textbf{Causal structure discovery}: Inferring the causal
-  structure (e.g. the causal graph) of the system using data.
-\end{enumerate}
-
-To summarize, \textit{causal effect inference (1)} calculates the
-magnitude of a causal effect given: 1) a causal graph drawn by a
-domain expert, and 2) data. On the other hand, \textit{causal
-  structure discovery (2)} does not calculate any causal effects at
-all, but instead generates a causal graph from data.  This paper
-focuses on causal inference as (1): calculating causal effects from
-data (Section \ref{sec:causal-graphs-pearls}). Inferring the causal
-structure of the system (2), is generally much more difficult and also
-requires additional assumptions. For example, some causal structure
-discovery algorithms rely on assumptions that we observe all relevant
-variables to the system and/or possibly arbitrary parameters for
-statistical independence tests
-\citep{runge2019inferring}. Additionally, some methods invoke
-linearity assumptions about the relationships between processes
-\citep{krich2019causal}, which is not generally true for the Earth
-system \citep{palmer-nonlinaer-1999}.
-
-However, there has been considerable work and effort in applying
-causal structure discovery (2) in Earth science
-\citep[e.g.,][]{ebert-uphoff2012,
-  samarasinghe-casuality,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}. Causal
-discovery algorithms filter and infer the direction of causal links in
-the system, usually using conditional independence detection
-algorithms that rely on significance parameters. In contrast to causal
-inference of effects, which we explore in this paper, causal discovery
-algorithms do not directly incorporate domain knowledge on the causal
-dependencies of processes in the system (although domain knowledge may
-guide assumptions about linearity of processes, and the observations
-that must be included in the causal discovery algorithm). Indeed, our
-perspective here is that we have often acquired substantial
-understanding of the mechanisms at play and their causal
-relationships, which we want to exploit: that is formally combine
-domain knowledge with inferences from data. For example, given our
-domain knowledge of the Earth science system we generally have high
-confidence about the causal structure of the system. We can identify
-the state variables and know that the state at time \(t\) determines
-the state at time \(t+1\), even if the exact functional form of the
-dependency through time is not known. Therefore, we can write down a
-causal graph and do not need to infer graph structure from data
-(Section \ref{sec:necess-cond-caus}). It is possible some links in
-these causal graphs correspond to small effects, and these links would
-be removed through causal structure discovery. However, directly
-interpreting what constitutes a ``negligibly small'' effect
-calculation presented in physical units and probabilities, as
-calculated with causal effect inference, may be more transparent than
-interpreting missing links derived from causal structure discovery
-significance parameters. In other words, direct calculation of effects
-may be more transparent and interpretable for many readers, relative
-to a causal graph derived from significance parameters with more
-abstract meaning. Additionally, calculating an effect of some
-processes upon others illuminates more information about the system
-than just the presence and direction of a causal edge, as is output by
-causal structure discovery algorithms.
-
-However, ultimately we view causal effect inference and causal
-structure discovery as complementary tools. Causal effect inference is
-more useful in scenarios where elevated domain knowledge gives a
-priori confidence in causal graph structure, while causal structure
-discovery is more useful when we have very limited domain knowledge
-but access to observations of all relevant processes to a
-problem. Additionally, causal effect inference can be used as a second
-step after causal discovery to calculate individual causal effects. We
-hope to motivate further research effort in causal effect inference to
-match recent efforts in causal structure discovery in Earth
-science. Ideally causal effect inference and causal structure
-discovery will co-evolve as complementary abstractions for causal
-interpretation; researchers and readers can choose the method that
-suits their assumptions, available data, and level of domain
-knowledge.
 
 \section{Assumptions leading to causal identification in Earth
   systems}
 \label{sec:necess-cond-caus}
+
+So far we have focused on toy examples, and the utlity of causal
+graphs as a communication and organziational tool. However, many may
+want to apply a ``full causal analysis'' to an Earth science problem,
+so it is useful to examine what common issues we may need encounter,
+and how we can overcome them in generic Earth science systems.
 
 Earth science systems are dynamical systems evolving through time
 according to an underlying system state
@@ -915,7 +837,6 @@ causal graphs we benefit from the temporal ordering of events: we know
 that future events can have no causal effect on the past. However,
 confounding due to incomplete observation of the system's state space
 introduces challenges.
-
 
 Causal identification and tractable causal inference to Earth science
 requires assumptions about the unobserved portions of the state
@@ -1169,6 +1090,91 @@ state space does not affect the cause (human behavior), there are no
 unblocked backdoor paths through the unobserved portions of the state
 space. Causal inference is particularly tractable for this class of
 problems.
+
+\section{Relation to previous work, ``causal discovery'', and
+  clarification on terminology}
+\label{sec:discovery}
+
+The term ``causal inference'' has been used to describe two
+techniques:
+
+\begin{enumerate}
+\item \textbf{Causal effect inference}: Calculating the causal effect
+  of some processes on other, given data and assumptions about the
+  causal structure of the system.
+\item \textbf{Causal structure discovery}: Inferring the causal
+  structure (e.g. the causal graph) of the system using data.
+\end{enumerate}
+
+To summarize, \textit{causal effect inference (1)} calculates the
+magnitude of a causal effect given: 1) a causal graph drawn by a
+domain expert, and 2) data. On the other hand, \textit{causal
+  structure discovery (2)} does not calculate any causal effects at
+all, but instead generates a causal graph from data.  This paper
+focuses on causal inference as (1): calculating causal effects from
+data (Section \ref{sec:causal-graphs-pearls}). Inferring the causal
+structure of the system (2), is generally much more difficult and also
+requires additional assumptions. For example, some causal structure
+discovery algorithms rely on assumptions that we observe all relevant
+variables to the system and/or possibly arbitrary parameters for
+statistical independence tests
+\citep{runge2019inferring}. Additionally, some methods invoke
+linearity assumptions about the relationships between processes
+\citep{krich2019causal}, which is not generally true for the Earth
+system \citep{palmer-nonlinaer-1999}.
+
+However, there has been considerable work and effort in applying
+causal structure discovery (2) in Earth science
+\citep[e.g.,][]{ebert-uphoff2012,
+  samarasinghe-casuality,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}. Causal
+discovery algorithms filter and infer the direction of causal links in
+the system, usually using conditional independence detection
+algorithms that rely on significance parameters. In contrast to causal
+inference of effects, which we explore in this paper, causal discovery
+algorithms do not directly incorporate domain knowledge on the causal
+dependencies of processes in the system (although domain knowledge may
+guide assumptions about linearity of processes, and the observations
+that must be included in the causal discovery algorithm). Indeed, our
+perspective here is that we have often acquired substantial
+understanding of the mechanisms at play and their causal
+relationships, which we want to exploit: that is formally combine
+domain knowledge with inferences from data. For example, given our
+domain knowledge of the Earth science system we generally have high
+confidence about the causal structure of the system. We can identify
+the state variables and know that the state at time \(t\) determines
+the state at time \(t+1\), even if the exact functional form of the
+dependency through time is not known. Therefore, we can write down a
+causal graph and do not need to infer graph structure from data
+(Section \ref{sec:necess-cond-caus}). It is possible some links in
+these causal graphs correspond to small effects, and these links would
+be removed through causal structure discovery. However, directly
+interpreting what constitutes a ``negligibly small'' effect
+calculation presented in physical units and probabilities, as
+calculated with causal effect inference, may be more transparent than
+interpreting missing links derived from causal structure discovery
+significance parameters. In other words, direct calculation of effects
+may be more transparent and interpretable for many readers, relative
+to a causal graph derived from significance parameters with more
+abstract meaning. Additionally, calculating an effect of some
+processes upon others illuminates more information about the system
+than just the presence and direction of a causal edge, as is output by
+causal structure discovery algorithms.
+
+However, ultimately we view causal effect inference and causal
+structure discovery as complementary tools. Causal effect inference is
+more useful in scenarios where elevated domain knowledge gives a
+priori confidence in causal graph structure, while causal structure
+discovery is more useful when we have very limited domain knowledge
+but access to observations of all relevant processes to a
+problem. Additionally, causal effect inference can be used as a second
+step after causal discovery to calculate individual causal effects. We
+hope to motivate further research effort in causal effect inference to
+match recent efforts in causal structure discovery in Earth
+science. Ideally causal effect inference and causal structure
+discovery will co-evolve as complementary abstractions for causal
+interpretation; researchers and readers can choose the method that
+suits their assumptions, available data, and level of domain
+knowledge.
 
 \section{Conclusions}
 
