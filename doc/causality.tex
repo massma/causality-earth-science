@@ -932,26 +932,19 @@ interpretation (see Section \ref{sec:miss-temp-observ},
 
 In practice we also do not know the number of lagged observations that
 are required for reconstruction of the state space at time $t$. One
-approach is to use the data for guidance. This involves predicting the
-effect at time $t+1$ with iteratively increasing numbers of lags. When
-using $L$ lagged observations, if the addition of more time lags does
-not improve the prediction of variables at time $t+1$, then we have
-some confidence that the relevant portions of state space at time $t$
-has been reconstructed by the lagged time series of length $L$ (e.g.,
-we have defined the embedding dimension $L$ of the attractor)
-\citep{Sugihara496}. However even this approach can be problematic;
-while predictive power may plateau as we add more temporal
-observations back in time, there are no guarantees that we would not
-gain causally relevant knowledge from observations further back in
-time. For example, a significant drought last year may impact
-ecosystem state in the current year, but predictive power may locally
-plateau going back in time two months (i.e. in pathological conditions
-when the system exhibits both long and short term memory). This
-example highlights the challenges associated with any method relying
-on state space reconstruction with lagged observations: to be sure we
-reconstruct the state space we must include observations from a
-potentially infinite temporal extent, and there might not be any way
-to check that we successfully reconstructed the state space.
+approach is to use the data for guidance. This involves reconstructing
+the state at time $t$ with iteratively increasing numbers of lags. We
+have confidence we have reproduced the state when the observations at
+time $t$ are conditionally independent of each other given the state
+reconstruction. However, this approach potentially introduces even
+more problems, including but not limited to the assumptions required
+in our conditional independence tests. This example highlights the
+challenges associated with any method relying on state space
+reconstruction with lagged observations: to be sure we reconstruct the
+state space we must include observations from a potentially infinite
+temporal extent, and there might not be any reliable way to check that
+we successfully reconstructed the state space. *relate back to opening
+questions: not good on interpretabgle*
 
 \subsection{Missing temporal observations induce independent random
   variations in cause and effect}
@@ -997,7 +990,7 @@ assumption that the missing temporal observations do not induce
 dependencies between the cause and effect of interest. As with Section
 \ref{sec:stat-reconstr-state}, we must be able to reconstruct the
 state space, which may not always be possible, and may also confuse
-interpretation.
+interpretation. *relate back to opening questions, not good for interpreatble*
 
 
 \subsection{The unobserved portion of the state space does not affect
@@ -1089,7 +1082,7 @@ approximately independent of the climate state. Because the climate
 state space does not affect the cause (human behavior), there are no
 unblocked backdoor paths through the unobserved portions of the state
 space. Causal inference is particularly tractable for this class of
-problems.
+problems. *discuss ``human confounding'' (e.g, with covid?*
 
 \section{Relation to previous work, ``causal discovery'', and
   clarification on terminology}
