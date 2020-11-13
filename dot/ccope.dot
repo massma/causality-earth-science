@@ -1,0 +1,33 @@
+digraph G {
+	synopticForcing[label="synoptic forcing", style="dashed"];
+	orographicLift[label="orographic\nascent", style="dashed"];
+	cloudTimescale[label="cloud\ntimescale", style="dashed"];
+	advectionTimescale[label="advection\ntimescale", style="dashed"];
+	rainRegime[label="rain regime", shape="invhouse"];
+	orographicEnhancement[label="orographic\nenhancement", shape="house"];
+	stability[label="stability"];
+	wind[label="wind"];
+	aerosols[label="aerosols"];
+	terrain[label="terrain"];
+	columnWater[label="atmospheric\nmoisture"];
+
+
+	aerosols -> rainRegime;
+	aerosols -> cloudTimescale;
+	rainRegime -> cloudTimescale;
+	synopticForcing -> rainRegime;
+	synopticForcing -> stability;
+	synopticForcing -> wind;
+	synopticForcing -> columnWater;
+	columnWater -> cloudTimescale;
+	columnWater -> rainRegime;
+	orographicLift -> cloudTimescale;
+	stability -> orographicLift;
+	wind -> orographicLift;
+	terrain -> orographicLift;
+	wind -> advectionTimescale;
+	cloudTimescale -> orographicEnhancement;
+	advectionTimescale -> orographicEnhancement;
+
+
+}

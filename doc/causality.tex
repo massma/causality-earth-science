@@ -16,13 +16,13 @@
   relationships and structure from data. Causal discovery requires
   strong assumptions that are not well justified in generic Earth
   science systems, and can lead to uninterpetable results and
-  scientific regress. Unforunately, by focusing on causal discovery we
-  may have missed an opportunity to apply causal fundamentals to
-  communicate assumptions and organize analyses. We argue that
-  encoding domain knowledge in a causal graph, rather than inferring a
-  causal graph from data, is a path towards interpretable results and
-  scientific progress. We apply causal fundamentals to generic graphs
-  of the climate system to identify where causal inference may be most
+  scientific regress. By focusing on causal discovery we may have
+  missed an opportunity to apply causal fundamentals to communicate
+  assumptions and organize analyses. We argue that encoding domain
+  knowledge in a causal graph, rather than inferring a causal graph
+  from data, is a path towards interpretable results and scientific
+  progress. We apply causal fundamentals to generic graphs of the
+  climate system to identify where causal inference may be most
   tractable in Earth science. Specifically we identify three different
   assumptions under which causal inference may be tractable in generic
   systems: (1) the state space of the system is reconstructable from
@@ -41,8 +41,8 @@
 
 
 The goal of scientific research is to improve understanding. But, we
-can't improve our understanding with results we can't interpret, so we
-need interpretable results. Interpretation requires clear
+cannot improve our understanding with results we cannot interpret, so
+we need interpretable results. Interpretation requires clear
 communication and justification of assumptions. As we add more tools
 to our scientific toolbox, we ought to ask ourselves questions like:
 
@@ -65,17 +65,18 @@ tools is booming across Earth science (CITATION DUMP). However, most
 of the recent use has focused on causal discovery, or the inference
 (using data) of causal ``links'' and directions between variables (for
 example ``does X cause Y?'', instead of ``how would changing X cause Y
-to change?''. This focus on causal discovery is perhaps a missed
+to change?''). This focus on causal discovery is perhaps a missed
 opportunity: for many applications in climate science the assumptions
 behind many causal discovery algorithms are not well justified, and/or
 are difficult to interpret (Section XX, also cite Friedman). We also
 usually have strong a priori knowledge of the functional connections
-in the Earth system, so have less of a need for ``causal discovery'',
-but we \textit{are} often interested in inferring the functional form
-of causal connections from data (i.e., a need to infer how changing X
-would cause Y to change), which is not addressed with causal
-discovery. In some sense, we believe that the current focus on causal
-discovery in Earth science has us on a path towards confusion.
+in the Earth system through our knowledge of physics, so have less of
+a need for ``causal discovery''. However we \textit{are} often
+interested in inferring the functional form of causal connections from
+data (i.e., a need to infer how changing X would cause Y to change),
+which is not addressed with causal discovery. In some sense, we
+believe that the current focus on causal discovery in Earth science
+has us on a path towards confusion.
 
 The irony of this path to confusion is that some fundamentals of
 causal inference are particularly well suited to clarifying
@@ -88,10 +89,14 @@ organize analyses, and ultimately improve scientific understanding. We
 want to hammer home that pretty much any study could benefit from
 inclusion of a causal graph in terms of communication and
 clarification, even if in the end the results cannot be interpreted
-causally. These points require a fair bit of background and
-discussion, and may have ended up a bit long winded, so here is a
-table of contents so you can pick those sections that are most
-relevant to you given your background knowledge and interests:
+causally. Causal graphs also encorouge us to think deeply up front
+about what we are trying to quantify and how the system is structured,
+and can identify infeasible studies early in the research process
+(before messing around with data or models), saving us time and
+minimizing the chance of (unintentionally) flawed studies. These
+points require a fair bit of background and discussion, so we broke
+the paper up into sections so that the reader can pick those sections
+that are most relevant given their background knowledge and interests:
 
 \begin{itemize}
 \item Section XX: Introduce and discuss causal graphs within the
@@ -119,52 +124,86 @@ and shift more focus towards using causal fundamentals. We believe
 wider adoption will set us on a path towards scientific clarity,
 rather than conusion.
 
-\section{Philosophy?}
+\section{What is causality?: the causal graph perspective and its
+  usefulness in Earth science}
 
-Why causality?
+We view causality through the lens of causal graphs, as introduced in
+\citet{pearl1995causal}, mostly because we believe causal graphs are
+pragmatically useful in Earth science, rather than because of any
+particular philosophical argument for causal graphs as the ``true''
+definition of causality.
 
-Controlled experimentation is the traditional path to scientific
-discovery. The scientist tests hypotheses about a system's nature by
-systematically varying experiment parameters and measuring the
-response. Climate and Earth system scientists primarily use numerical
-models for experimentation \citep[e.g.,][]{eyring-cmip6-2016}, but
-real world experiment is also used to a lesser degree
-\citep[e.g.,][]{ainsworth-face-2005}. However, it may be logistically
-impossible or unethical to execute many real world experiments (e.g.,
-geoengineering), and numerical experiments (e.g., climate modeling)
-may rely on approximations that bias experimental results relative to
-the real world
-\citep[e.g.,][]{kim-cmip5,stillmann-cmip5-extremes}. Given the
-limitations of real world and numerical experiments in Earth sciences,
-researchers require additional tools for scientific discovery.
-\citet{pearl-1994-do-calculus} introduced one such tool: the
-\textit{do-}calculus for calculating the causal effects of
-experimental interventions based on passive observations of a system
-and assumptions about causal dependencies in the system. In other
-words, given observational data about a system one can use
-\textit{do}-calculus to calculate an experimental effect from data
-without conducting a specific experiment. This is a powerful tool for
-Earth scientists that complements numerical experimentation. When
-numerical modeling assumptions break down, causal inference may be a
-tractable path towards scientific discovery.
+Causal graphs are directed acyclic graphs that encode our assumptions
+about the causal dependencies of a system.  To make a causal graph, a
+domain expert simply draws directed edges (i.e. arrows) from variables
+that are causes to effects. In other words, to make a causal graph you
+just draw a picture (Figure \ref{fig:toy}). Causal graphs are useful
+tools because they can be drawn by any domain expert with no required
+knowledge of math or probability, but they also represent formal
+mathematical objects. Specifically, underlying each causal graph are a
+set of equations: each node corresponds to a generating function for
+that variable. The function's inputs are all of the node's parents
+(plus a random variability term, which we won't worry about for
+now). Parents are the other nodes in the graph that point to our node
+of interest (e.g., in the simpilest graph X->Y; X is a parent of
+Y). So in reality, drawing arrows from ``causes'' to ``effects'' is
+really just drawing arrows from function inputs to generating
+functions.
 
+In this way, drawing a causal graph is just another way to visualize
+and reason about a complicated system of equations, which is a
+powerful tool for the Earth scientist: we deal with very complicated
+systems of equations and welcome any tool that helps us understand and
+reason about their behavior. Some times in Earth sciences we might
+know (from physics) the equations for a given function in the causal
+graph. However, in practice we often either do not know all of the
+functions (e.g., plant stomata response to VPD), or some functions are
+computationally intractable to compute (e.g., turbulence, moist
+convection, and cloud microphysics in large scale models). In these
+scenarios the benefits of causal graphs are fully realized: based on
+the causal graph we can calulate from data, using somethign called the
+\textit{do-}calculus \citep{pearl-1994-do-calculus}, the functional
+relationship between target variables (i.e. effects) and interventions
+on any other variables in the graph (i.e. causes). By viewing causal
+graphs through this pragmatic lens of calculating the functional form
+for functions that we cannot calculate a priori, we simultaneously
+identify their value for Earth scientists, while also side stepping
+philosophical arguments about the meaning of causality, which are sure
+to continue until the heat death of the universe\footnote{and we hope
+  they do, we have enjoyed many such arguments in the past}. In Earth
+science we often want to know how the system responds to interventions
+(e.g., sub grid scale parameterization: how time tendancies respond to
+interventions on the large scale state; experimentation: how would
+changing land cover from X to Y change the statistics of surface
+temperature), and do-calculus provides a way to calculate this reponse
+to interventions without relying on approximate numerical models or
+(potentially in feasible or unethical) real world experimentation. For
+consistency with the causal literature, we will call the response
+variables ``effects'', and the intervened upon variables ``causes'',
+but we want to reemphisize that for Earth science applications the
+exact definition of causality is largely irrelevant (we are
+pragmatically interested in cacluling functional forms).
 
-\section{Causal graphs and Pearl's do calculus}
+One might say: ``wait, don't we have regression to calculate functions
+from data?'' But, as we will see (Section
+\ref{sec:causal-graphs-pearls}), uninformed regression is just a
+functional mapping of associations between variables, not the response
+to interventions. This is the problem that \textit{do-}calculus
+solves: it identifies whcih data are needed and how we can use those
+data to calculate the functional mapping of interventions, rather than
+just associactions that may be attributable to other processes
+entirely. Working through an example will hopefully clarify some of
+these claims.
+
+\section{A Toy Example: the problem of confounding and the necessity
+  of \textit{do-}calculus for calculating interventions}
 \label{sec:causal-graphs-pearls}
 % intro causal graphs}
 
-Causal graphs, introduced in \citet{pearl1995causal}, are directed
-acyclic graphs (DAGs)\footnote{define DAG?} that encode our
-assumptions about the causal dependencies of a system. Causal graphs
-are useful tools because they can be drawn by any domain expert with
-no required knowledge of math or probability, but they also represent
-formal mathematical objects with specific meaning. A domain expert
-simply draws directed edges (i.e. arrows) from variables that are
-causes to effects. We illustrate causal graphs and their mathematical
-consequences with a simplified toy example examining the causal
-interaction between clouds, aerosols, and surface solar
-radiation/sunlight (Figure \ref{fig:toy}A). Our causal graph consists
-of:
+We demonstrate the problem of confounding and the necessity of
+\textit{do-}calculus we use a very simple toy example involving
+clouds, aerosols, and surface solar radiation/sunlight (Figure
+\ref{fig:toy}A). Our causal graph consists of:
 
 \begin{figure}
   % % consider \noindent\include... [width=0.75\textwidth]...
@@ -214,58 +253,64 @@ readers, we will continue with the graph as drawn in Figure
 \ref{fig:toy} (Section \ref{sec:necess-cond-caus} explores realistic
 Earth system graphs).
 
-Even though probabilistic reasoning is not required to construct a
-causal graph, the resulting graph encodes specific probabilistic
-meaning. Interpreted as a general probabilistic graphical model, our
-example graph in Figure \ref{fig:toy}A represents a specific
-factorization of the joint distribution into conditional and marginal
-factors:
+Even though mathematical reasoning is not required to construct a
+causal graph, the resulting graph encodes specific mathematical
+meaning. For example, the graph corresponds to a set fo underlying
+functions for each variable:
+
+\begin{align}
+  \label{eq:2}
+  aerosol &= f(U_{aerosol}) \\
+  cloud &= f(aerosol, U_{cloud})\\
+  sunlight &= f(aerosol, cloud, U_{sunlight})
+\end{align}
+
+where $U$ are random variables due to all the factors not represented
+explicitly in the causal graph, and $f$ are deterministic functions
+that generate each variable in the graph from their parents and
+corresponding $U$.
+
+The presence of the random variables $U$ introduce
+a third meaning to the causal graph: they induce a specific
+factorization of the joint distrition of the variables into
+conditional and marginal facotors:
 
 \begin{equation}
   P(A, C, S) = P(S \, | \,C, A) \, P(C \, | \, A) \, P(A),
 \end{equation}
 
 where $A$ represents aerosol, $C$ represents cloud, $S$ represents
-surface sunlight/solar radiation, and $|$ denotes conditional
-probability (Appendix \ref{prob-theory} describes the notation used in
-this paper and a brief introduction to probability theory for
-unfamiliar readers). Interpreted causally, as in
-\citet{pearl1995causal} and this manuscript, the directed edges encode
-causal dependencies in addition to a factorization of the joint. More
-specifically, each node is causally determined by its parents, as well
-as some random variation due to processes not explicitly considered in
-the graph. For example, sources of aerosol variability not considered
-in Figure \ref{fig:toy}A include anthropogenic aerosol emission, the
-biosphere, fires, volcanoes, etc. \citep[e.g.,][]{Boucher2015}. For
-cloud, this includes synoptic forcing, atmospheric humidity,
-etc. \citep[e.g.,][]{wallace2006atmospheric}. For radiation, this
-includes variability of top of atmosphere radiation,
-etc. \citep[e.g.,][]{hartmann2015global}. The causal graph, as drawn,
-encodes the assumption that all of these sources of randomness are
-independent of each other. The representation of randomness in causal
+surface sunlight/solar radiation, and $P(\cdot | \codt)$ denotes
+conditional probability (Appendix \ref{prob-theory} describes the
+notation used in this paper and a brief introduction to probability
+theory for unfamiliar readers). The inclusion of randomness in causal
 graphs is a powerful tool: by positing a causal graph, we are not
 stating that the variables in the graph are the only processes in the
 system. Instead, we are stating that all other processes not included
-in the graph induce variations in the causal variables that are
-independent of each other. For a deeper look at causal graphs and
-their underlying theory based on structural causal models (SCMs) we
-refer the reader to \citet{pearl2009}. We find that the causal graph
-representation is more intuitive to domain experts than the underlying
-SCM-based theory, so we focus on graph-based theory in our application
-of causal inference to Earth science.
+in the graph induce variations in the graph's variables that are
+independent of each other (e.g., all $U_{\cdot}$ in Equation
+(\ref{eq:2}) are independent). For example, sources of aerosol
+variability not considered in Figure \ref{fig:toy}A include
+anthropogenic aerosol emission, the biosphere, fires, volcanoes,
+etc. \citep[e.g.,][]{Boucher2015}. For cloud, this includes synoptic
+forcing, atmospheric humidity,
+etc. \citep[e.g.,][]{wallace2006atmospheric}. For radiation, this
+includes variability of top of atmosphere radiation,
+etc. \citep[e.g.,][]{hartmann2015global}. Figure \ref{fig:toy}A states
+that all these external, or \textit{exogenous}, sources of variability
+are independent of each other (in very technical terms, this means the
+graph is ``\textit{Markovian}'').
 
 We can apply causal graph theory
 \citep[e.g.,][]{pearl1995causal,shpitser2006} to the assumptions
 encoded in our causal graph to identify which distributions must be
-estimated from data in order to calculate a causal effect of
-interest. More precisely, ``calculating a causal effect'' refers to
-estimating the probability distribution of a response (e.g. sunlight)
-to an experimental intervention on our cause where we artificially set
-it to a value of our choosing (e.g. presence or absence of a
-cloud). The challenge of causal inference is to derive the response to
-the intervention in terms of only observed distributions. This process
-of identifying the necessary observed distributions is formally termed
-\emph{causal identification}. If a causal effect is not identifiable
+estimated from data in order to calculate the response of effect(s)
+(e.g. of sunlight) to an experimental intervention on the cause(s)
+(e.g. presence or absence of a cloud). The challenge of causal
+inference is to derive the response to the intervention in terms of
+only observed distributions. This process of identifying the necessary
+observed distributions is formally termed \emph{causal
+  identification}. If a causal effect is not identifiable
 (\emph{un}-identifiable), for example if calculating a causal effect
 requires distributions of variables that we do not observe, then we
 cannot use causal inference to calculate a causal effect, even with an
@@ -300,27 +345,28 @@ example. Returning to our toy example (Figure \ref{fig:toy}A), we
 attempt to calculate the causal effect of clouds on sunlight. In other
 words, we want to isolate the variability of sunlight due to the
 causal link from cloud to sunlight (Figure \ref{fig:toy}A). However,
-affect both cloud and sunlight, so if we naively calculate a causal
-effect using correlations between sunlight and cloud, we would get a
-biased estimate. To demonstrate this, consider simulated cloud,
-aerosol, and sunlight data with causal dependencies consistent with
-Figure \ref{fig:toy}A.
+aerosols affect both cloud and sunlight, so if we naively calculate a
+causal effect using correlations between sunlight and cloud, we would
+get a biased estimate. To demonstrate this, consider simulated cloud,
+aerosol, and sunlight data from a set of underlying equations
+consistent with Figure \ref{fig:toy}A and Equation (\ref{eq:2}):
+
 
 \begin{align}
-  aerosol &\sim \text{uniform (0, 1]}\\
-  cloud &\sim \text{bernoulli (aerosol)}\\
-  sunlight &:= \begin{cases}
+  aerosol = U_{aerosol} \sim \text{uniform (0, 1]}\\
+  cloud = \text{Cloudy if } U_{cloud} + aerosol > 1; \;
+  U_{cloud} \sim \text{uniform (0, 1]}\\
+  sunlight = &: \begin{cases}
     \text{Cloudy} &: 0.6 \cdot \text{downwelling clear sky radiation}  \\
     \text{Clear} &: \text{downwelling clear sky radiation}
-  \end{cases},
-                   \label{eq:1}
+  \end{cases}
 \end{align}
 
-and:
+where:
 
 \begin{equation*}
-  \text{downwelling clear sky radiation} = TOA \, \cdot \, (1 - aerosol); \;
-  TOA \sim \text{Normal(340 W m$^{-2}$, 30 \, W m$^{-2}$)}
+  \text{downwelling clear sky radiation} = U_{sunlight} \cdot (1 - aerosol); \;
+  U_{sunlight} \sim \text{Normal(340 W m$^{-2}$, 30 \, W m$^{-2}$)}
 \end{equation*}
 
 Now, consider not knowing the underlying generative processes, but
@@ -437,10 +483,15 @@ Equation (\ref{eq:lln}) to justify an approximation to Equation
 \end{equation}
 
 Data or prior knowledge can inform the regression function for
-$\mathbb{E}(S | C=c, A=a_i)$. In the toy example, a linear model
-conditional on cloud appears to be a good choice of regression
-function (Figure \ref{fig:linear}). The causal effect of clouds on
-sunlight as calculated using Equation (\ref{eq:6})) (e.g.
+$\mathbb{E}(S | C=c, A=a_i)$, and as always whatever regression method
+is used, it should be checked to insure it is representative of the
+data. In the toy example, a linear model conditional on cloud appears
+to be a good choice of regression function (Figure
+\ref{fig:linear})\footnote{However note that for most real problems in
+  Earth science, we probably want to use some type of non linear
+  regression (neural networks could be well suited to this
+  task).}. The causal effect of clouds on sunlight as calculated using
+Equation (\ref{eq:6})) (e.g.
 $\mathbb{E}(S | do(C = \text{cloudy})) - \mathbb{E}(S | do(C =
 \text{clear}))$) is -68.52 W m$^{-2}$, which closely matches the true
 causal effect from Equation (\ref{eq:1}) of -68 W m$^{-2}$. This
@@ -466,7 +517,9 @@ models and \textit{do-}calculus:
 \begin{itemize}
 \item Graphical causal models encode our assumptions about causal
   dependencies in a system (edges are drawn \emph{from} causes
-  \emph{to} effects).
+  \emph{to} effects). ``Causal dependencies'' really just refer to
+  functional dependencies between inputs (causes) and outputs
+  (effect), which are useful in physical sciences.
 \item In order to calculate an unbiased causal effect from data, we
   must isolate the covariability between cause and effect that is due
   to the directed causal path from cause to effect. The presence of
@@ -519,6 +572,251 @@ of Earth science systems (Figure \ref{fig:generic})
 \citep{tian2002general}. In other words, blocking backdoor paths is a
 requirement for calculating a causal effect in graphs of the form
 presented in Figure \ref{fig:generic}.
+
+\section{Causal graphs as communicators, organizers, and time-savers}\label{sec:causal-graphs-as}
+
+In Section \ref{sec:causal-graphs-pearls} we used a toy example to go
+through a full causal analysis from drawing the graph, to calculating
+the average response of sunlight (the effect) to an intervention on
+cloud (the cause). However, often we may not be able to estimate the
+causal effects from the available data, as there are serious
+challenges with unobserved confounding in generic Earth science
+problems (Section \ref{sec:necess-cond-caus}). We want to emphasize,
+even if we cannot follow all the way through to calculating
+successfully calcualting an interventional effect for our problem of
+interest, drawing a causal graph at the beginning of the analysis, and
+including it the disemination of results can pay huge dividents in
+terms of organization, saving us time, preventing us from
+unintentionally executing flawed studiess, and comunicating our
+results to the public. Drawing the causal graph at the beginning of
+the analysis is not easy: it takes time and deep thought. But, this is
+thought that will need to be done at some point in the analysis: we
+will need some forumlation in our brain of how the system behaves and
+what are the functional dependencies between processes in the
+system. Making these dependencies explicit at the beginning of the
+analysis forces us to clarify our thinking, exposing factors and
+potential problems that we may not have realized until much later (or
+never) if we do not do the deep thinking up front. If we realize
+issues much later, we will have wasted a lot of time building a flawed
+analysis (e.g. downloading data, running models). If we never realize
+the issues, then we introduced confusion into the literature. So the
+causal graph is both an organizer for scientific analysis, and because
+we can draw it at the beginning of the analysis, it is a time saver
+preventing us from unwittingly investing in flawed analyses.
+
+Once we have drawn a causal graph, there is no cost to including in in
+presentations, papers, and discussions of our results. Making our
+assumptions about dependencies in the system explicit greatly improves
+the interpretability of our results. Perhaps our analysis and graph
+meets the standards for a causal interpretation, but even if it does
+not, the causal graph still helps the rest of the community asses the
+sources of confounding in teh graph that were not controlled for, and
+understand if their conceptualizzation of how the graph is structured
+matches the author's assumptions (for rearch without a causal graph,
+it is difficult to diagnose if we and the authors even view the system
+in the same light).
+
+To support the idea that many analysis would benefit from a causal
+graph, we will detail how, if we were to redo a past analysis, we
+would start with a causal graph, and the benfits that would have
+provided.
+
+\subsection{An example from our past}
+
+In \citet{massmann2017}, the lead author of this paper (Adam)
+participated in a field campaign designed to study the impact of
+microphysical rain regime (specifically the presence of ice from aloft
+falling into orographic clouds) on orographic enhancement of
+precipitation. This analysis would have benefited from a causal graph,
+and is a nice real example argument for the more common use of causal
+graphs are research tools. Our retrospective causal graph of
+orographic enhancement in the Nahuelbuta mountains under steady
+conditions clearly communicates our assumptions about the system
+(Figure \ref{fig:ccope}).
+
+\begin{figure}
+  \includegraphics[]{ccope.pdf}
+  \caption{A graph representing steady conditions for orographic
+    enhancement during the Chilean Coastal Orographic Precipitation
+    Experiment \citep[CCOPE,][]{massmann2017}. We were interested in
+    the effect of ``rain regime'' on ``orographic enhacement.''
+    Observed quantites are represented by solid nodes, while
+    unobserved quatnties are represented by dashed nodes. All backdoor
+    paths are blocked by observed quantities, so the effect of rain
+    regime on orographic enahcement is identifiable.}
+  \label{fig:ccope}
+\end{figure}
+
+A few things to notice about the graph: many of the variables are
+quite general (and even vague) quantities. This can be a useful tool
+for communicating assumptions, and we recommend startng with more
+general/vague quantities. If logic needs clarifying, the graph can
+become more explit (e.g., differentiating wind into speed, direction,
+and spatial distribution, both horizontally and vertically). However
+the more general graph approaches often yield more intuitive and
+interpretable graphs, and are generally easier to manage. ``Wind'',
+``stability'', and ``atmospheric moisture'' all refer to upwind
+conditions and we assume that these upwind conditions are the relevant
+``boundary condition'' for the downwind orographic clouds and
+precipitation. This assumptions in ecndoed in teh graph: for example,
+if ``wind'' referred to the three dimensional distrubtion of wind over
+teh entire domain, then terrain would have to affect wind as well.
+
+An important assumption in this field campaign is that ``synoptic
+forcing'' variability operates at larger horizontal spatial scales
+(e.g., O(100km)) than the horizontal spatial scales over which the
+orography influences physics and kinematics (O(10 km)). This allows us
+to assume that upwind ``orographically unaffected'' observations of
+synoptic quantities are relatively constant across the mountain
+range. So, upwind observations of precipitation at our island and
+coastal sites can be thought of as representative of background
+``synoptic rain'' across the mountain network. If we define
+``orographic enhacement'' as the difference between our mountain sites
+and our coastal sites, then orographic enhancement is not directly
+affected by synoptic forcing (e.g., we have ``subtracted'' the
+synoptic rain out of our orographic metric).
+
+It might be unclear why we are digressing into this discussion of the
+choice of orographic enahcement metric: but the importance of this
+choice is illuminated by the causal graph. When writing the paper, we
+focused on ``orographic difference'' (``mountain sites'' minus
+``upwind sites'') as the orographc enahcement metric that should be
+used. However, it is common in mountain weatehr research to define
+orographic enhacement in terms of the ``orographic ratio'', or the
+ratio of mountain sites to upwind sites. Intuitively we felt that the
+orographic precipitation metric should be invariant to changes in
+background precipitation, which is true for ``orographic difference''
+but false for ``orographic ratio.'' However, the causal graph makes
+the argument for ``orographic difference'' clear and mathematically
+explicit (supporting the ``intuitive'' description). If synoptic
+forcing directly impacts our orographic enhacement metric, as is the
+case for the ``orographic ratio'', then our causal graph would need an
+additional edge from ``synoptic forcing'' to ``orographic
+enhancement.'' Because we do not observe ``synoptic forcing'', this
+would open up a backdoor path between ``rain regime'' and ``orographic
+enhancement,'' so any estimate of the influence of rain regime on
+orographic enahcement would be biased. The choice of orographic
+enhacement metric matters, because it changes our graph from one where
+the effect of interest is identifiable (``orographic difference'') to
+one where it is unidenifiable (``orographic ratio''). If we used
+orographic ratio, our estimate of warm rain's impact on orographic
+enahcement would likely be biased very high: decreased synoptic
+forcing decreases the chance of ice falling into orographic clouds
+(increasing the likelihood of ``warm rain''), while also decreasing
+upwind precipitation (which non-linearly increases the orographic
+ratio, up to infinity as it approaches zero). We would falsley
+attribute synoptic forcing's effect on orographic ratio to rain
+regime. This example shows how causal graphs can provide clear and strong
+evidence supporting ideas we ``intuitively know.''
+
+However, perhaps the biggest advantage of including a causal graph in
+the CCOPE case would have been in the funding stage. One of the
+challenges of the CCOPE field campaign is that the campaign's
+designers, Justin Minder, Rene Garreaud and Jefferson Snider, were
+trying to do it on a relatively small budget. So, there was no budget
+for traditional atmospheric field campaign tools like scanning radars
+or aircraft that could measure the three dimensional distribution of
+clouds, rain, aerosols, and help quantify important quantites like
+``synoptic forcing'' and ``orographic ascent.'' Instead, they proposed
+using upwind radiosondes to measure wind, stability, and atmospheric
+moisture, and a coastal ground based station to observe aerosol
+distribution. By assuming that these measrurements are sufficiently
+representative of the ``upwind boundary condition'' for orographic
+enhacement over the Nahuelbuta, they were able to observe enough
+variables to identify the effect of rain regime on orographic
+enhacement (Figure \ref{fig:ccope}). Given the PIs' experience and
+thoughtfulness it is no suprise that the field campaign design yeilded
+an idenifiable effect. However, inclusion of a causal graph like
+Figure \ref{fig:ccope} communicates to proposal reviewers the
+assumptions about the systems behavior, and very clearly demonsrtates
+that the proposed observation plan allows us to calculate the effect
+of interest given the rigorous framework of \textit{do-}calculus. This
+type of theoretically-justified framework can really strengthen a
+proposal, or alternatively rule out infeasible proposals before one
+spends a bunch of time writing and doing backgroudn resaerch. One can
+also flip the process and draw the graph first, and then exame the
+graph to determine which variables would need to be observed in order
+to identify the effect of interest. If we label each node in the graph
+with a cost of obtainment (from zero to infinity), we can optimize to
+find the set of variables we need to observe to caclulate our effect
+of interest such that the total cost of the field experiment is
+minimized.
+
+The last important piece of this example is that many other mountain
+weather experts may disagree with the causal graph we draw. In our
+estimation, this is a good thing - we cannot disagree about things
+that we do not know, and we believe that everyone has in their head
+some notion of how the system behaves, and making that idea explicit
+in a causal graph and allowing ourselves to reconcile that idea with
+other's ideas (even if is through disagreement) is a good thing. The
+thing we shoudl fear more than disagreement is confusion: and nothing
+is more confusing than two researchers who think of a system in a
+completely different way, trying to have a discussion about results
+based on taht system, without any knowledge that they fundamentally
+believe in different structures to the system. Clearing up and
+conciling differences in how we view dpendencies of a system seems to
+be a productive pre requisite to reconciling contradictory results.
+
+Just one last note - this causal graph would have also benefited the
+layout and plan of analysis of the data. The paper itself ended up
+being a bit add hoc in how it approached ``controlling'' for wind,
+stability, and atmopsheric moisture, mostly just observing if there
+are any differences in those quatnties between the two rain
+regimes. Part of this was due to a lack of large sample sizes. But,
+had we included the causal graph, I thinkwe could have presented a
+statistical analysis that was much more clear and motivated by the
+graph itself. Also, the small sample size itself is a common problem,
+and can be overcome with ``shoe leather'' as David A. Freedman
+recommends in his excellent (but at times overly scathing) critizim of
+causal infference in the social sciences
+(\cite{freedman2010statistical}). However Freedman argues against
+causal graphs because on the grounds that we rarely have strong
+apriori knowledge of the causal structure of systems of
+interset. While this is likely true for the social sciences, in the
+physical sciences we usually do have strong apriori knowledge, as
+Figure \ref{fig:ccope} demonstrates. Additionally, Freedman misses the
+organizational and conceptual benfits of causal graphs, even for
+analyses were ``formal'' causal effects are not actually cacluclated:
+they can be sueful for communicating assumptions and organzing
+analyses. In some ways with CCOPE we did use the shoe leatehr
+approach: we identified negligbley small differences in wind,
+stability, and atmospheric moisture, and used that logic to suggest
+that most of the observed differences in orogrpahic enahcement were
+due to rain regime. However, the causal graph would have aided the
+communication and focus of that shoe leather work. Also, because not
+everythign goes to plan, we ended up hafving trouble with our aerosol
+equipment, so that was a possible (unknwon) source of confoudning that
+would have been made more clear with icnlsuion of the causal graph.
+
+Which is all a long way to say the causal graphs are useful, they
+force us to do a lot of the ``heavy thinking'' up front of our
+analysis, which prevent us from wasting a bunch of time and resources
+on more mundane research procedures like downloading or collecting
+data, and running big, complicated numerical model. With the heavy
+thinking done up front and the causal graph already made, we can then
+use it to help communicate our results and structure our analysis
+(e.g., motivate why we are doing regression, why we are includign the
+variables we are in regression, etc.).
+
+\subsection{Summary}
+
+This is one example: but the complexity and structure of causal graphs
+will vary by field. Again, we think drawing the graph early will help
+clarify and make explicit assumptions (both for ourselves, and also
+for the rest fo the communication), and can help identify flawed or
+intractable studies. These can also be used as communication tools for
+very complicated spatiotemproatl systems, including climate models,
+etc. They offer a path to understanding and visualizing inherent
+assumptions in any system (for a climate model: what are invariants;
+what are the inputs into subgrid parameterizations?). Some of these
+graphs might be too hard to visualize on printed papers, but
+researchers can link to and use interactive visualization software to
+examine compilcated graphs. Another sueful tool for visualizing
+complicated graphs are plates \citep{bishop2006pattern}, which can
+represent repeated structure like we often get in spatiotemporal
+systems. Additionally, as we will see in the next section, we can draw
+quite general graphs that are reprentative of many problems in Earth
+science.
 
 \section{Relation to previous work, ``causal discovery'', and
   clarification on terminology}
