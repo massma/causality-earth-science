@@ -4,10 +4,10 @@
 
 \begin{document}
 
-\title{Causality in Earth science: a path to confusion or clarity?}
+\title{Causality for clarification: examples from Earth science}
 
 \author{Adam Massmann\thanks{Corresponding author:
-    akm2203@columbia.edu}, Pierre Gentine?, Jakob Runge?, Elias Bareinboim?}
+    akm2203@columbia.edu}, Pierre Gentine, Jakob Runge, Elias Bareinboim}
 
 \maketitle
 \begin{abstract}
@@ -61,22 +61,25 @@ confuse, rather than clarify, understanding.
 This paper is about causality, and is motivated by asking ourselves
 the above questions with respect to causal tools used in Earth science
 applications. This is particularly relevant because the use of causal
-tools is booming across Earth science (CITATION DUMP). However, most
-of the recent use has focused on causal discovery, or the inference
-(using data) of causal ``links'' and directions between variables (for
-example ``does X cause Y?'', instead of ``how would changing X cause Y
-to change?''). This focus on causal discovery is perhaps a missed
-opportunity: for many applications in climate science the assumptions
-behind many causal discovery algorithms are not well justified, and/or
-are difficult to interpret (Section XX, also cite Friedman). We also
-usually have strong a priori knowledge of the functional connections
-in the Earth system through our knowledge of physics, so have less of
-a need for ``causal discovery''. However we \textit{are} often
-interested in inferring the functional form of causal connections from
-data (i.e., a need to infer how changing X would cause Y to change),
-which is not addressed with causal discovery. In some sense, we
-believe that the current focus on causal discovery in Earth science
-has us on a path towards confusion.
+tools is booming across Earth science
+\citep[e.g.,][]{ebert-uphoff2012,
+  samarasinghe-casuality,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}
+\textbf{could add more}. However, most of the recent use has focused
+on causal discovery, or the inference (using data) of causal ``links''
+and directions between variables (for example ``does X cause Y?'',
+instead of ``how would changing X cause Y to change?''). This focus on
+causal discovery is perhaps a missed opportunity: for many
+applications in climate science the assumptions behind many causal
+discovery algorithms are not well justified, and/or are difficult to
+interpret (Section XX, also cite Friedman). We also usually have
+strong a priori knowledge of the functional connections in the Earth
+system through our knowledge of physics, so have less of a need for
+``causal discovery''. However we \textit{are} often interested in
+inferring the functional form of causal connections from data (i.e., a
+need to infer how changing X would cause Y to change), which is not
+addressed with causal discovery. In some sense, we believe that the
+current focus on causal discovery in Earth science has us on a path
+towards confusion.
 
 The irony of this path to confusion is that some fundamentals of
 causal inference are particularly well suited to clarifying
@@ -280,7 +283,7 @@ conditional and marginal facotors:
 \end{equation}
 
 where $A$ represents aerosol, $C$ represents cloud, $S$ represents
-surface sunlight/solar radiation, and $P(\cdot | \codt)$ denotes
+surface sunlight/solar radiation, and $P(\cdot | \cdot)$ denotes
 conditional probability (Appendix \ref{prob-theory} describes the
 notation used in this paper and a brief introduction to probability
 theory for unfamiliar readers). The inclusion of randomness in causal
@@ -1084,90 +1087,109 @@ unblocked backdoor paths through the unobserved portions of the state
 space. Causal inference is particularly tractable for this class of
 problems. *discuss ``human confounding'' (e.g, with covid?*
 
-\section{Relation to previous work, ``causal discovery'', and
-  clarification on terminology}
+\section{Reexaming casual discovery in light of what we know}
 \label{sec:discovery}
 
-The term ``causal inference'' has been used to describe two
-techniques:
+The first question is ``why causal discovery?'' It is not clear; we
+usually have strong apriori knowledge of functional dependencies of
+our system (e.g., we know the current state is affected by the past
+state and will affect teh future, and we usually inow the state
+variables at least for physical systems), if not their exact
+form. Even if we did not know the dependencies fo the system and
+wanted to try to infer them from data, our systems susually do not
+meet the assumptions necessary for the algorithm. For example, for the
+PC class of algorithms, as well as for ``Granger causality'' we must
+assume that we observe all relevant variables of the system (not
+usually the case of earth science). We can perhaps assume that for
+subsets of the system we obserre verything causally releveant as in
+Section \ref{sec:observ-port-state}, but in defining the subset of the
+system we have defined the causal graph, so we no longer need to infer it!
 
-\begin{enumerate}
-\item \textbf{Causal effect inference}: Calculating the causal effect
-  of some processes on other, given data and assumptions about the
-  causal structure of the system.
-\item \textbf{Causal structure discovery}: Inferring the causal
-  structure (e.g. the causal graph) of the system using data.
-\end{enumerate}
+Also in practice, for computational tratablility the PC algorithms and
+granger causality will invoke linearity assumptiosn, which are not
+generally well justified for Earth science systems. Granger causality
+assumes that ther eis no underlying state to the system (which is not
+the case). Convergent cross-mapping (CCM) \citep{Sugihara496} assumes
+that the variables of interst exhibit ``weak couplng'', which is an
+untestable assumption that is difficult to interpret (to our
+knowledge). The difference in underlying assumptions between Granger
+causality and CCM leads to contradictory behavior: when using CCM if X
+predicts Y better than Y predictrs X, then Y is the cause of
+X. However for Granger causality, if X predicts Y better than Y
+predicts X then X is a cause of Y. We should expect that different
+assumptions lead to different results, but what is a little alarming
+is that they lead to \textit{opposite} results, and it is not clear
+(at least to us) when you should use one or ther other, except maybe
+we could say we should never use Granger because ther eis always some
+underlying state.
 
-To summarize, \textit{causal effect inference (1)} calculates the
-magnitude of a causal effect given: 1) a causal graph drawn by a
-domain expert, and 2) data. On the other hand, \textit{causal
-  structure discovery (2)} does not calculate any causal effects at
-all, but instead generates a causal graph from data.  This paper
-focuses on causal inference as (1): calculating causal effects from
-data (Section \ref{sec:causal-graphs-pearls}). Inferring the causal
-structure of the system (2), is generally much more difficult and also
-requires additional assumptions. For example, some causal structure
-discovery algorithms rely on assumptions that we observe all relevant
-variables to the system and/or possibly arbitrary parameters for
-statistical independence tests
-\citep{runge2019inferring}. Additionally, some methods invoke
-linearity assumptions about the relationships between processes
-\citep{krich2019causal}, which is not generally true for the Earth
-system \citep{palmer-nonlinaer-1999}.
+In addition to the aforementioned issues with the PC class of
+algorithms, we also run into the problem that often multiple possible
+graphs could graphs could explain the same observational data. So we
+end up with ambiguous links that we need to resolve ...using expert
+domian knowledge. Why not use that expert domain knowledge to
+construct the graph a priori? If we need to, we can also test the
+graph we have drawn with data to see if the data are consistent with
+our assumption. THis approach seems much more inline with the
+scientific method, and seems much more justified than trying to
+massage our domain downledge to match the output of a flawed causal
+discovery algorithm.
 
-However, there has been considerable work and effort in applying
-causal structure discovery (2) in Earth science
-\citep[e.g.,][]{ebert-uphoff2012,
-  samarasinghe-casuality,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}. Causal
-discovery algorithms filter and infer the direction of causal links in
-the system, usually using conditional independence detection
-algorithms that rely on significance parameters. In contrast to causal
-inference of effects, which we explore in this paper, causal discovery
-algorithms do not directly incorporate domain knowledge on the causal
-dependencies of processes in the system (although domain knowledge may
-guide assumptions about linearity of processes, and the observations
-that must be included in the causal discovery algorithm). Indeed, our
-perspective here is that we have often acquired substantial
-understanding of the mechanisms at play and their causal
-relationships, which we want to exploit: that is formally combine
-domain knowledge with inferences from data. For example, given our
-domain knowledge of the Earth science system we generally have high
-confidence about the causal structure of the system. We can identify
-the state variables and know that the state at time \(t\) determines
-the state at time \(t+1\), even if the exact functional form of the
-dependency through time is not known. Therefore, we can write down a
-causal graph and do not need to infer graph structure from data
-(Section \ref{sec:necess-cond-caus}). It is possible some links in
-these causal graphs correspond to small effects, and these links would
-be removed through causal structure discovery. However, directly
-interpreting what constitutes a ``negligibly small'' effect
-calculation presented in physical units and probabilities, as
-calculated with causal effect inference, may be more transparent than
-interpreting missing links derived from causal structure discovery
-significance parameters. In other words, direct calculation of effects
-may be more transparent and interpretable for many readers, relative
-to a causal graph derived from significance parameters with more
-abstract meaning. Additionally, calculating an effect of some
-processes upon others illuminates more information about the system
-than just the presence and direction of a causal edge, as is output by
-causal structure discovery algorithms.
+In the end we are really not sure how to interpret causal discovery
+algorithms, and if they can yield useful results in any
+field. Statistical experits \citep{freedman2010statistical} are
+skeptical of causal discoery's practical ability. However, we view
+their general utility as moot, becuase even if they do work in teh
+general case, they are only needed when we do not hav apriori
+knowledge of the functional dependencies of the system. For Earth
+science we often have strong a priori knoweldge fo the functinal
+depenedneceies of the system, and we can even draw quite general
+graphs that are applicable to a wide range of scenarios (Figure
+\ref{fig:generic}).
 
-However, ultimately we view causal effect inference and causal
-structure discovery as complementary tools. Causal effect inference is
-more useful in scenarios where elevated domain knowledge gives a
-priori confidence in causal graph structure, while causal structure
-discovery is more useful when we have very limited domain knowledge
-but access to observations of all relevant processes to a
-problem. Additionally, causal effect inference can be used as a second
-step after causal discovery to calculate individual causal effects. We
-hope to motivate further research effort in causal effect inference to
-match recent efforts in causal structure discovery in Earth
-science. Ideally causal effect inference and causal structure
-discovery will co-evolve as complementary abstractions for causal
-interpretation; researchers and readers can choose the method that
-suits their assumptions, available data, and level of domain
-knowledge.
+So then the question is, ``why have causal discoery algorithms seen so
+much interest in Eareth science recently?'' One answer could lie with
+the perverse incentives we have in academia. Academics are strongly
+incentiviezed to publish many articles in peer review. One could argue
+that articles with more opaque, and highly technical, assumptions are
+more likely to make it in peer reivew (e.g., articles are more likely
+to get rejected for assumptions reviews disagree with, than for
+articles that rely on assumptions reviewers are unaware of or don't
+even really unerstand). The assumptions behind many causal discoery
+are genereally very opaque, sometimes even buried in teh
+documentation, or worse yet, the code of a given software
+pacakge. Also, many of these ``black box'' causal discovery algorithms
+are nicely packaged online, so all a resaercher needs to do is
+download the existing package and run their data through them, print
+soem diagnostic figures, and then craft a story to match the
+results. Because these packages are so easily available, the research
+themselves need not even really understand the underlyhing
+assumptions. So we end up in a situation where there can be a little
+cottage industry of relatively easy, mindless analyses using black box
+algorithms that are relatively easy to get through peer review. We
+also think there is a marketing component; for whatever reason,
+``causality'' sounds cool to many people. If one combined a long list
+of mindless causal discovery pulbications, with a CV riddled with buzz
+terms like ``AI,'' ``ML,'' ``Causality,'' and ``Bayesian,'' and any
+researcher can find themselves at the front of the line for the next
+open faculty position. If we contrast that to the more fundamental,
+domain knowledge driven approach of drawing the causal graph apriori,
+we find that a lot of deep (and difficult) thought is required, and we
+might find out that many analyses are intractable or flawed, so we
+spend more time thinking than publishing, and for those publications
+that we do decide to publich, our assumptions are very clearly
+communicated in the graph, and so are more likely to be rejected in
+peer review. Anyways, this is really a digression into the incentive
+structure of academia, which is not where we wanted to be necessarily,
+but we do think that we ought to put more focus on quality rather than
+quantity when it comes to value in the acadmeic community. This is
+also inline with our oroginal argument about interpetability and
+communication of assumptions. If we are more rigid abouty requireing
+clear communication of assumptions and interpretabiltiy of results, we
+might end up with fewer, but higher quality, publciations. A community
+wide focus on quality over quantity will also save everyone time: less
+time reviewing, less time editing, less time writing, etc.
+
 
 \section{Conclusions}
 
