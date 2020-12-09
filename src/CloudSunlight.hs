@@ -6,20 +6,19 @@
 {-# OPTIONS_GHC -Wredundant-constraints #-}
 
 module CloudSunlight
-  ( cloudSunlightExperiment
+  ( cloudSunlightExperiment,
   )
 where
 
-import           Control.Monad
-import qualified Data.ByteString.Lazy          as BL
-import           Data.Csv
-import qualified Data.List                     as L
-import qualified Data.Vector.Unboxed           as V
-import qualified Statistics.Sample             as S
-import qualified Statistics.Regression         as R
-import           System.Random.MWC
-import qualified System.Random.MWC.Distributions
-                                               as D
+import Control.Monad
+import qualified Data.ByteString.Lazy as BL
+import Data.Csv
+import qualified Data.List as L
+import qualified Data.Vector.Unboxed as V
+import qualified Statistics.Regression as R
+import qualified Statistics.Sample as S
+import System.Random.MWC
+import qualified System.Random.MWC.Distributions as D
 
 meanToa :: Double
 meanToa = 340.0
@@ -31,35 +30,39 @@ toa = D.normal meanToa 30.0
 aerosolAffectSunlight :: Double
 aerosolAffectSunlight = 1.0
 
--- | magnitude of aerosol affect on cloud, between 1.0 and 0.0 (1.0 = max effect)
-aerosolAffectCloud :: Double
-aerosolAffectCloud = 1.0
-
 -- | factor that cloud reduces sunlight, if there is cloud
 cloudAffectSunlight :: Double
 cloudAffectSunlight = 0.6
 
-sunlight
-  :: Double -- ^ non-dim measure of aerosol
-  -> Bool -- ^ cloud
-  -> GenIO
-  -> IO Double -- ^ W/m2
-sunlight a c gen = toa gen >>= \toa' ->
-  let clearSky = toa' * (1.0 - aerosolAffectSunlight * a)
-  in  return (if c then clearSky * cloudAffectSunlight else clearSky)
+sunlight ::
+  -- | non-dim measure of aerosol
+  Double ->
+  -- | cloud
+  Bool ->
+  -- | U_sun (i.e. TOA)
+  Double ->
+  -- | W/m2
+  Double
+sunlight a c toa' = if c then clearSky * cloudAffectSunlight else clearSky
+  where
+    clearSky = toa' * (1.0 - aerosolAffectSunlight * a)
 
-cloud :: Double -> GenIO -> IO Bool
-cloud a = D.bernoulli (0.5 + aerosolAffectCloud * (a - 0.5))
-  -- deterministic: if a > 0.5 then return True else return False
+cloud :: Double -> Double -> Bool
+cloud a u
+  | (a + u) > 1.0 = True
+  | otherwise = False
 
-aerosol :: GenIO -> IO Double
-aerosol = uniform
+aerosol :: Double -> Double
+aerosol u = u
 
 genTuple :: GenIO -> IO (Double, String, Double)
 genTuple gen = do
-  a <- aerosol gen
-  c <- cloud a gen
-  s <- sunlight a c gen
+  uAero <- uniform gen
+  uCld <- uniform gen
+  uSun <- toa gen
+  let a = aerosol uAero
+  let c = cloud a uCld
+  let s = sunlight a c uSun
   return (a, if c then "Cloudy" else "Clear", s)
 
 getCloud :: (a, b, c) -> b
@@ -74,44 +77,48 @@ getAerosol (a, _c, _s) = a
 calcRegression :: V.Vector Double -> Double -> Double
 calcRegression ols x = x * ols V.! 0 + ols V.! 1
 
-calcStats
-  :: [(Double, String, Double)]
-  -> [(Double, String, Double)]
-  -> (V.Vector Double, V.Vector Double, Double, Double)
+calcStats ::
+  [(Double, String, Double)] ->
+  [(Double, String, Double)] ->
+  (V.Vector Double, V.Vector Double, Double, Double)
 calcStats cloud' clear =
-  ( olsCloud
-  , olsClear
-  , avgRegress olsCloud - avgRegress olsClear
-  , naiveCloud - naiveClear
+  ( olsCloud,
+    olsClear,
+    avgRegress olsCloud - avgRegress olsClear,
+    naiveCloud - naiveClear
   )
- where
-  calcAvgs xs = (as, ols, S.mean ss)
-   where
-    ss  = V.fromList (fmap getSun xs)
-    as  = V.fromList (fmap getAerosol xs)
-    ols = fst . R.olsRegress [as] $ ss
-  (aCloud, olsCloud, naiveCloud) = calcAvgs cloud'
-  (aClear, olsClear, naiveClear) = calcAvgs clear
-  totAs                          = aCloud <> aClear
-  avgRegress ols = S.mean $ V.map (calcRegression ols) totAs
+  where
+    calcAvgs xs = (as, ols, S.mean ss)
+      where
+        ss = V.fromList (fmap getSun xs)
+        as = V.fromList (fmap getAerosol xs)
+        ols = fst . R.olsRegress [as] $ ss
+    (aCloud, olsCloud, naiveCloud) = calcAvgs cloud'
+    (aClear, olsClear, naiveClear) = calcAvgs clear
+    totAs = aCloud <> aClear
+    avgRegress ols = S.mean $ V.map (calcRegression ols) totAs
 
 cloudSunlightExperiment :: Int -> IO (Double, Double, Double)
 cloudSunlightExperiment n = do
   gen <- create
-  xs  <- replicateM n (genTuple gen)
+  xs <- replicateM n (genTuple gen)
   let (cloud', clear) = L.partition ((== "Cloudy") . getCloud) xs
   let (olsCloud, olsClear, estDiff, naiveDiff) = calcStats cloud' clear
-  let regPoints       = [0, 0.1 .. 1]
+  let regPoints = [0, 0.1 .. 1]
   f "dat/cloudy.dat" cloud'
-  f "dat/clear.dat"  clear
-  write "aerosol\tsunlight\n"
-        "dat/olsCloudy.dat"
-        (zip regPoints (fmap (calcRegression olsCloud) regPoints))
-  write "aerosol\tsunlight\n"
-        "dat/olsClear.dat"
-        (zip regPoints (fmap (calcRegression olsClear) regPoints))
+  f "dat/clear.dat" clear
+  write
+    "aerosol\tsunlight\n"
+    "dat/olsCloudy.dat"
+    (zip regPoints (fmap (calcRegression olsCloud) regPoints))
+  write
+    "aerosol\tsunlight\n"
+    "dat/olsClear.dat"
+    (zip regPoints (fmap (calcRegression olsClear) regPoints))
   return (estDiff, naiveDiff, (0.5 * meanToa * (cloudAffectSunlight - 1.0)))
- where
-  f = write "aerosol\tcloud\tsunlight\n"
-  write header' fpath = BL.writeFile fpath . (header' <>) . encodeWith
-    (defaultEncodeOptions { encDelimiter = 9 })
+  where
+    f = write "aerosol\tcloud\tsunlight\n"
+    write header' fpath =
+      BL.writeFile fpath . (header' <>)
+        . encodeWith
+          (defaultEncodeOptions {encDelimiter = 9})

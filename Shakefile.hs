@@ -125,7 +125,7 @@ main = shakeArgs shakeOptions {shakeFiles = "_build"} $ do
       liftIO $ D.createDirectoryIfMissing True "dat"
       (estDiff, naiveDiff, trueDiff) <-
         liftIO $
-          CloudSunlight.cloudSunlightExperiment 1000
+          CloudSunlight.cloudSunlightExperiment 2000
       generateFigGp
         naive
         ( printf
