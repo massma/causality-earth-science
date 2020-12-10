@@ -18,6 +18,7 @@ _build
 _shake
 .stack-work
 stack.yaml.lock
+dist-newstyle
 
 # figs and derived stuff
 *.pdf
@@ -25,3 +26,5 @@ stack.yaml.lock
 
 # derived data, etc
 dat
+etc
+doc/figs
