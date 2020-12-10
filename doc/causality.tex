@@ -14,103 +14,100 @@
   Use of causal methods is exploding in Earth science. However, most
   applications focus on causal discovery: inferring the causal
   relationships and structure from data. This paper looks at causality
-  through a very different lens and examines how causal graphs, a
+  through a different lens and examines how causal graphs, a
   fundamental from causal theory, can be used to clarify assumptions,
   identify tractable problems, and aid interpretation of results in
   Earth science research. We apply causal theory to generic graphs of
-  the climate system to identify where causal inference may be most
-  tractable in Earth science. Specifically we identify three different
-  assumptions under which causal inference may be tractable in generic
-  systems: (1) the state space of the system is reconstructable from
-  lagged observations of the system; alternatively: (2) the effect of
-  interest is only causally affected by the observed portion of the
-  state space; alternatively: (3) The cause of interest can be assumed
-  to be independent of the evolution of the system’s state. However,
-  we also highlight through examples that inclusion of a causal graph
-  in any analysis improves communication of assumptions and helps to
+  the Earth system to identify where causal inference may be most
+  tractable in Earth science. Specifically, causal inference may be
+  particularly tractable when: (1) the state space of the system is
+  reconstructable from lagged observations of the system; or: (2) the
+  effect of interest is only causally affected by the observed portion
+  of the state space; or: (3) The cause of interest can be assumed to
+  be independent of the evolution of the system’s state. However, we
+  also highlight through examples that inclusion of a causal graph in
+  any analysis improves communication of assumptions and helps to
   structure analyses, even if causal inference is ultimately
   impossible from the data available.
-
 \end{abstract}
 
 \section{Introduction}
 
 The use of causal tools is booming across Earth science
 \citep[e.g.,][]{ebert-uphoff2012,
-  samarasinghe-casuality,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}
-\textbf{could add more}. However, most of the recent use has focused
-on causal discovery, or the inference (using data) of causal
-structure: ``links'' and directions between variables.
+  samarasinghe-casuality,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}. However,
+most of the recent use has focused on causal discovery, or the
+inference (using data) of causal structure: ``links'' and directions
+between variables.
 
 This paper looks at causality through a very different lens and
 examines how causal graphs \citep{pearl1995causal}, a fundamental from
 causal theory, can be used to clarify assumptions, identify tractable
-problems, and aid interpretation of results in climate research. Our
-goal is to distill \citep{olah2017} the basics of the graphical
-approach to causality in a way that is relatable for climate
+problems, and aid interpretation of results in Earth science
+research. Our goal is to distill \citep{olah2017} the basics of the
+graphical approach to causality in a way that is relatable for Earth
 scientists, hopefully motivating more widespread use and adoption of
 causal graphs in service of organizing anlayses and communicating
 assumptions. These tools are relevant now more than ever, as the
 cornocpia of new data analysis tools have inevitable led to more
 opaque results and barriers to the communication of assumptions.
 
-Beyond just their usefulness as communication tools, in some cases
-causal graphs can be used to calculate the generalized functional form
-of relationships between Earth science variables from observational
-data. Ultimately generalized functional relationships betwee variables
-is a primary goal of climate science. While through our knowledge of
-physics we can sometimes write down the functional relationships
-between variables apriori, there are many times when we cannot (e.g.,
-ecosystem scale water and carbon fluxes) CITE HERE, and other times
-when we can but it is computationally itnractable to calculate (clouds
-and microophysics at the global scale) CITE HERE. In these types of
-applications, causal graphs give us a path toward new scientific
-knowledge: generalized functional relationships that were inaccessible
-with traditional tools.
+Beyond their usefulness as communication tools, if certain conditions
+are met causal graphs can be used to calculate, from data, the
+generalized functional form of relationships between Earth science
+variables. Ultimately, deriving generalized functional relationships
+is a primary goal science. While we can derive functional
+relationships between some variables a priori, there are many
+relationships we do not know \citep[e.g., ecosystem scale water and
+carbon fluxes][]{massmann-2019} - \textit{(PIERRE: any reviews you'd
+  like to see cited on this?)}, or that we do know but are
+computationally intractable to calculate \citep[e.g., clouds and
+microophysics at the global scale][]{randall2003, gentine2018,
+  zadra2018} . In these types of applications, causal graphs give us a
+path toward new scientific knowledge: generalized functional
+relationships that were inaccessible with traditional tools.
 
 The main contribution of this paper is to demonstrate how causal
 graphs, a fundamental tool of causal inference introduced in Section
-XX, can be used to communicate assumptions, organize analyses, and
-ultimately improve scientific understanding. We want to hammer home
-that pretty much any study could benefit from inclusion of a causal
-graph in terms of communication and clarification, even if in the end
-the results cannot be interpreted causally. Causal graphs also
-encorouge us to think deeply up front about what we are trying to
-quantify and how the system is structured, and can identify infeasible
-studies early in the research process (before messing around with data
-or models), saving us time and minimizing the chance of
-(unintentionally) flawed studies. These points require a fair bit of
-background and discussion, so we broke the paper up into sections so
-that the reader can pick those sections that are most relevant given
-their background knowledge and interests:
+\ref{sec:what-caus-caus}, can be used to communicate assumptions, organize analyses, and
+ultimately improve scientific understanding. We want to emphasize that
+almost any study could benefit from inclusion of a causal graph in
+terms of communication and clarification, even if in the end the
+results cannot be interpreted causally. Causal graphs also encorouge
+us to think deeply in the intitial stages of analysis about project
+goals and how the system is structured, and can identify infeasible
+studies early in the research process (before time spend aquiting data
+or building/running models), saving us time and minimizing the chance
+of (unintentionally) flawed studies. These points require a fair bit
+of background and discussion, so the paper is broken up into sections,
+allowing the reader to pick those sections that are most relevant
+given their background knowledge and interests:
 
 \begin{itemize}
-\item Section XX: Introduce and discuss causal graphs within the
+\item Section \ref{sec:what-caus-caus}: Introduce and discuss causal graphs within the
   general philosophy of causality.
-\item Section XX: Using a simple relatable example we will explain
+\item Section \ref{sec:causal-graphs-pearls}: Using a simple relatable example we will explain
   the problem of confounding and how causal graphs can be used to
   isolate the functional mapping between interventions on some
   variable(s) to their effect on other variable(s).
-\item Section XX: We draw on a past example from our own research that
-  would have benefitted from inclusion of a causal graph, in terms of
-  communicating assuptions, and organizing and justifying analyses.
-\item Section XX: We turn to more generic examples of graphs that are
-  generally constistent with a wide variety of systems in Earth
-  science, to highlight some of the difficulties we confront when
-  using causal inference in Earth science and how we may be able to
-  overcome those difficulties (Section XX).
-\item Section XX: A qualitative discussion of causality in Earth
-  science, including recommendations for authors on incorporating
-  causality into their research, and for reviewers/readers reviewing
-  and interpreting causal studies.
+\item Section \ref{sec:causal-graphs-as}: We draw on a past example
+  from our own research that bennefits from inclusion of a causal
+  graph, in terms of communicating assuptions, and organizing and
+  justifying analyses.
+\item Section \ref{sec:necess-cond-caus}: We turn to more generic
+  examples of graphs that are generally constistent with a wide
+  variety of systems in Earth science, to highlight some of the
+  difficulties we confront when using causal inference in Earth
+  science and how we may be able to overcome these challenges.
 \end{itemize}
 
 We hope that this paper will increase understanding of causal graphs
-and shift more focus towards using causal fundamentals. We believe
-wider adoption will set us on a path towards scientific clarity.
+and encourage more use of causal fundamentals in applications. We
+believe wider adoption will set us on a path towards scientific
+clarity.
 
 \section{What is causality?: the causal graph perspective and its
-  usefulness in Earth science}
+  usefulness in Earth science}\label{sec:what-caus-caus}
 
 We view causality through the lens of causal graphs, as introduced in
 \citet{pearl1995causal}, mostly because we believe causal graphs are
@@ -122,63 +119,67 @@ Causal graphs are directed acyclic graphs that encode our assumptions
 about the causal dependencies of a system.  To make a causal graph, a
 domain expert simply draws directed edges (i.e. arrows) from variables
 that are causes to effects. In other words, to make a causal graph you
-just draw a picture (Figure \ref{fig:toy}). Causal graphs are useful
+simply draw a picture (Figure \ref{fig:toy}). Causal graphs are useful
 tools because they can be drawn by any domain expert with no required
 knowledge of math or probability, but they also represent formal
 mathematical objects. Specifically, underlying each causal graph are a
 set of equations: each node corresponds to a generating function for
 that variable. The function's inputs are all of the node's parents
-(plus a random variability term, which we will discuss later). Parents
-are the other nodes in the graph that point to our node of interest
-(e.g., in the most simple graph X->Y; X is a parent of Y). So in
-reality, drawing arrows from ``causes'' to ``effects'' is really just
-drawing arrows from function inputs to generating functions.
+(plus a random variability term, which we will discuss in Section
+\ref{sec:causal-graphs-pearls}). Parents are the other nodes in the
+graph that point to our node of interest (e.g., in the most simple
+graph $X \to Y$; $X$ is a parent of $Y$). So in reality, drawing
+arrows from ``causes'' to ``effects'' is synonymous with drawing
+arrows from function inputs to generating functions.
 
-In this way, drawing a causal graph is just another way to visualize
-and reason about a complicated system of equations, which is a
-powerful tool for the Earth scientist: we deal with very complicated
-systems of equations and welcome any tool that helps us understand and
-reason about their behavior. Sometimes in Earth sciences we might know
-(from physics) the equations for a given function in the causal
+In this way, drawing a causal graph is another way to visualize and
+reason about a complicated system of equations, which is a powerful
+tool for the Earth scientist: we deal with very complicated systems of
+equations and welcome any tool that helps us understand and reason
+about their behavior. In some cases we may know a priori (from
+physics) the equations for a given function in a causal
 graph. However, in practice we often either do not know all of the
-functions (e.g., plant stomata response to VPD), or some functions are
-computationally intractable to compute (e.g., turbulence, moist
-convection, and cloud microphysics in large scale models). In these
-scenarios the benefits of causal graphs are fully realized: based on
-the causal graph we can calulate from data, using somethign called the
-\textit{do-}calculus \citep{pearl-1994-do-calculus}, the functional
-relationship between target variables (i.e. effects) and interventions
-on any other variables in the graph (i.e. causes).
+functions \citep[e.g., plant stomata response to VPD]{massmann-2019},
+or some functions are computationally intractable to compute
+\citep[e.g., turbulence, moist convection, and cloud microphysics in
+large scale models]{zadra2018}.. In these scenarios the benefits of
+causal graphs are fully realized: based on the causal graph we can
+calulate from data, using the \textit{do-}calculus
+\citep{pearl-1994-do-calculus}, the functional relationship between
+target variables (i.e. effects) and interventions on any other
+variables in the graph (i.e. causes).
 
 By viewing causal graphs through this pragmatic lens of calculating
 the functional form for functions that we cannot calculate a priori,
-we simultaneously identify their value for Earth scientists while also
-side stepping philosophical arguments about the meaning of
-causality. In Earth science we often want to know how the system
-responds to interventions. For example for sub grid scale
-parameterization we want to know how time tendancies respond to
-interventions on the large scale state, and for experimentation we
-might want to know how changing land cover from X to Y changes the
+we simultaneously identify causa graphs' value for Earth scientists
+while also side stepping philosophical arguments about the meaning of
+causality. In Earth science we often need to estimate how the system
+responds to interventions. For example, for sub-grid parameterization
+we need to estimate time tendancies' response to interventions on the
+large scale state. We also may desire to calulate experiments: for
+example how changing land cover from forest to grasslands affects the
 statistics of surface temperature. \textit{do-}calculus provides a way
 to calculate this reponse to interventions without relying on
 approximate numerical models or (potentially in feasible or unethical)
-real world experimentation. For consistency with the causal
-literature, we will call the response variables ``effects'', and the
-intervened upon variables ``causes'', but we want to reemphisize that
-for Earth science applications the exact definition of causality is
-largely irrelevant (we are pragmatically interested in cacluling
-functional forms).
+real world experimentation. While we want to maintain this emphasis on
+causality as a method for calculating generalized functional forms of
+responses to intervention, for consistency with the causal literature
+we will call the response variables ``effects'', and the intervened
+upon variables ``causes''.
 
-One might say: ``wait, don't we have regression to calculate functions
-from data?'' But, as we will see (Section
-\ref{sec:causal-graphs-pearls}), uninformed regression is just a
-functional mapping of associations between variables, not the response
-to interventions. This is the problem that \textit{do-}calculus
-solves: it identifies whcih data are needed and how we can use those
-data to calculate the functional mapping of interventions, rather than
-just associactions that may be attributable to other processes
-entirely. Working through an example will hopefully clarify some of
-these claims.
+One might challenge: ``what about regression as a method as a simple
+method to calculate functional relationships from data?'' However as
+we will demonstate (Section \ref{sec:causal-graphs-pearls}, and as
+many are aware), uninformed regression is just a functional mapping of
+associations between variables, not the response to
+interventions. This is the problem that \textit{do-}calculus solves:
+it identifies whcih data are needed and how we can use those data to
+calculate the functional mapping of interventions, rather than just
+associactions that may be attributable to other processes
+entirely. Because interventions generalize much better than
+associacions, \textit{do-}calculus is especially relevant for
+scientists and engineers. Working through an example will hopefully
+clarify some of these claims.
 
 \section{A Toy Example: the problem of confounding and the necessity
   of \textit{do-}calculus for calculating interventions}
@@ -338,13 +339,14 @@ consistent with Figure \ref{fig:toy}A and Equation (\ref{eq:2}):
 
 
 \begin{align}
-  aerosol = U_{aerosol} \sim \text{uniform (0, 1]}\\
-  cloud = \text{Cloudy if } U_{cloud} + aerosol > 1; \;
-  U_{cloud} \sim \text{uniform (0, 1]}\\
-  sunlight = &: \begin{cases}
+  aerosol =& \; U_{aerosol}; \; U_{aerosol} \sim \text{uniform (0, 1]}\\
+  cloud =& \; \text{Cloudy if } U_{cloud} + aerosol > 1; \;
+           U_{cloud} \sim \text{uniform (0, 1]}\\
+  sunlight =& \begin{cases}
     \text{Cloudy} &: 0.6 \cdot \text{downwelling clear sky radiation}  \\
     \text{Clear} &: \text{downwelling clear sky radiation}
   \end{cases}
+                   \label{eq:1}
 \end{align}
 
 where:
@@ -818,8 +820,8 @@ as we will see in the next section, we can draw quite general graphs
 that are reprentative of many problems in Earth science.
 
 
-\section{Assumptions leading to causal identification in Earth
-  systems}
+\section{Overcoming unobserved confounding: tractable classes of
+  problems in generic Earth systems}
 \label{sec:necess-cond-caus}
 
 So far we have focused on toy examples, and the utlity of causal
