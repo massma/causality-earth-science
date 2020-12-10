@@ -9,7 +9,7 @@ digraph G {
 	sMinus1 -> s;
 
 	f -> s;
-
+        f -> s1;
 	s -> s1;
 
 }
