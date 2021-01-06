@@ -38,12 +38,12 @@
 \section{Introduction}
 
 The use of causal tools is booming across the Earth sciences
-\citep[e.g.,][]{ebert-uphoff2012,
+\citep[e.g.,][]{salvucci2002, ebert-uphoff2012,
   samarasinghe-casuality,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}. However,
 most of this work focuses on causal discovery, or the inference (using
 data) of causal structure: ``links'' and directions between
-variables. This is then used to define a causal graphs and the
-relationships between variables when the graph is not know a
+variables. This is then used to define a causal graph and the
+relationships between variables when the graph is not known a
 priori. However in many applications, the causal graph is already
 known based on physical insights. For instance the impact of El Niño
 on West American rainfall is known to be causal and the graph does not
@@ -58,24 +58,24 @@ basics of the graphical approach to causality in a way that is
 relatable for Earth scientists, hopefully motivating more widespread
 use and adoption of causal graphs to organize analyses and communicate
 assumptions. These tools are relevant now more than ever, as the
-cornucopia of new data analysis tools have inevitable led to more
+cornucopia of new data analysis tools have inevitably led to more
 opaque results and barriers to the communication of assumptions.
 
 Beyond their usefulness as communication tools, if certain conditions
 are met causal graphs can be used to calculate, from data, the
 generalized functional form of relationships between Earth science
-variables. Ultimately, deriving generalized functional relationships
-is a primary goal of science. While we know the functional
-relationships between some variables a priori, there are many
-relationships we do not know \citep[e.g., ecosystem scale water and
-carbon fluxes;][]{massmann2019} - \textit{Grosslord et al 2020 on VPD,
-  Zhou et al., 2019 PNAS, Sci Adv}, or that we do know but are
+variables \citep{pearl2009causality}. Ultimately, deriving generalized
+functional relationships is a primary goal of science. While we know
+the functional relationships between some variables a priori, there
+are many relationships we do not know \citep[e.g., ecosystem scale
+water and carbon fluxes;][]{massmann2019, zhou2019arid,
+  zhou2019feedback, grossiord2020}, or that we do know but are
 computationally intractable to calculate \citep[e.g., clouds and
 microphysics at the global scale:][]{randall2003, gentine2018,
-  zadra2018}. In these types of applications, causal graphs give us a
-path toward new scientific knowledge and hypothesis testing:
-generalized functional relationships that were inaccessible with
-traditional tools.
+  zadra2018, gagne2020emulation}. In these types of applications,
+causal graphs give us a path toward new scientific knowledge and
+hypothesis testing: generalized functional relationships that were
+inaccessible with traditional tools.
 
 The main contribution of this paper is to demonstrate how causal
 graphs, a fundamental tool of causal inference introduced in Section
@@ -110,21 +110,19 @@ and discussion, so the paper is divided into the following sections:
   may be able to overcome these challenges.
 \end{itemize}
 
-We hope that this paper will increase understanding of causal graphs
-and encourage more use of causal fundamentals in applications. We
-believe wider adoption will set us on a path towards scientific
-clarity.
+Throughout the discussion key terms will be emphasized in italics.
 
 \section{What is causality?: the causal graph perspective and its
   usefulness in the Earth sciences}\label{sec:what-caus-caus}
 
-We view causality through the lens of causal graphs, as introduced in
-\citet{pearl1995causal}, mostly because we believe causal graphs are
-useful in Earth science, rather than because of any particular
-philosophical argument for causal graphs as the ``true'' definition of
-causality.
+While there are many different definitions and interpretations of
+``causality'', for this manuscript we view causality through the lens
+of causal graphs, as introduced in \citet{pearl1995causal}. We take
+this perspective  because we believe causal graphs are useful in Earth
+science, rather than because of any particular philosophical argument
+for causal graphs as the ``true'' representation of causality.
 
-Causal graphs are directed acyclic graphs (DAGs) that encode our
+Causal graphs are directed acyclic graphs (\emph{DAG}s) that encode our
 assumptions about the causal dependencies of a system.  To make a
 causal graph, a domain expert simply draws directed edges
 (i.e. arrows) from variables that are causes to effects. In other
@@ -157,7 +155,7 @@ cloud microphysics in large scale models;][]{zadra2018}. In these
 scenarios the benefits of causal graphs are fully realized: based on
 the causal graph we can calculate from data, using the
 \textit{do-}calculus \citep{pearl-1994-do-calculus}, the functional
-relationship between target variables (i.e. effects) and interventions
+relationship between target variables (i.e. effects) and \textit{interventions}
 on any other variables in the graph (i.e. causes).
 
 By viewing causal graphs through this pragmatic lens of calculating
@@ -166,42 +164,40 @@ simultaneously identify casual graphs' value for Earth scientists
 while also side stepping philosophical arguments about the meaning of
 causality. Causal graphs are pragmatic because in the Earth sciences
 we often need to estimate how the system responds to
-interventions. For example, for sub-grid parameterization we need to
-estimate time tendencies' response to interventions on the large scale
-state. We also may desire to calculate experiments: for example how
-changing land cover from forest to grasslands affects (the statistics
-of) surface temperature. \textit{Do-}calculus provides a way to
-calculate this response to interventions without relying on
-approximate numerical models or (potentially infeasible or unethical)
-real world experimentation. While we want to maintain this emphasis on
-causality as a method for calculating generalized functional forms of
-responses to intervention, for consistency with the causal literature
-we will call the response variables ``effects'', and the intervened
-upon variables ``causes''.
+\emph{interventions} (prescribed changes to variables of interest, or
+``causes''). For example, for sub-grid parameterization we need to
+estimate time tendencies' response to \emph{interventions} on the
+large scale state. We also may desire to calculate experiments: for
+example how changing land cover from forest to grasslands affects (the
+statistics of) surface temperature. \textit{Do-}calculus provides a
+way to calculate this response to interventions without relying on
+approximate numerical models or real world experimentation, which can
+be infeasible or unethical \citep[as is the case for geoengineering
+and unilateral decisions to seed the oceans with iron, or spray
+aerosols in the atmosphere; e.g.,][]{hamilton2013no}. While we want to
+maintain this emphasis on causality as a method for calculating
+generalized functional forms of responses to intervention, for
+consistency with the causal literature we will call the response
+variables ``effects'', and the intervened upon variables ``causes''.
 
 For some, it may not be clear how the functional response to
-interventions is different from naive regression between observed
-variables. We will demonstrate in Section
+\emph{interventions} is different from naive regression between
+observed variables. We will demonstrate in Section
 \ref{sec:causal-graphs-pearls} how uninformed regression is just a
 functional mapping of associations between variables, and how this
 differs from the response to interventions. This is the problem that
 \textit{do-}calculus solves: it identifies which data are needed and
 how we can use those data to calculate the functional mapping of
 interventions, rather than just associations that may be attributable
-to other processes entirely. Because interventions generalize much
-better than associations, \textit{do-}calculus is especially relevant
-for scientists and engineers. Working through an example will clarify
-some of these claims.
+to other processes entirely. Because \emph{interventions} generalize
+much better than associations, \textit{do-}calculus is especially
+relevant for scientists and engineers. Working through an example will
+clarify some of these claims.
 
 \section{A Toy Example: the problem of confounding and the necessity
   of \textit{do-}calculus for calculating interventions}
 \label{sec:causal-graphs-pearls}
 % intro causal graphs}
-
-We demonstrate the problem of confounding and the necessity of
-\textit{do-}calculus we use a very simple toy example involving
-clouds, aerosols, and surface solar radiation/sunlight (Figure
-\ref{fig:toy}A). Our causal graph consists of:
 
 \begin{figure}
   % % consider \noindent\include... [width=0.75\textwidth]...
@@ -221,10 +217,17 @@ clouds, aerosols, and surface solar radiation/sunlight (Figure
     causal dependencies in the system, so we find it more conceptually
     clear to include unobserved common causes explicitly in the graph,
     and prefer the notation in \textbf{B)} to \textbf{C}). Any
-    semi-Markovian graph can be represented as a graph with unobserved
-    nodes, and vice-versa \citep[e.g.,][]{lee2019structural}.}
+    semi-Markovian graph, which is a graph with bi-directed dashed
+    arrows representing hidden common causes, can be represented as a
+    graph with unobserved nodes, and vice-versa
+    \citep[e.g.,][]{lee2019structural}.}
   \label{fig:toy}
 \end{figure}
+
+We demonstrate the problem of \textit{confounding} and the necessity of
+\textit{do-}calculus we use a very simple toy example involving
+clouds, aerosols, and surface solar radiation/sunlight (Figure
+\ref{fig:toy}A). Our causal graph consists of:
 
 \begin{enumerate}
 \item An edge from aerosols to clouds because aerosols serve as cloud
@@ -244,9 +247,11 @@ cloud-aerosol-sunlight example, clouds also affect aerosols; e.g., by
 increasing the likelihood that aerosol will be scavenged from the
 atmosphere during precipitation \citep[e.g.,][]{radke-scavenge-1980,
   jurado2008, blanco-alegre2018}. By not including an edge from cloud
-to aerosol, we are making the assumption that we are negelcting the
-effect of clouds on aerosols. Considering this example is intended to
-be pedagogical for introducing causal theory to the readers, we will
+to aerosol, we are making the assumption that we are neglecting the
+effect of clouds on aerosols, and also preventing the graph from
+containing any cycles (a path from a variable to itself) - a
+requirement of the theory. Considering this example is intended to be
+pedagogical for introducing causal theory to the readers, we will
 continue with the graph as drawn in Figure \ref{fig:toy} (Section
 \ref{sec:necess-cond-caus} explores realistic Earth system graphs).
 
@@ -282,7 +287,7 @@ unfamiliar readers). The inclusion of randomness in causal graphs is a
 key tool: by positing a causal graph, we are not stating that the
 variables in the graph are the only processes in the system. Instead,
 we are stating that all other processes not included in the graph
-induce variations in the graph's variables that are independent of
+induce variations in the graph's variables that are \emph{independent} of
 each other (e.g., all $U_{\cdot}$ in Equation (\ref{eq:2}) are
 independent). For example, sources of aerosol variability not
 considered in Figure \ref{fig:toy}A include anthropogenic aerosol
@@ -313,18 +318,19 @@ infinite sample of data.
 
 % backdoor path}
 
-A necessary condition for unidentifiability is the presence of an
-unblocked backdoor path from cause to effect. Backdoor paths are any
-paths going through parents of the cause to the effect. We can block
-these paths by selectively observing variables such that no
-information passes through them \citep{geiger-d-sep}. If we can
-observe variables along the backdoor paths such that they are blocked,
-then we have satisfied the \emph{back-door criterion}
-\citep{pearl2009} and we can calculate unbiased causal effects from
-data.
+A necessary condition for \emph{unidentifiability} is the presence of
+an unblocked \emph{backdoor path} from cause to effect. Backdoor paths
+are any paths going through parents of the cause to the effect. We can
+block these paths by selectively observing variables such that no
+information passes through them \citep{geiger-d-sep}. If observations
+are not available for the variables to block the path, the path will
+be \emph{unblocked}. However, if we can observe variables along the
+backdoor paths such that they are all blocked, then we have satisfied
+the \emph{back-door criterion} \citep{pearl2009} and we can calculate
+unbiased causal effects from data.
 
 \begin{figure} \input{figs/mutilated-cloud-aerosol.tex}
-  \caption{A mutilation of Figure \ref{fig:toy}(A), where we have
+  \caption{A \emph{mutilation} of Figure \ref{fig:toy}(A), where we have
     removed directed causal paths from the cause (cloud) to the effect
     (surface solar radiation). There is covariability between cloud and
     surface solar radiation that is not due to the causal connection
@@ -376,7 +382,7 @@ m$^{-2}$), derived from Equation (\ref{eq:1}). Yet, aerosol induces
 co-variability between cloud and sunlight that is unrelated to the
 causal link from cloud to sunlight. Graphically, this is clarified by
 removing all edges from our cause (cloud) to children of our cause (in
-this case sunlight) to create a ``mutilated'' graph (Figure
+this case sunlight) to create a ``\emph{mutilated}'' graph (Figure
 \ref{fig:mutilated-toy}). By ``mutilated'', we mean that the new graph
 deviates from reality, in this case by breaking all causal paths from
 our cause to our effect. We see that in this mutilated graph clouds
@@ -418,7 +424,7 @@ presence of a cloud, or ``False'' for no cloud). In the case that
 observations of aerosols are not available (e.g., Figure
 \ref{fig:toy}B, C), our causal effect is not identifiable and we
 cannot use causal inference no matter how large the sample size of our
-data is. The DAG is therefore a powerful analysis tool: after encoding
+data is. The \emph{DAG} is therefore a powerful analysis tool: after encoding
 our domain knowledge in a causal graph, we can analyze the available
 observations to determine whether a causal calculation is possible,
 \textit{without needing to collect, download, or manipulate any
@@ -512,16 +518,16 @@ models and \textit{do-}calculus:
   dependencies between inputs (causes) and outputs (effect), which are
   useful in physical sciences.
 \item In order to calculate an unbiased causal effect from data, we
-  must isolate the covariability between cause and effect that is due to
-  the directed causal path from cause to effect. The presence of
+  must isolate the covariability between cause and effect that is due
+  to the directed causal path from cause to effect. The presence of
   non-causal dependencies between the cause and effect can be deduced
-  from the causal graph: the presence of an unblocked backdoor path from
-  the cause to the effect leads to non-causal dependencies (and
-  co-variation).
-\item The backdoor criterion identifies the distributions we must
-  calculate from data in order to block all backdoor paths, remove
-  non-causal dependence between the cause and effect, and calculate an
-  unbiased causal effect from data.
+  from the causal graph: the presence of an \textit{unblocked backdoor
+    path} from the cause to the effect leads to non-causal
+  dependencies (and co-variation).
+\item The \emph{backdoor criterion} identifies the distributions we
+  must calculate from data in order to block all backdoor paths,
+  remove non-causal dependence between the cause and effect, and
+  calculate an unbiased causal effect from data.
 \item The \emph{average} causal effect can be reliably approximated
   with regression (Equation (\ref{eq:6})) derived from the backdoor
   criterion. In this scenario, causal theory and graphs identify the
@@ -543,9 +549,12 @@ models and \textit{do-}calculus:
   \label{fig:linear}
 \end{figure}
 
-Here we focused on the backdoor criterion to block backdoor paths. An
-un-blockable backdoor path from the cause to the effect is a necessary
-condition for unidentifiability. However, it is not sufficient
+Here we focused on the \emph{backdoor criterion} to block backdoor
+paths. An un-blocked backdoor path from the cause to the effect is a
+necessary condition for unidentifiability (e.g., no observations
+available for the variables we need to block the back door
+pathpath). However, an un-blocked backdoor path from the cause to the
+effect is not a sufficient conidition for unidentifiability
 (e.g. there are other identification strategies like the front door
 criterion and instrumental variables that do not rely on observing
 variables along the backdoor path \citep{pearl2009causality}). We
