@@ -589,20 +589,20 @@ of our problem at the outset can save us time in the long term,
 forcing us to clarify our thinking early, expose potential challenges,
 and identify intractable approaches.
 
-Once we have drawn a causal graph, there is no cost to including in in
-presentations, papers, and discussions of our results. Making our
-assumptions about dependencies in the system explicit greatly improves
-the interpretability and reproducibility of our results. Perhaps our
-analysis and graph meet the standards for a causal interpretation, but
-even if they do not, the causal graph helps the rest of the community
-asses the sources of confounding in the graph that were not controlled
-for, and understand if their conceptualization of the graph structure
-and of the problem match the authors' assumptions. Often there are
-more assumptions being made than are communicated, and even when they
-are communicated, the assumptions do not always get discussed in a
-precise way. Including a causal graph allows the assumptions to be
-clearly known, and discussed in a precise and rigorous way
-\citep{hannart-da}.
+Additionally, once the causal graph is drawn, we can use it as a
+communication tool and include it in presentations, papers, and
+discussions of our results. Making our assumptions about dependencies
+in the system explicit greatly improves the interpretability and
+reproducibility of our results. Perhaps our analysis and graph meet
+the standards for a causal interpretation, but even if they do not,
+the causal graph helps the rest of the community asses the sources of
+confounding in the graph that were not controlled for, and understand
+if their conceptualization of the graph structure and of the problem
+match the authors' assumptions. Often there are more assumptions being
+made than are communicated, and even when they are communicated, the
+assumptions do not always get discussed in a precise way. Including a
+causal graph allows the assumptions to be clearly known, and discussed
+in a precise and rigorous way \citep{hannart-da}.
 
 To support the idea that many analyses would benefit from a causal
 graph, we will detail how a past project benefits from a causal
@@ -670,10 +670,7 @@ causal graph to determine which observations are needed to meet the
 campaign’s goals. Building on this idea, one could attach costs
 associated with observing each variable in the graph, and
 automatically determine the set of observations that minimizes cost
-while still allowing us to calculate our effect(s) of interest. This
-analysis communicates to proposal reviewers the campaign is rigorously
-optimized to minimize cost while still tractably calculating the
-causal effect(s) of interest.
+while still allowing us to calculate our effect(s) of interest.
 
 While this is just one example, it demonstrates that causal graphs are
 useful beyond toy problems in the Earth system. Additionally, as we
@@ -698,14 +695,14 @@ Earth science systems are (typically) dynamical systems evolving
 through time according to an underlying system state
 \citep{lorenz-1963,lorenz1996predictability,majda-state}. This offers
 both advantages and challenges for causal inference. When constructing
-causal graphs we benefit from the temporal ordering of events: we know
-that future events can have no causal effect on the past. However,
-confounding due to incomplete observation of the system's state space
-introduces challenges.\footnote{Note that incomplete observation of
-  the system precludes many ``causal discovery'' algorithms as well
-  \citep[see ][ for a great review]{runge2019inferring}. Despite this
-  paper's different causal lens, many of these same issues must be
-  overcome in causal discovery as well.}
+causal graphs we benefit from the temporal ordering of events
+\citep{runge2019inferring}: we know that future events can have no
+causal effect on the past. However, confounding due to incomplete
+observation of the system's state space introduces challenges;
+challenges that are not unique to this paper's causal lens: incomplete
+observation of the system precludes many ``causal discovery''
+algorithms as well \citep[see][ for a great
+review]{runge2019inferring}.
 
 Causal identification and tractable causal inference in Earth science
 requires assumptions about the unobserved portions of the state
@@ -715,11 +712,14 @@ space will introduce confounding for any causal affect of interest
 the state space at every time (e.g. $S(t-1/2)$, Figure
 \ref{fig:generic}a), and at any given time, we do not observe the
 state space at all locations and for all state variables (e.g. $S(t)$
-and $S(t-1)$ in Figure \ref{fig:generic}a). So, if we are interested
-in the causal effect of any state variable at time $t$ on some
-variable at time $t+1$ (e.g., $E$ in Figure \ref{fig:generic}a), then
-the causal effect will be confounded by the unobserved portions of the
-state space, and calculating a causal effect is impossible
+and $S(t-1)$ in Figure \ref{fig:generic}a). Despite our impressive and
+growing array of statelite, remote sensing, and in situ observation
+systems, we are still very far from observing every relevant state
+variable at every location in time and space.  So, if we are
+interested in the causal effect of any state variable at time $t$ on
+some variable at time $t+1$ (e.g., $E$ in Figure \ref{fig:generic}a),
+then the causal effect will be confounded by the unobserved portions
+of the state space, and calculating a causal effect is impossible
 (un-identifiable) without additional assumptions. We will apply causal
 graph theory to identify the additional assumptions that would make
 the calculations of causal effects tractable, and may be reasonable in
@@ -728,24 +728,25 @@ many Earth science situations.
 \begin{figure} \input{figs/generic-graph.tex}
   \caption{Generic graphs of the Earth system state sequence, limited
     to a 3 time-step sequence subset of the infinite
-    sequence. \textbf{A):} The reality of the observed Earth system:
-    unobserved nodes are outlined by dashed lines. We only observe the
-    state space at certain times (e.g., no observations at $S(t-1/2)$). At
-    times with observations, we only partially observe the full state
-    ($S(t)$, $S(t-1)$). In the scenario that we are interested in
-    calculating the causal effect of any portion of the state space at
-    time $t$ on some effect ($E$) at time $t+1$, the causal effect will be
-    confounded by the unobserved portions of the state space, and
-    calculating the causal effect is impossible (un-identifiable) without
-    additional assumptions. \textbf{B):} The reduction of the Earth system
-    graph under an assumption that we can reconstruct the state $S(t)$
-    from the observable portions of the state space at lagged times $< t$
-    (see Section \ref{sec:stat-reconstr-state}). \textbf{C):} The
-    reduction of the Earth system graph under an assumption that missing
-    temporal observations (e.g. $S(t-1/2)$ in \textbf{A)}) induce
-    independent random variations in the cause ($C(t)$) and effect
-    ($E(t+1)$). $S'(t)$ denotes the state space, not including the cause
-    $C(t)$ (see Sections
+    sequence. Unobserved nodes are outlined by dashed
+    lines. \textbf{A):} The Earth system, partially observed: we only
+    observe the state space at certain times (e.g., no observations at
+    $S(t-1/2)$), and at times with observations, we only partially
+    observe the full state ($S(t)$, $S(t-1)$). In the scenario that we
+    are interested in calculating the causal effect of any portion of
+    the state space at time $t$ on some effect ($E$) at time $t+1$,
+    the causal effect will be confounded by the unobserved portions of
+    the state space, and calculating the causal effect is impossible
+    (un-identifiable) without additional assumptions. \textbf{B):} The
+    reduction of the Earth system graph under an assumption that we
+    can reconstruct the state $S(t)$ from the observable portions of
+    the state space at lagged times $< t$ (see Section
+    \ref{sec:stat-reconstr-state}). \textbf{C):} The reduction of the
+    Earth system graph under an assumption that missing temporal
+    observations (e.g. $S(t-1/2)$ in \textbf{A)}) induce independent
+    random variations in the cause ($C(t)$) and effect
+    ($E(t+1)$). $S'(t)$ denotes the state space, not including the
+    cause $C(t)$ (see Sections
     \ref{sec:miss-temp-observ},\ref{sec:observ-port-state}).}
   \label{fig:generic}
 \end{figure}
@@ -754,28 +755,34 @@ many Earth science situations.
   lagged observations}
 \label{sec:stat-reconstr-state}
 
-Takens' theorem implies that we can reconstruct the unobserved
-portions of the state space using lagged observations back in time
-\citep{takens1981detecting,deyle2011generalized,Sugihara496}. In this
-case, the causal graph is greatly simplified (Figure
-\ref{fig:generic}b). If we assume that the state is reconstructable,
-then we can calculate the causal effect of any reconstructed state on
-any future variable or process. The primary advantages of this
-approach is that it is the minimum assumption required to calculate a
-causal effect in the generic Earth system graph proposed in Figure
-\ref{fig:generic}a (i.e., we do not need to assume anything about the
-relationship between the unobserved portions of the state space and
-the effect). However this simplification comes at a cost: we can only
-examine the effect of different global states on future variables, and
-we cannot examine the causal effect of a specific variable
-(e.g. $C(t)$) on another (e.g. $E(t+1)$), because the mapping from
-individual observations to a state space reconstruction transforms the
-individual observation's importance to additionally include the
-unknowable and unobserved portions of the state space. So, an
-intervention on any individual observation is of ambiguous meaning
-(e.g. we do not know what are the unobserved variables we are
-intervening on). Instead, we limit ourselves to only examining the
-causal effect of changes in the entire state
+% because the state at time $t$ determines the future of
+% all processes in the system,
+
+Takens' theorem assures that we can reconstruct the unobserved portion
+of the state space of a deterministic dynamical system using a finite
+set of lagged observations back in time
+\citep{takens1981detecting,deyle2011generalized,Sugihara496}. If we
+can reconstruct the state at any given time, the graph reduces to a
+simple chain: the state at time $t$ causally affects any future
+process at time $> t$ (Figure \ref{fig:generic}b). With reconstructed
+state, there are no longer any unobserved portions of the state space
+introducing confoudning, and we can calculate the causal effect of any
+reconstructed state on any future variable or process. The primary
+advantages of this approach is that it is the minimum assumption
+required to calculate a causal effect in the generic Earth system
+graph proposed in Figure \ref{fig:generic}a (i.e., we do not need to
+assume anything about the relationship between the unobserved portions
+of the state space and the effect). However this simplification comes
+at a cost: we can only examine the effect of different global states
+on future variables, and we cannot examine the causal effect of a
+specific variable (e.g. $C(t)$) on another (e.g. $E(t+1)$), because
+the mapping from individual observations to a state space
+reconstruction transforms the individual observation's importance to
+additionally include the unknowable and unobserved portions of the
+state space. So, an intervention on any individual observation is of
+ambiguous meaning (e.g. we do not know what are the unobserved
+variables we are intervening on). Instead, we limit ourselves to only
+examining the causal effect of changes in the entire state
 holistically. Additionally, this approach requires a shift in
 interpretation from the relatively straightforward interventions on
 observable variables we have considered thus far to one where we
@@ -783,7 +790,7 @@ intervene on the entire state.
 
 For example, consider that we reconstructed our state space from
 available observations, and this reconstruction reduced to a discrete
-state space of $N$ states, with associated patterns in the
+state space of $N$ states, with associated mappings onto the
 observations at time $\leq t$. If we are interested in the effect of a
 change in state on a process at time $t+1$, for example a change from
 state $1$ to state $2$, this corresponds to an intervention on the
@@ -798,21 +805,6 @@ represents a significant barrier to interpretation, and motivates the
 exploration of stronger assumptions that result in a clearer
 interpretation (see Section \ref{sec:miss-temp-observ},
 \ref{sec:observ-port-state}, \ref{human}).
-
-In practice, we might not know the number of lagged observations that
-are required for reconstruction of the state space at time $t$. One
-approach is to use the data for guidance. This involves reconstructing
-the state at time $t$ with iteratively increasing numbers of lags. We
-have confidence we have reproduced the state when the observations at
-time $t$ are conditionally independent of each other given the state
-reconstruction. However, this approach potentially introduces even
-more problems, including but not limited to the assumptions required
-in our conditional independence tests. This example highlights the
-challenges associated with any method relying on state space
-reconstruction with lagged observations: to be sure we reconstruct the
-state space we must include observations from a potentially infinite
-temporal extent, and there might not be any reliable way to check that
-we successfully reconstructed the state space.
 
 \subsection{Missing temporal observations induce independent random
   variations in cause and effect}
@@ -869,7 +861,8 @@ variable on future processes. In this case, the graph is as in Figure
 \ref{fig:generic}c, but $S'(t)$ corresponds to all observations at
 time $t$ not including $C$, and so can be used to block all backdoor
 paths. If we can assume that there are no interactions between
-observations at time $t$ then we can calculate the causal effect as:
+observations at time $t$ then we can calculate the causal effect of
+$C(t)$ on $E(t+1)$ as:
 
 \begin{equation} P(E(t+1)| do(C(t)=c)) = \int_{S'(t)} P(E(t+1) \, | \,
   C(t)=c, S'(t) = s )\; P(S'(t-1)=s) \, d \, s,
@@ -915,17 +908,11 @@ strong assumption may seem unjustifiable due to many feedbacks within
 the Earth system, recent historical examples suggest that this
 assumption may be applicable to some situations. For example,
 coordinated global human response to global warming is relatively
-independent of the climate state \citep{arto2014drivers}. We have
-failed to reduce green house gas emissions even as global temperature
-increased. Instances of reduced rises in global green house gas
-emissions are usually due to global economic recession (e.g. the 2008
-financial crisis) or pandemic (COVID-19 crisis) rather than factors
-directly tied to the climate state. In these examples many global
-social, political, health, and economic factors are the primary causes
-of global green house gas emission, and while the climate system may
-affect these factors, the historical evidence suggests that the
-climate system exerts a relatively small impact
-\citep{arto2014drivers}.
+independent of the climate state \citep{arto2014drivers}. Instances of
+reduced rises in global green house gas emissions are usually due to
+global economic recession (e.g. the 2008 financial crisis) or pandemic
+\citep[COVID-19 crisis,][]{le2020temporary, liu2020near} rather than
+factors directly tied to the climate state.
 
 \begin{figure} \includegraphics[]{forcing-graph.pdf}
   \caption{A generic graph asserting an assumption that there are
@@ -950,10 +937,10 @@ human-based sources of confounding may need to be controlled for
 depending on the cause of interest. For example, CO$_2$ emissions
 decreased during the COVID-19 crisis, but a lot of other human
 behaviors also changed, and these changes must be controlled for
-(e.g., the COVID-19 virus is a common cause to many large changes in
-human behavior in 2020). This example highlights the importance of
-drawing a bespoke graph for every application and rigorously reasoning
-about the causal structure.
+\citep[e.g., the COVID-19 virus is a common cause to many large
+changes in human behavior in 2020,][]{diffenbaugh2020covid}. This
+example highlights the importance of drawing a bespoke graph for every
+application and rigorously reasoning about the causal structure.
 
 \section{Conclusions}
 
@@ -962,42 +949,39 @@ In summary, this review showed that:
 \begin{itemize}
 \item Causal graphs concisely and clearly encode assumptions about
   causal/functional dependencies between processes. Including a causal
-  graph benefits any observational or modeling analysis, including those
-  that use regression. Depending on the observations available and the
-  causal structure of the system, regression analyses can be interpreted
-  as an average, generalized, functional mapping from causes to
-  effects. This causal approach opens up a new path to calculate
-  functional relationships when we either do not know the functional
-  form a priori, or it is too computationally intractable to calculate
-  from models.
-\item Whether or not a causal effect can be calculated from data is
-  determined exclusively by the causal graph. Thus the tractability of a
-  causal analyses, or the strength of assumptions necessary to make an
-  analysis tractable, is determined and assessed before collecting,
-  generating, or manipulating data (which can cost a tremendous amount
-  in terms of researchers' time or computational resources). We
-  recommend early causal analyses to determine tractability during a
-  project's conception, before resources are spent obtaining or
-  analyzing data.
+  graph benefits any observational or modeling analysis, including
+  those that use regression.
+\item Whether a causal effect can be theoretically calculated from
+  data is determined exclusively by the causal graph. Thus the
+  tractability of a causal analyses, or the strength of assumptions
+  necessary to make an analysis tractable, is determined and assessed
+  before collecting, generating, or manipulating data (which can cost
+  a tremendous amount in terms of researchers' time or computational
+  resources). We recommend early causal analyses to determine
+  tractability during a project's conception, before resources are
+  spent obtaining or analyzing data.
+\item Calculated causal effects are functional relationships between
+  target variables (i.e. effects) and \textit{interventions} on other
+  variables in the system (i.e. causes). These functional
+  relationships \textit{generalize} because they map
+  \textit{interventions} onto the response: unlike observed
+  associacions (e.g., naive regresssion), we know the response is
+  attributable to the function's input, and not some other process in
+  the system (e.g., a hidden common cause). This causal approach opens
+  up a new path to calculate generalzied functional relationships when
+  we either do not know the functional form a priori, or it is too
+  computationally intractable to calculate from models.
 \item Because the Earth system evolves as a dynamical system through
   time, we can construct broadly applicable, generic Earth system
-  causal graphs. However, causal inference in Earth science also
-  presents challenges: we only partially observe the state space of
-  the system.
+  causal graphs. We can use these to calculate generalized functional
+  relationships between processes of interest, which would not be
+  possible with associations/correlation/naive regression. However,
+  causal inference in Earth science also presents challenges: we only
+  partially observe the state space of the system.
 \item These challenges can be alleviated by applying causal theory to
   generic causal graphs of the Earth system and identifying the
-  assumptions that allow for causal inference from data. These are
-  assumptions that:
-  \begin{itemize}
-  \item The state space of the system is reconstructable from lagged
-    observations of the system, as allowed by Takens' theorem (Section
-    \ref{sec:stat-reconstr-state}, Section \ref{sec:miss-temp-observ}), or
-  \item The effect of interest is only causally affected by the
-    observed portion of the state space (Section
-    \ref{sec:observ-port-state}), or
-  \item The cause of interest can be assumed to be independent of the
-    evolution of the system's state (e.g. forcing) (Section \ref{human}).
-  \end{itemize}
+  assumptions that allow for causal inference from data (\Section
+  \ref{sec:necess-cond-caus}).
 \end{itemize}
 
 Here we focus on the fundamentals of calculating causal effects from
@@ -1022,14 +1006,15 @@ results to the real world. In this case, numerical models are the
 source domains that differ from the target domain (``real world'') due
 to approximations.
 
-However, many of these developments in causal theory are not yet well
-established in applied domains. We believe that the use of causal
-graphs to organize and structure analyses is mature and directly
-applicable to many applications, and can serve as a gateway to these
-more sophisticated (and less mature) causal methods. We hope that
-drawing and including causal graphs in Earth science research becomes
-much more common, and that this manuscript provides some of the the
-necessary foundation for readers to feel comfortable using causal
+However, because of the speed and scope of this recent growth in
+causal theory, applied domains lag in establishing recent theoretical
+developments' utility for applied analysis. We believe that the use of
+causal graphs to organize and structure analyses is mature and
+directly applicable to many applications, and can serve as a gateway
+to these more sophisticated (and less mature) causal methods. We hope
+that drawing and including causal graphs in Earth science research
+becomes much more common, and that this manuscript provides some of
+the necessary foundation for readers to feel comfortable using causal
 graphs in their next project.
 
 \paragraph{Acknowledgments} The authors want to than Beth Tellman,
