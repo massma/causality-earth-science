@@ -12,52 +12,58 @@
 
 \maketitle
 \begin{abstract}
-  There is growing interest in the study of causal methods in the Earth sciences. However, most applications
-  have focused on causal discovery, i.e. inferring the causal
-  relationships and structure from data. This paper looks at causality
-  through the lens of causal {\it inference} and examines how expert-defined
-  causal graphs, a fundamental from causal theory, can be used to
-  clarify assumptions, identify tractable problems, and aid
-  interpretation of results and their causality in Earth science research. We apply causal
-  theory to generic graphs of the Earth system to identify where
-  causal inference may be most tractable and useful to address
-  problems in the Earth science and avoid potentially incorrect
+  There is growing interest in the study of causal methods in the
+  Earth sciences. However, most applications have focused on causal
+  discovery, i.e. inferring the causal relationships and structure
+  from data. This paper looks at causality through the lens of causal
+  {\it inference} and examines how expert-defined causal graphs, a
+  fundamental from causal theory, can be used to clarify assumptions,
+  identify tractable problems, and aid interpretation of results and
+  their causality in Earth science research. We apply causal theory to
+  generic graphs of the Earth system to identify where causal
+  inference may be most tractable and useful to address problems in
+  the Earth science and avoid potentially incorrect
   conclusions. Specifically, causal inference may be particularly
-  powerful when: (1) the effect of
-  interest is only causally affected by the observed portion of the
-  state space; or: (2) The cause of interest can be assumed to be
-  independent of the evolution of the system’s state; or: (3) the state space of the system is reconstructable
-  from lagged observations of the system. However, we also
-  highlight through examples that inclusion of a causal graph in any
-  analysis provides explicit definition and communication of
-  assumptions and hypotheses and helps to structure analyses, even if causal inference is ultimately challenging given the data availability, limitations and uncertainties.
+  powerful when: (1) the effect of interest is only causally affected
+  by the observed portion of the state space; or: (2) The cause of
+  interest can be assumed to be independent of the evolution of the
+  system’s state; or: (3) the state space of the system is
+  reconstructable from lagged observations of the system. However, we
+  also highlight through examples that inclusion of a causal graph in
+  any analysis provides explicit definition and communication of
+  assumptions and hypotheses and helps to structure analyses, even if
+  causal inference is ultimately challenging given the data
+  availability, limitations and uncertainties.
 \end{abstract}
 
 \section{Introduction}
 
-There is growing interest in the study of causal
-inference methods in the Earth sciences \citep[e.g.,][]{salvucci2002,
-  ebert-uphoff2012, kretschmer2016,
+There is growing interest in the study of causal inference methods in
+the Earth sciences \citep[e.g.,][]{salvucci2002, ebert-uphoff2012,
+  kretschmer2016,
   samarasinghe2020,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}. However,
 most of this work focuses on causal discovery, or the inference (using
 data) of causal structure: ``links'' and directions between
-variables. In many cases, causal discovery can be used to estimate the structure of a causal graph and the relationships between variables when the graph is
-not known a priori. However in many if not most Earth system applications, the causal graph is
-already known based on physical insights. For instance the impact of
-El Ni\~{n}o on West American rainfall is known to be causal and the
-graph does not need to be discovered.
+variables. In many cases, causal discovery can be used to estimate the
+structure of a causal graph and the relationships between variables
+when the graph is not known a priori. However in many if not most
+Earth system applications, the causal graph is already known based on
+physical insights. For instance the impact of El Ni\~{n}o on West
+American rainfall is known to be causal and the graph does not need to
+be discovered.
 
 This paper looks at causality through a different, but complementary,
 lens and examines how assumed causal graphs \citep{pearl1995causal}, a
 fundamental from causal theory, can be used to clarify assumptions,
 identify tractable problems, and aid interpretation of results in
-Earth science research. Our goal is to distill the
-basics of the graphical approach to causality \citep{olah2017} in a way that is
+Earth science research. Our goal is to distill the basics of the
+graphical approach to causality \citep{olah2017} in a way that is
 relatable for Earth scientists, hopefully motivating more widespread
 use and adoption of causal graphs to organize analyses and communicate
 assumptions. These tools are relevant now more than ever, as the
-abundance of new data and novel analysis methods have inevitably led to more
-opaque results and barriers to the communication of assumptions.
+abundance of new data and novel analysis methods have inevitably led
+to more opaque results and barriers to the communication of
+assumptions.
 
 Beyond their usefulness as communication tools, if certain conditions
 are met, causal graphs can be used to calculate, from data, the
@@ -126,29 +132,30 @@ Causal graphs are Directed Acyclic Graphs (\emph{DAG}s) that encode
 our assumptions our assumptions about the causal dependencies of a
 system. To make a causal graph, a domain expert simply draws directed
 edges (i.e. arrows) from variables that are causes to effects. In
-other words, to make a causal graph you draw a diagram
-summarizing the assumed causal links between variables (e.g., Figure
+other words, to make a causal graph you draw a diagram summarizing the
+assumed causal links between variables (e.g., Figure
 \ref{fig:toy}A). Causal graphs are useful tools because they can be
 drawn by domain experts with no required knowledge of maths or
 probability, but they also represent formal mathematical
 objects. Specifically, underlying each causal graph are a set of
 equations called \emph{structural causal models}: each node
-corresponds to a generating function for that variable. Parents are the other nodes in the
+corresponds to a generating function for that variable. Parents are
+the other nodes in the graph that point to a node of interest (e.g.,
+in the most simple graph $X \to Y$; $X$ is a parent of $Y$). So in
+reality, drawing arrows from ``causes'' to ``effects'' is synonymous
+with drawing arrows from function inputs to generating functions. Each
+random variable in the system is model as a node. A directed edge
+(i.e. arrow) is drawn from node A to node B when B is functionally
+dependent on A (i.e., B is directly affected by changes in A). For
+instance, in Figure \ref{fig:toy}A, since the variable sunlight (S)
+responds to variations in the cloud (C), we draw an arrow from C to
+S. The function's inputs are all of the node's parents plus a source
+of exogenous variability (which will be detailed in Section
+\ref{sec:causal-graphs-pearls}). Parents are the other nodes in the
 graph that point to a node of interest (e.g., in the most simple graph
 $X \to Y$; $X$ is a parent of $Y$). So in reality, drawing arrows from
 ``causes'' to ``effects'' is synonymous with drawing arrows from
-function inputs to generating functions. Each random variable in the system is
-model as a node. A directed edge (i.e. arrow) is drawn from
-node A to node B when B is functionally dependent on A (i.e., B is
-directly affected by changes in A). For instance, in Figure
-\ref{fig:toy}A, since the variable sunlight (S) responds to variations
-in the cloud (C), we draw an arrow from C to S. The function's inputs are all of the node's
-parents plus a source of exogenous variability (which will be detailed
-in Section \ref{sec:causal-graphs-pearls}). Parents are the other nodes in the graph that point to
-a node of interest (e.g., in the most simple graph $X \to Y$; $X$ is a
-parent of $Y$). So in reality, drawing arrows from ``causes'' to
-``effects'' is synonymous with drawing arrows from function inputs to
-generating functions.
+function inputs to generating functions.
 
 In this way, drawing a causal graph is another way to visualize and
 reason about a complicated system of equations, which is a very useful
@@ -433,17 +440,19 @@ satisfying the backdoor criterion with \textit{adjustment} on aerosol:
 \end{equation} where the \textit{do}-expression ($P(S \, | \, do(C\, = \,c))$) represents the probability of sunlight
 if we did an experiment where we intervened and set cloud to a value
 of our choosing (in this case $c$, which could be ``True'' for the
-presence of a cloud, or ``False'' for no cloud). In the case that
-observations of aerosols are not available (e.g., Figure
-\ref{fig:toy}B, C), our causal effect is not identifiable and we
-cannot generally  use causal inference no matter how large the sample size is of our
-data. The \emph{DAG} is therefore a powerful analysis tool: after encoding
+presence of a cloud, or ``False'' for no cloud). In the case that observations of aerosols are not available (e.g.,
+Figure \ref{fig:toy}B, C), our causal effect is not identifiable and
+we cannot generally use causal inference no matter how large the
+sample size is of our data.
+
+The \emph{DAG} is therefore a powerful analysis tool: after encoding
 our domain knowledge in a causal graph, we can analyze the available
 observations to determine whether a causal calculation is possible,
 \textit{without needing to collect, download, or manipulate any
   data}. For more complicated graphs, causal identification can be
-automated \citep[][ \url{http://www.dagitty.net/}]{shpitser2006,
-  textor2017}. We later use this theory to theoretically assess which
+automated \citep[][ and \url{http://www.dagitty.net/},
+\url{https://causalfusion.net}]{tian2002general,shpitser2006,huang2006identifiability,Bareinboim7345,
+  textor2017,}. We later use this theory to theoretically assess which
 general problems are tractable in Earth science using causal inference
 (Section \ref{sec:necess-cond-caus}).
 
@@ -494,14 +503,14 @@ Equation (\ref{eq:lln}) to justify an approximation to Equation
 
 Data or prior knowledge can inform the regression function for
 $\mathbb{E}(S | C=c, A=a_i)$, and as always whatever regression method
-is used, it should be checked to insure it is representative of the
-data. In the toy example, a linear model conditional on cloud appears
-to be a good choice of regression function (Figure
-\ref{fig:linear})\footnote{However note that for most real problems in
-  Earth science, we probably want to use some type of non linear
-  regression (neural networks could be well suited to this
-  task).}. The causal effect of clouds on sunlight as calculated using
-Equation (\ref{eq:6})) (e.g.
+is used, it should be checked to ensure it is representative of the
+data. In this simple example, a linear model conditional on cloud
+should be a suitable choice for the regression function (Figure
+\ref{fig:linear})\footnote{However, most real problems in Earth
+  science require non-linear approximation methods like neural
+  networks and/or advanced machine learning methods; for examples, we
+  refer readers to \citep{bishop2006pattern}.}. The causal effect of
+clouds on sunlight as calculated using Equation (\ref{eq:6})) (e.g.
 $\mathbb{E}(S | do(C = \text{cloudy})) - \mathbb{E}(S | do(C =
 \text{clear}))$) is -67.69 W m$^{-2}$, which closely matches the true
 causal effect from Equation (\ref{eq:1}) of -68 W m$^{-2}$. This
@@ -511,26 +520,35 @@ assumptions clearly encoded in the causal graph. Further, causal
 inference can be used to justify and communicate assumptions in any
 observational analyses employing regression. In the best case, the
 causal effect is identifiable from the available observations, and the
-regression analysis can be framed as an average causal effect. In the
-worst case that identification is not possible from the available
-observations, one may present the regression as observed associations
-between variables. However, presentation of a causal graph still aids
-the reader: the reader can see from the causal graph what the
-confounders and unobserved sources of covariability are between the
-predictors and the output. In all cases, the presentation of a causal
-graph makes explicit the assumptions about the causal dependencies of
-the system. Wherever possible, we recommend including causal graphs
-with any observation-based analyses.
+regression analysis can be framed as an average causal effect. In the worst case that identification is not possible
+from the available observations, one may present the regression as
+observed associations between variables. (Alternative: In the
+case that identification is not obtainable, one could first present
+the regression as observed associations between variables and should
+make it clear that causation cannot be established given the available
+assumptions.) However, presentation of a
+causal graph still aids the reader: the reader can see from the causal
+graph what the confounders and unobserved sources of covariability are
+between the predictors and the output. In all cases, the presentation
+of a causal graph makes explicit the assumptions about the causal
+dependencies of the system. Wherever possible, we recommend including
+causal graphs with any observation-based analyses.
 
 In summary of the main points of this introduction to causal graphical
 models and \textit{do-}calculus:
 
 \begin{itemize}
 \item Graphical causal models encode our assumptions about causal
-  dependencies in a system (edges are drawn \emph{from} causes \emph{to}
-  effects). ``Causal dependencies'' really just refer to functional
-  dependencies between inputs (causes) and outputs (effect), which are
-  useful in the Earth sciences.
+  dependencies in a system (edges are drawn \emph{from} causes
+  \emph{to} effects). ``Causal dependencies'' really just refer to
+  functional dependencies between inputs (causes) and outputs
+  (effect), which are useful in the Earth sciences. (Alternative:
+  Graphical causal models encode the assumptions the scientist is
+  willing to make about the functional dependencies in the system
+  under investigation (edges are drawn from causes to
+  effects). Naturally, these dependencies are between the inputs
+  (causes) and outputs (effect) in the system, which are both not only
+  natural but also useful in the physical sciences.)
 \item In order to calculate an unbiased causal effect from data, we
   must isolate the covariability between cause and effect that is due
   to the directed causal path from cause to effect. The presence of
@@ -552,9 +570,10 @@ models and \textit{do-}calculus:
   graphs identify the variables that \textit{should not} be included
   in the regression: we can also bias a causal effect by
   including too many variables in a regression.
-\item Causal identification is a flexible tool that provides the
-  conditional and marginal distributions that must be estimated from data,
-  while making no assumptions about the forms of those
+\item The do-calculus and identification theory provide a flexible
+  tool to determine whether an effect is identifiable and, if so,
+  which distributions should be estimated from data, while making no
+  assumptions about the the forms of the underlying functions and
   distributions. However, parametric assumptions can be applied to
   make the calculation of those distributions from data more
   computationally tractable.
@@ -582,13 +601,33 @@ focus on the backdoor criterion because it is the most fundamental and
 direct method for adjusting for confounding, the most intuitive for an
 introduction to causality, and is the most relevant for the generic
 temporal systems present in the Earth sciences (Figure
-\ref{fig:generic}, also see \citet{tian2002general} for more discussion on
-sufficient conditions for unidentifiability).  However, causal
-identification through other methods like instrumental variables and
-the front door criterion can also be automated; we refer the reader to
-\citet{pearl2009causality} for further discussion and software tools
-like \url{http://www.dagitty.net/} and
+\ref{fig:generic}, also see \citet{tian2002general} for more
+discussion on sufficient conditions for unidentifiability). However,
+causal identification through other methods like instrumental
+variables and the front door criterion can also be automated; we refer
+the reader to \citet{pearl2009causality} for further discussion and
+software tools like \url{http://www.dagitty.net/} and
 \url{http://www.causalfusion.net} for interactive exploration.
+
+(Alternative: Even though we have focused on the backdoor criterion,
+we note that the existence of an unblockable backdoor path is not
+sufficient for unidentifiability. In fact, there exist other
+identification strategies like the front door criterion and
+instrumental variables that do not rely on observing variables along
+the backdoor path [Pearl, 2009b], and can be used in both
+non-parametric and parametric settings. Still, the backdoor criterion
+is one of the most fundamental and direct method for adjusting for
+confounding, the most intuitive for an introduction to causality, and
+is one of the most relevant for the generic temporal systems present
+in the Earth sciences (Figure 6), which we’ll discuss later on; see
+also Tian and Pearl [2002] for a more detailed discussion on
+sufficient conditions for unidentifiability.
+
+As mentioned earlier, other causal identification methods like the
+front door criterion and instrumental variables can also be automated;
+we refer the reader to [Pearl, 2000; Bareinboim and Pearl, 2016] for
+further discussion, and software tools like
+http://www.causalfusion.net for interactive exploration.)
 
 
 \section{Beyond toys: causal graphs as communicators, organizers, and
