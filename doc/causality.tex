@@ -637,18 +637,19 @@ In Section \ref{sec:causal-graphs-pearls} we used a toy example to
 demonstrate a causal analysis starting with drawing a graph and ending
 with the successful calculation of the average response of sunlight
 (the effect) to an intervention on cloud (the cause). However, often
-we may not be able to complete this last step of estimating the causal
-effects from the available data. In many cases there are serious
-challenges due to unobserved confounding in generic Earth science
-problems (Section \ref{sec:necess-cond-caus}), and for other cases we
-may lack enough samples to estimate the necessary distributions (or
-regressions) with sufficient certainty (e.g., Equation
-(\ref{eq:6})). However, we want to emphasize that, even if calculating
-a causal effect might be in some cases impossible, drawing a causal graph at the beginning of an analysis offers tremendous benefits in terms of
-organization and communication of the hypotheses being tested. Investing time to reason about the
-functional structure of our problem at the outset can save us time in
-the long term, forcing us to clarify our thinking early, expose
-potential challenges, and identify intractable approaches.
+we may not be able to ultimately estimate the causal effects from the
+available data. In many cases there are serious challenges due to
+unobserved confounding in generic Earth science problems (Section
+\ref{sec:necess-cond-caus}), and for other cases we may lack enough
+samples to estimate the necessary distributions (or regressions) with
+sufficient certainty (e.g., Equation (\ref{eq:6})). However, we want
+to emphasize that, even if calculating a causal effect might be in
+some cases impossible, drawing a causal graph at the beginning of an
+analysis offers tremendous benefits in terms of organization and
+communication of the hypotheses being tested. Investing time to reason
+about the functional structure of our problem at the outset can save
+us time in the long term, forcing us to clarify our thinking early,
+expose potential challenges, and identify intractable approaches.
 
 Additionally, once the causal graph is drawn, we can use it as a
 communication tool and include it in presentations, papers, and
@@ -671,7 +672,9 @@ graph. This example also moves beyond the toy example of Section
 \ref{sec:causal-graphs-pearls}, and demonstrates causal graphs'
 applicability to real problems in Earth science.
 
-\subsection{An example from our past}
+\subsection{A real Example: Measuring The Impact of Microphysical Rain
+  Regime on Orographic Enchancement of Precipitation (Alternative: An
+  example from our past)}
 
 In \citet{massmann2017}, the lead author of this manuscript
 participated in a field campaign designed to study the impact of
@@ -696,7 +699,8 @@ conditions clearly communicates our assumptions about the system
   \label{fig:ccope}
 \end{figure}
 
-Many of the variables in the graph are quite general
+Many of the variables in the graph, such as ``synoptic forcing'',
+``wind'', and ``orographic flow'', are quite general
 quantities. Keeping quantities general can lead to more intuitive and
 interpretable graphs by limiting the number of details and nodes that
 one must store in their mind. However, if logic needs clarifying, the
@@ -708,30 +712,30 @@ like plates \citep{bishop2006pattern}, which are particularly well
 suited to representing repeated structure common to spatiotemporal
 systems.
 
-While the exact details of the graph are not as important for this
-example case (e.g., ``wind'', ``stability'', and ``atmospheric
-moisture'' all refer to upwind conditions, and we assume that these
-upwind conditions are the relevant ``boundary condition'' for the
-downwind orographic clouds and precipitation), what is important is
-that the field campaign's effect of interest, rain regime on
-orographic enhancement, is identifiable from the field campaign's
-observations. This is subject to the assumptions encoded in the graph,
-but those assumptions are explicitly represented and communicated with
-the graph. The causal graph helps interpret the field campaign's
-results, and in some sense proves (or could disprove) that the design of the field
-campaign is sound.
+While the exact details of the graph and the assumptions it encodes
+(e.g., ``wind'', ``stability'', and ``atmospheric moisture'' all refer
+to upwind conditions, and we assume that these upwind conditions are
+the relevant ``boundary condition'' for the downwind orographic clouds
+and precipitation) are interesting, a particularly noteworthy feature
+of the graph is that the field campaign's effect of interest, rain
+regime on orographic enhancement, is identifiable from the field
+campaign's observations. This is subject to the assumptions encoded in
+the graph, but those assumptions are explicitly represented and
+communicated by the graph. The causal graph helps interpret the field
+campaign's results, and in some sense proves (or could disprove) that
+the design of the field campaign is sound.
 
 For field campaigns, causal graphs are particularly useful at the
 planning and proposal stage. Such a causal graph could be included in
 any field campaign proposal, improving communication about the system
 and also rigorously justifying the campaign’s observations as
 necessary for calculating the desired effect(s). Even before the
-proposal, one could start with a causal graph, and then analyze the
-causal graph to determine which observations are needed to meet the
-campaign’s goals. Building on this idea, one could attach costs
-associated with observing each variable in the graph, and
-automatically determine the set of observations that minimizes cost
-while still allowing us to calculate our effect(s) of interest.
+proposal, one could start with a causal graph, and then analyze it to
+determine which observations are needed to meet the campaign’s
+goals. Building on this idea, one could attach costs associated with
+observing each variable in the graph, and automatically determine the
+set of observations that minimizes cost while still allowing us to
+calculate our effect(s) of interest.
 
 While this is just one example, it demonstrates that causal graphs are
 useful beyond toy problems in the Earth system. Additionally, as we
@@ -746,11 +750,16 @@ clarify our analysis and its assumptions.
   problems in generic Earth systems}
 \label{sec:necess-cond-caus}
 
-So far we have focused on toy (Section \ref{sec:causal-graphs-pearls})
-and very specific (Section \ref{sec:causal-graphs-as}) examples. We
-now turn our attention to more general and generic problems in Earth
-science systems, the common challenges we may encounter when
-attempting causal inference, and how we can overcome these challenges.
+(Remove?: So far we have focused on toy (Section
+\ref{sec:causal-graphs-pearls}) and very specific (Section
+\ref{sec:causal-graphs-as}) examples). We now turn our attention to
+more general and generic problems in Earth science systems, the common
+challenges we may encounter when attempting causal inference, and how
+we can overcome these challenges. (Alternative: We now turn our
+attention to more general and generic problems in Earth science
+systems. In particular, we will investigate common challenges that one
+may encounter in practice when attempting to perform causal inference
+when some variables are unobserved.)
 
 Earth science systems are (typically) dynamical systems evolving
 through time according to an underlying system state
@@ -766,8 +775,12 @@ algorithms as well (see \citet{runge2019inferring} for a detailed
 review).
 
 Causal identification and tractable causal inference in Earth science
-requires assumptions about the unobserved portions of the state
-space. Without such assumptions the unobserved portions of the state
+requires assumptions about the unobserved portions of the state space
+and how these unobserved portions of the state space affect observed
+variables. (Alternative: Causal identification and tractable causal
+inference in Earth science requires assumptions about the underlying
+system and how unobserved portions of the state affect the observed
+ones.) Without such assumptions the unobserved portions of the state
 space will introduce confounding for any causal affect of interest
 (Figure \ref{fig:generic}a). For example, we generally do not observe
 the state space at every time (e.g. $S(t-1/2)$, Figure
@@ -1055,20 +1068,21 @@ that could benefit the Earth system research community. For example,
 there are techniques for representing variables observed under
 selection bias in the causal graph and analyzing whether a causal
 effect can be calculated (i.e. identified) given selection bias
-\citep[e.g.,][]{bareinboim2014recovering}. Selection bias is very
-relevant in Earth sciences. For example, satellite observations are
-almost always collected under selection bias (e.g. clouds obscure
-surface data and they sample at certain local times of the day which
-is connected to top of atmosphere solar forcing). Additionally,
-transportability \citep[e.g.,][]{bareinboim2012transportability}
+\citep[e.g.,][]{bareinboim2014recovering,correa2018generalized}. Selection
+bias is very relevant in Earth sciences. For example, satellite
+observations are almost always collected under selection bias
+(e.g. clouds obscure surface data and they sample at certain local
+times of the day which is connected to top of atmosphere solar
+forcing). Additionally, transportability
+\citep[e.g.,][]{bareinboim2012transportability,Bareinboim7345,lee2019general}
 identifies whether one can calculate a causal effect in a passively
 observed target domain, by merging experiments from source domains
 that may differ from the target domain. A potential application for
 transportability in earth sciences would be to merge numerical model
-experiments (e.g., Earth system models) and
-formally transport their results to the real world. In this case,
-numerical models are the source domains that differ from the target
-domain (``real world'') due to approximations.
+experiments (e.g., Earth system models) and formally transport their
+results to the real world. In this case, numerical models are the
+source domains that differ from the target domain (``real world'') due
+to approximations and different resolutions.
 
 However, because of the speed and scope of this recent growth in
 causal theory, applied domains lag in establishing these recent
