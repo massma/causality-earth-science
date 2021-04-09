@@ -746,8 +746,7 @@ first step in their next project; they help structure, organize, and
 clarify our analysis and its assumptions.
 
 
-\section{Overcoming unobserved confounding: tractable classes of
-  problems in generic Earth systems}
+\section{Overcoming unobserved confounding and partial observation of Earth system state}
 \label{sec:necess-cond-caus}
 
 (Remove?: So far we have focused on toy (Section
@@ -795,10 +794,48 @@ $t$ on some variable at time $t+1$ (e.g., $E$ in Figure
 \ref{fig:generic}a), then the causal effect will be confounded by the
 unobserved portions of the state space, and calculating a causal
 effect is impossible (un-identifiable) without additional
-assumptions. We will apply causal graph theory to identify the
-additional assumptions that would make the calculations of causal
-effects tractable, and may be reasonable in many Earth science
-situations.
+assumptions.
+
+What are some assumptions or scenarios that allow us to overcome this
+problem of unobserved confounding due to partial observation of the
+state space? There are several classes of assumptions we can make that
+may be reasonable for many generic scenarios in Earth science:
+
+% reformulate this as table, with columns: assumption, graph,
+% identification formula, commentary, test.
+
+\begin{itemize}
+\item The simplest assumptions is that \textbf{we observe all state
+    variables that impact our effect(s) of interest} (Fig ??). While
+  we may not observe the entire state of the system, we sometimes may
+  observe the portion of the state space that affects our specific
+  variable of interst. In this case, we can calculate the causal
+  effect of any observation on our effect, by blocking backdoor paths
+  with the observed portion of the state space. (insert
+  regression/equation?).
+\item While we may not observe the entire state space, \textbf{in some
+    cases we may be able to reconstruct the state at any given time
+    using lagged observations of the system} \citep[see Takens'
+  theorem,][]{takens1981detecting}. In this case, we can examine the
+  impact of changes in reconstructed state on any future variable of
+  interest, or also use the reconstructed state to block backdoor
+  paths and examine the effect of individual variables on future
+  variables (Figure ??). A good check to determine if we were
+  successful in reconstructign the state space is to test whether the
+  observed variables are conditionally independent, given the
+  reconstructed state variable. This approach bears similarity to the
+  deconfounder approach introduced by \cite{yixin-2019}, which argues
+  that causal effects can be calculated for any problem where we can
+  infer a latent variable that renders the causes conditionally
+  independent.
+\item In some cases, we may assume that \textbf{our cause of interest
+    may be independent of the systems' state evolution} (Figure
+  ??). While not generally true, in some cases a variable may behave
+  independent of the system's state while still causally affecting
+  that state. For example, some human behavior may be approximated as
+  independent fo the climate state (e.g., city planning and land use
+  decisions).
+\end{itemize}
 
 \begin{figure} \input{figs/generic-graph.tex}
   \caption{Generic graphs of the Earth system state sequence, limited
@@ -826,197 +863,11 @@ situations.
   \label{fig:generic}
 \end{figure}
 
-\subsection{Reconstruction of the state space with time
-  lagged observations}
-\label{sec:stat-reconstr-state}
-
-% because the state at time $t$ determines the future of
-% all processes in the system,
-
-Takens' theorem states that we can reconstruct the unobserved portion
-of the state space of a deterministic dynamical system using a finite
-set of lagged observations back in time
-\citep{takens1981detecting,deyle2011generalized,Sugihara496}. If we
-can reconstruct the state at any given time, the graph reduces to a
-simple chain: the state at time $t$ causally affects any future
-process at time $> t$ (Figure \ref{fig:generic}b). With this reconstructed
-state, there are no longer any unobserved portions of the state space
-introducing confounding, and we can calculate the causal effect of any
-reconstructed state on any future variable or process. The primary
-advantages of this approach is that it is the minimum assumption
-required to calculate a causal effect in the generic Earth system
-graph proposed in Figure \ref{fig:generic}a (i.e., we do not need to
-assume anything about the relationship between the unobserved portions
-of the state space and the effect). However this simplification comes
-at a cost: we can only examine the effect of different global states
-on future variables, and we cannot examine the causal effect of a
-specific variable (e.g. $C(t)$) on another (e.g. $E(t+1)$), because
-the mapping from individual observations to a state space
-reconstruction transforms the individual observation's importance to
-additionally include the unknowable and unobserved portions of the
-state space. So, an intervention on any individual observation is of
-ambiguous meaning (e.g. we do not know what are the unobserved
-variables we are intervening on). Instead, we limit ourselves to only
-examining the causal effect of changes in the entire state
-holistically. Additionally, this approach requires a shift in
-interpretation from the relatively straightforward interventions on
-observable variables we have considered thus far to one where we
-intervene on the entire state.
-
-For example, consider that we reconstructed our state space from
-available observations, and this reconstruction reduced to a discrete
-state space of $N$ states, with associated mappings onto the
-observations at time $\leq t$. If we are interested in the effect of a
-change in state at time $t$ on a process at time $t+1$, for example a
-change from state $1$ to state $2$, this corresponds to an
-intervention on the \textit{entire state space at time $t$}. This
-includes the unobserved portions of the state space. So, the
-intervention no longer consists of just intervening on the observed
-variables to change them from observations consistent with state $1$
-to state $2$, but instead intervening on the observed variables
-\emph{and all unobserved variables consistent with the system and
-  changes from state $1$ to $2$.}  Conceptualizing unknowable changes
-in unobserved variables represents a significant barrier to
-interpretation, and motivates the exploration of stronger assumptions
-that result in a clearer interpretation (see Section
-\ref{sec:miss-temp-observ}, \ref{sec:observ-port-state}, \ref{human}).
-
-\subsection{Missing temporal observations induce independent random
-  variations in cause and effect}
-\label{sec:miss-temp-observ}
-
-If we can assume that the missing temporal observations
-(e.g. $S(t-1/2)$ in Figure \ref{fig:generic}a) induce independent
-random variations in the cause and effect, conditional on $S(t-1)$,
-then the causal graph reduces to Figure \ref{fig:generic}c. In this
-case, if we can reconstruct the state space at time $t-1$ using lagged
-observations at time $t'$ $\leq t-1$, then we can block all backdoor
-paths between our cause $C(t)$ and any future effect $E(t+1)$. In this
-case, the causal effect would be calculated as:
-
-\begin{equation} P(E(t+1)| do(C(t)=c)) = \int_{S(t-1)} P(E(t+1) \, |
-  \, C(t)=c, S(t-1) = s )\; P(S(t-1)=s) \, d s,
-\end{equation}
-
-where $S(t-1)$ is reconstructed from time lags of observations at
-times $\leq t-1$. From the graph it may appear that we could also
-block backdoor paths by conditioning on $S'(t)$. However, under these
-assumptions $S'(t)$ is incalculable because if we attempt to
-reconstruct $S'(t)$ using lagged observations of the state space, the
-reconstruction will estimate $S$ rather than $S'$, which includes
-$C(t)$ because $C$ is a part of the state space. So, a portion of the
-cause's role in the system's evolution will be falsely incorporated
-into the reconstruction of the state space, and our causal effect will
-be biased.
-
-The assumption that missing temporal observations induce independent
-random variations in the cause and effect is required because
-otherwise there would be an open backdoor path between the cause and
-effect through the unobserved time slice (e.g. at time $t-1/2$ in
-Figure \ref{fig:generic}a). Relative to Section
-\ref{sec:stat-reconstr-state}, the advantage of this approach to
-causal inference is that we can calculate the causal effects of
-individual observations (e.g, $C(t)$ on $E(t+1)$), rather than needing
-to interpret the causal impact of the entire state holistically (e.g.,
-$S(t)$ on $E(t+1)$). However, this approach requires an additional
-assumption that the missing temporal observations do not induce
-dependencies between the cause and effect of interest. As with Section
-\ref{sec:stat-reconstr-state}, we must be able to reconstruct the
-state space, which may not always be possible (especially for high
-dimensional systems that are common in Earth science), and may also
-confuse interpretation.
-
-
-\subsection{The unobserved portion of the state space does not affect
-  the effect}
-\label{sec:observ-port-state}
-
-If we assume that we observe all portions of the state space that
-affect the effect, then we can calculate the effect of any state
-variable on future processes. In this case, the graph is as in Figure
-\ref{fig:generic}c, but $S'(t)$ corresponds to all observations at
-time $t$ not including $C$, and so can be used to block all backdoor
-paths. If we can assume that there are no interactions between
-observations at time $t$ then we can calculate the causal effect of
-$C(t)$ on $E(t+1)$ as:
-
-\begin{equation} P(E(t+1)| do(C(t)=c)) = \int_{S'(t)} P(E(t+1) \, | \,
-  C(t)=c, S'(t) = s )\; P(S'(t-1)=s) \, d \, s,
-\end{equation}
-
-where $S'(t)$ are all observations at time $t$, not including the
-cause $C(t)$. However, when blocking backdoor paths with simultaneous
-observations it is important to consider whether there are
-interactions between observations at time $t$, and whether the
-observations are truly simultaneous. Whether there can be interactions
-between observations is a function of the temporal and spatial
-extent/averaging of the observations. If observations are
-instantaneous point observations indexed in time, then interactions
-between them can likely be ignored. However, often the spatial and/or
-temporal extents of observations overlap, and in this case an
-assumption of zero interactions between observations is more difficult
-to justified. Yet, in this case, we can still block backdoor paths by
-conditioning on past observations ($S(t-1)$):
-
-\begin{equation} P(E(t+1)| do(C(t)=c)) = \int_{S(t-1)} P(E(t+1) \, |
-  \, C(t)=c, S(t-1) = s )\; P(S(t-1)=s) \, d \, s.
-\end{equation}
-
-Importantly, the assumption that we observe all variables relevant to
-an effect is a strong assumption. However, it provides significant
-benefits both in terms of the statistical complexity of estimating the
-causal effect, as well as in interpretation of the causal effect. We
-do not need to reconstruct the state space using lagged observations,
-which can be a statistically and computationally challenging
-problem. Additionally, the assumption that we observe everything
-relevant to the effect is much easier to interpret relative to an
-assumption about the degree to which we can (or cannot) reconstruct
-the relevant state space with lagged observations.
-
-\subsection{Applications at the human-Earth system interface: when the
-  cause is approximately independent of the system.}
-\label{human}
-
-Causal inference becomes substantially more tractable under an
-assumption that our causes of interest are independent from the
-evolution of the state space (Figure \ref{fig:forcing}). While such a
-assumption may seem strong due to many feedbacks within
-the Earth system, recent examples suggest that this
-assumption may be applicable to some situations. For example,
-coordinated global human response to global warming is relatively
-independent of the climate state \citep{arto2014drivers}. Instances of
-reduced rises in global green house gas emissions are usually due to
-global economic recession (e.g. the 2008 financial crisis) or pandemic
-\citep[COVID-19 crisis,][]{le2020temporary, liu2020near} rather than
-factors directly tied to the climate state.
-
 \begin{figure} \includegraphics[]{forcing-graph.pdf}
   \caption{A generic graph asserting an assumption that there are
     forcing external to the evolution of the state-space}
   \label{fig:forcing}
 \end{figure}
-
-Generally this logic applies to many systems on the "human-climate"
-interface, such as land-use land-cover change in urban centers where
-urban planning is relatively independent of recent climate
-history. The general graph in Figure \ref{fig:forcing} is applicable
-to any analyses for which: 1) we wish to examine the effect of human
-behavior on the environment, and 2) we can assume human behavior is
-approximately independent of the climate state. Because the climate
-state space does not affect the cause (human behavior), there are no
-unblocked backdoor paths through the unobserved portions of the state
-space. Causal inference is particularly tractable for this class of
-problems.
-
-However, care is still required at the human-climate interface:
-human-based sources of confounding may need to be controlled for
-depending on the cause of interest. For example, CO$_2$ emissions
-decreased during the COVID-19 crisis, but a lot of other human
-behaviors also changed, and these changes must be controlled for
-\citep[e.g., the COVID-19 virus is a common cause to many large
-changes in human behavior in 2020,][]{diffenbaugh2020covid}. This
-example highlights the importance of drawing a bespoke graph for every
-application and rigorously reasoning about the causal structure.
 
 \section{Conclusions}
 
