@@ -37,6 +37,16 @@
   availability, limitations and uncertainties.
 \end{abstract}
 
+\paragraph{Note:} This is a living document. We will update this
+manuscript as our understanding of causality's role in Earth science
+research evolves. Comments, feedback, and edits are enthusiastically
+encouraged, and we will add acknowledgements and/or coauthors as we
+receive community contributions! (to edit the manuscript directly you
+can fork and submit a pull request at
+\url{https://github.com/massma/causality-earth-science}, or you can
+alternatively email us comments and suggestions and we will
+incorporate them).
+
 \section{Introduction}
 
 There is growing interest in the study of causal inference methods in
@@ -142,28 +152,17 @@ causal graph, a domain expert simply draws directed edges
 (i.e. arrows) from variables that are causes to effects. In other
 words, to make a causal graph you draw a diagram summarizing the
 assumed causal links between variables (e.g., Figure
-\ref{fig:toy}A). Causal graphs are useful tools because they can be
+\ref{fig:toy}). Causal graphs are useful tools because they can be
 drawn by domain experts with no required knowledge of maths or
 probability, but they also represent formal mathematical
 objects. Specifically, underlying each causal graph are a set of
 equations called \emph{structural causal models}: each node
-corresponds to a generating function for that variable. Parents are
-the other nodes in the graph that point to a node of interest (e.g.,
-in the most simple graph $X \to Y$; $X$ is a parent of $Y$). So in
-reality, drawing arrows from ``causes'' to ``effects'' is synonymous
-with drawing arrows from function inputs to generating functions. Each
-random variable in the system is model as a node. A directed edge
-(i.e. arrow) is drawn from node A to node B when B is functionally
-dependent on A (i.e., B is directly affected by changes in A). For
-instance, in Figure \ref{fig:toy}A, since the variable sunlight (S)
-responds to variations in the cloud (C), we draw an arrow from C to
-S. The function's inputs are all of the node's parents plus a source
-of exogenous variability (which will be detailed in Section
-\ref{sec:causal-graphs-pearls}). Parents are the other nodes in the
-graph that point to a node of interest (e.g., in the most simple graph
-$X \to Y$; $X$ is a parent of $Y$). So in reality, drawing arrows from
-``causes'' to ``effects'' is synonymous with drawing arrows from
-function inputs to generating functions.
+corresponds to a generating function for that variable, and the inputs
+to that function are the node's parents. Parents are the other nodes
+in the graph that point to a node of interest (e.g., in the most
+simple graph $X \to Y$; $X$ is a parent of $Y$). So in reality,
+drawing arrows from ``causes'' to ``effects'' is synonymous with
+drawing arrows from function inputs to generating functions.
 
 In this way, drawing a causal graph is another way to visualize and
 reason about a complicated system of equations, which is a very useful
@@ -176,14 +175,14 @@ functions a priori \citep[e.g., plant stomata response to
 VPD;][]{massmann2019, zhou2019arid, zhou2019feedback, grossiord2020},
 or some functions are computationally intractable to compute
 \citep[e.g., turbulence, moist convection, and cloud microphysics in
-large scale models;][]{zadra2018,gentine2018}. In these scenarios the benefits of
-causal graphs are fully realized: based on the causal graph we can
-calculate from data, using the \textit{do-}calculus
+large scale models;][]{zadra2018,gentine2018}. In these scenarios the
+benefits of causal graphs are fully realized: based on the causal
+graph we can calculate from data, using the \textit{do-}calculus
 \citep{pearl-1994-do-calculus}, the response of target variables
-(i.e. effects) and to \textit{interventions} on any other variables in
-the graph (i.e. causes). When combined with statistical modelling
-(i.e., regression), one can estimate the functional relationship
-between interventions on causes and effects.
+(i.e. effects) to \textit{interventions} on any other variables in the
+graph (i.e. causes). When combined with statistical modelling (i.e.,
+regression), one can estimate the functional relationship between
+interventions on causes and effects.
 
 By viewing causal graphs through this pragmatic lens of calculating
 the functional form of relationships that we do not know a priori, we
@@ -231,7 +230,7 @@ clarify some of these claims.
 To demonstrate the problem of \textit{confounding} and the necessity
 of causal graphs/\textit{do-}calculus, we use a very simple toy
 example involving clouds, aerosols, and surface solar
-radiation/sunlight. As shown in Figure \ref{fig:toy}A, the causal
+radiation/sunlight. As shown in Figure \ref{fig:toy}, the causal
 graph consists of:
 
 \begin{enumerate}
@@ -306,13 +305,13 @@ we are stating that all other processes not included in the graph
 induce variations in the graph's variables that are \emph{independent} of
 each other (e.g., all $U_{\cdot}$ in Equation (\ref{eq:2}) are
 independent). For example, sources of aerosol variability not
-considered in Figure \ref{fig:toy}A include anthropogenic aerosol
+considered in Figure \ref{fig:toy} include anthropogenic aerosol
 emission, the biosphere, fires, volcanoes,
 etc. \citep[e.g.,][]{Boucher2015}. For cloud, this includes synoptic
 forcing or atmospheric humidity,
 etc. \citep[e.g.,][]{wallace2006atmospheric}. For radiation, this
 includes variability of top of atmosphere radiation,
-etc. \citep[e.g.,][]{hartmann2015global}. Figure \ref{fig:toy}A states
+etc. \citep[e.g.,][]{hartmann2015global}. Figure \ref{fig:toy} states
 that all these external, or \textit{exogenous}, sources of variability
 are independent of each other (in very technical terms, this means the
 graph is ``\textit{Markovian}'').
@@ -354,16 +353,16 @@ the \emph{back-door criterion} \citep{pearl2009} and we can calculate
 unbiased causal effects from data.
 
 Understanding backdoor paths and the backdoor criterion is helped by
-an example. Returning to our toy example (Figure \ref{fig:toy}A), we
+an example. Returning to our toy example (Figure \ref{fig:toy}), we
 attempt to calculate the causal effect of clouds on sunlight. In other
 words, we want to isolate the variability of sunlight due to the
-causal link from cloud to sunlight (Figure \ref{fig:toy}A). However,
+causal link from cloud to sunlight (Figure \ref{fig:toy}). However,
 aerosols affect both cloud and sunlight (i.e., there is a backdoor
 path from cloud to aerosol to sunlight), so if we naively calculate a
 causal effect using correlations between sunlight and cloud, we obtain
 a biased estimate. To demonstrate this, consider simulated cloud,
 aerosol, and sunlight data from a set of underlying equations
-consistent with Figure \ref{fig:toy}A and Equation (\ref{eq:2}):
+consistent with Figure \ref{fig:toy} and Equation (\ref{eq:2}):
 
 
 \begin{align}
@@ -424,8 +423,7 @@ satisfying the backdoor criterion with \textit{adjustment} on aerosol:
 \end{equation} where the \textit{do}-expression ($P(S \, | \, do(C\, = \,c))$) represents the probability of sunlight
 if we did an experiment where we intervened and set cloud to a value
 of our choosing (in this case $c$, which could be ``True'' for the
-presence of a cloud, or ``False'' for no cloud). In the case that observations of aerosols are not available (e.g.,
-Figure \ref{fig:toy}B, C), our causal effect is not identifiable and
+presence of a cloud, or ``False'' for no cloud). In the case that observations of aerosols are not available, our causal effect is not identifiable and
 we cannot generally use causal inference no matter how large the
 sample size is of our data.
 
