@@ -1,15 +1,15 @@
 digraph G {
 	sMinus1[label="S(t-1)"];
 
-	f[label="External\nForcing"];
+	f[label="C (or forcing)"];
 	s[label="S(t)"];
 
-	s1[label="S(t+1)"];
+	e[label="E(t+1)"];
 
 	sMinus1 -> s;
 
 	f -> s;
-        f -> s1;
-	s -> s1;
+        f -> e;
+	s -> e;
 
 }

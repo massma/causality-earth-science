@@ -54,7 +54,15 @@ figPath = ("doc" </>) . ("figs" </>)
 
 main :: IO ()
 main = shakeArgs shakeOptions {shakeFiles = "_build"} $ do
-  let dotFigs = fmap (figPath . (<.> "pdf")) ["forcing-graph", "ccope"]
+  let dotFigs =
+        fmap
+          (figPath . (<.> "pdf"))
+          [ "forcing-graph",
+            "ccope",
+            "observe-everything",
+            "reconstruction",
+            "cloud-aerosol"
+          ]
 
   let figs =
         fmap (figPath . (<.> "pdf")) ["naiveCloudSunlight", "aerosolSunlight"]

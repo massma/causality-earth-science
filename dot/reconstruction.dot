@@ -1,7 +1,13 @@
 digraph G {
-	s[label="S(t)"];
+	s[label="S'(t-1)"];
+        c[label="C(t)"];
+        o[label="O(t)"];
 	e[label="E(t+1)"];
 
-	s -> e;
+	s -> c;
+        s -> o;
+        c -> e;
+        o -> e;
+        s -> e;
 
 }

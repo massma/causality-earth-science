@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage{float}
 \input{def}
 \graphicspath{{figs/}}
 
@@ -44,7 +45,7 @@ the Earth sciences \citep[e.g.,][]{salvucci2002, ebert-uphoff2012,
   samarasinghe2020,runge-causal-timeseries,runge2019inferring,goodwell-causality-2020}. However,
 most of this work focuses on causal discovery, or the inference (using
 data) of causal structure: ``links'' and directions between
-variables. In many cases, causal discovery can be used to estimate the
+variables. In some cases, causal discovery can be used to estimate the
 structure of a causal graph and the relationships between variables
 when the graph is not known a priori. However in many if not most
 Earth system applications, the causal graph is already known based on
@@ -56,11 +57,12 @@ This paper looks at causality through a different, but complementary,
 lens and examines how assumed causal graphs \citep{pearl1995causal}, a
 fundamental from causal theory, can be used to clarify assumptions,
 identify tractable problems, and aid interpretation of results in
-Earth science research. Our goal is to distill the basics of the
-graphical approach to causality \citep{olah2017} in a way that is
-relatable for Earth scientists, hopefully motivating more widespread
-use and adoption of causal graphs to organize analyses and communicate
-assumptions. These tools are relevant now more than ever, as the
+Earth science research. Our goal is to distill
+\citep[e.g.,][]{olah2017} the basics of the graphical approach to
+causality in a way that is relatable for Earth scientists,
+\textbf{hopefully motivating more widespread use and adoption of
+  causal graphs to organize analyses and communicate
+  assumptions}. These tools are relevant now more than ever, as the
 abundance of new data and novel analysis methods have inevitably led
 to more opaque results and barriers to the communication of
 assumptions.
@@ -104,9 +106,8 @@ paper is divided into the following sections:
   can be used to isolate the functional mapping between interventions
   on some variable(s) to their effect on other variable(s).
 \item Section \ref{sec:causal-graphs-as}: We draw on a past example
-  from our own research that benefits from inclusion of a causal
-  graph, in terms of communicating assumptions, and organizing and
-  justifying analyses.
+  that benefits from inclusion of a causal graph, in terms of
+  communicating assumptions, and organizing and justifying analyses.
 \item Section \ref{sec:necess-cond-caus}: We turn to more generic
   examples of graphs that are generally consistent with a wide variety
   of systems in Earth science, to highlight some of the difficulties
@@ -128,11 +129,18 @@ perspective because we believe causal graphs are useful in Earth
 science, rather than because of any particular philosophical argument
 for causal graphs as the ``true'' representation of causality.
 
+\begin{figure} \includegraphics[]{cloud-aerosol.pdf}
+  \caption{A toy graph example to demonstrate basic causal theory,
+    involving cloud (C), aerosol (A), and surface solar radiation
+    (S).}
+  \label{fig:toy}
+\end{figure}
+
 Causal graphs are Directed Acyclic Graphs (\emph{DAG}s) that encode
-our assumptions our assumptions about the causal dependencies of a
-system. To make a causal graph, a domain expert simply draws directed
-edges (i.e. arrows) from variables that are causes to effects. In
-other words, to make a causal graph you draw a diagram summarizing the
+our assumptions about the causal dependencies of a system. To make a
+causal graph, a domain expert simply draws directed edges
+(i.e. arrows) from variables that are causes to effects. In other
+words, to make a causal graph you draw a diagram summarizing the
 assumed causal links between variables (e.g., Figure
 \ref{fig:toy}A). Causal graphs are useful tools because they can be
 drawn by domain experts with no required knowledge of maths or
@@ -219,30 +227,6 @@ clarify some of these claims.
 \label{sec:causal-graphs-pearls}
 % intro causal graphs}
 
-\begin{figure}
-  % % consider \noindent\include... [width=0.75\textwidth]...
-  % \includegraphics[height=0.4\textheight]{cloud-aerosol-bidirected.pdf}\\
-  \scalebox{1.0}{\input{figs/cloud-aerosol.tex}}
-  \caption{A toy graph example to demonstrate basic causal theory,
-    involving cloud (C), aerosol (A), and surface solar radiation
-    (S). In \textbf{A)} we observe all variables, while in \textbf{B)}
-    we do not observe aerosol and we use the semantic of a dashed node
-    to denote the unobserved variable. \textbf{C)} presents an
-    alternative notation for representing an unobserved or hidden
-    common cause that is popular in causal literature \citep[e.g.,
-    ``semi-Markovian graphs'',][]{shpitser2006}. When using this
-    notation it is common practice to only include observed processes
-    as nodes in the graph. However in the Earth Science we often
-    observe much less of the system relative to our knowledge of
-    causal dependencies in the system, so we find it more conceptually
-    clear to include unobserved common causes explicitly in the graph,
-    and prefer the notation in \textbf{B)} to \textbf{C)}). Any
-    semi-Markovian graph, which is a graph with bi-directed dashed
-    arrows representing hidden common causes (as in \textbf{C)})), can
-    be represented as a graph with unobserved nodes (as in
-    \textbf{B)})), and vice-versa \citep[e.g.,][]{lee2019structural}.}
-  \label{fig:toy}
-\end{figure}
 
 To demonstrate the problem of \textit{confounding} and the necessity
 of causal graphs/\textit{do-}calculus, we use a very simple toy
@@ -796,52 +780,9 @@ unobserved portions of the state space, and calculating a causal
 effect is impossible (un-identifiable) without additional
 assumptions.
 
-What are some assumptions or scenarios that allow us to overcome this
-problem of unobserved confounding due to partial observation of the
-state space? There are several classes of assumptions we can make that
-may be reasonable for many generic scenarios in Earth science:
-
-% reformulate this as table, with columns: assumption, graph,
-% identification formula, commentary, test.
-
-\begin{itemize}
-\item The simplest assumptions is that \textbf{we observe all state
-    variables that impact our effect(s) of interest} (Fig ??). While
-  we may not observe the entire state of the system, we sometimes may
-  observe the portion of the state space that affects our specific
-  variable of interst. In this case, we can calculate the causal
-  effect of any observation on our effect, by blocking backdoor paths
-  with the observed portion of the state space. (insert
-  regression/equation?).
-\item While we may not observe the entire state space, \textbf{in some
-    cases we may be able to reconstruct the state at any given time
-    using lagged observations of the system} \citep[see Takens'
-  theorem,][]{takens1981detecting}. In this case, we can examine the
-  impact of changes in reconstructed state on any future variable of
-  interest, or also use the reconstructed state to block backdoor
-  paths and examine the effect of individual variables on future
-  variables (Figure ??). A good check to determine if we were
-  successful in reconstructign the state space is to test whether the
-  observed variables are conditionally independent, given the
-  reconstructed state variable. This approach bears similarity to the
-  deconfounder approach introduced by \cite{yixin-2019}, which argues
-  that causal effects can be calculated for any problem where we can
-  infer a latent variable that renders the causes conditionally
-  independent.
-\item In some cases, we may assume that \textbf{our cause of interest
-    may be independent of the systems' state evolution} (Figure
-  ??). While not generally true, in some cases a variable may behave
-  independent of the system's state while still causally affecting
-  that state. For example, some human behavior may be approximated as
-  independent fo the climate state (e.g., city planning and land use
-  decisions).
-\end{itemize}
-
 \begin{figure} \input{figs/generic-graph.tex}
-  \caption{Generic graphs of the Earth system state sequence, limited
-    to a 3 time-step sequence subset of the infinite
-    sequence. Unobserved nodes are outlined by dashed
-    lines. \textbf{A):} The Earth system, partially observed: we only
+  \caption{A generic graph of the Earth system state
+    sequence. Unobserved nodes are outlined by dashed lines. We only
     observe the state space at certain times (e.g., no observations at
     $S(t-1/2)$), and at times with observations, we only partially
     observe the full state ($S(t)$, $S(t-1)$). In the scenario that we
@@ -849,25 +790,145 @@ may be reasonable for many generic scenarios in Earth science:
     the state space at time $t$ on some effect ($E$) at time $t+1$,
     the causal effect will be confounded by the unobserved portions of
     the state space, and calculating the causal effect is impossible
-    (un-identifiable) without additional assumptions. \textbf{B):} The
-    reduction of the Earth system graph under an assumption that we
-    can reconstruct the state $S(t)$ from the observable portions of
-    the state space at lagged times $< t$ (see Section
-    \ref{sec:stat-reconstr-state}). \textbf{C):} The reduction of the
-    Earth system graph under an assumption that missing temporal
-    observations (e.g. $S(t-1/2)$ in \textbf{A)}) induce independent
-    random variations in the cause ($C(t)$) and effect
-    ($E(t+1)$). $S'(t)$ denotes the state space, not including the
-    cause $C(t)$ (see Sections
-    \ref{sec:miss-temp-observ},\ref{sec:observ-port-state}).}
+    (un-identifiable) without additional assumptions.}
   \label{fig:generic}
 \end{figure}
 
+What are some assumptions or scenarios that allow us to overcome this
+problem of unobserved confounding due to partial observation of the
+state space? There are several assumptions we can make that may be
+reasonable for many generic scenarios in Earth science, which we
+elaborate upon below. For each assumption, we draw a graph, elaborate
+on the identification formula and how average effects can be estimated
+(for example, using regression to esimtate $\mathbb{E}(\cdot )$), and
+include some strategies for testing the assumption with data.
+
+% reformulate this as table, with columns: assumption, graph,
+% identification formula, commentary, check.
+\paragraph{Assumption: we observe all state variables that impact our effect(s) of interest}
+
+\begin{figure}[H]
+  \includegraphics[]{observe-everything.pdf}
+  \caption{A generic graph for the assumption that we observe all
+    state variables that impact our effect(s) of interest. $C(t)$ is
+    the cause of interest, $E(t+1)$ is the future effect of interest,
+    and $O(t)$ are all observations not including $C(t)$. The full
+    state $S(t-1)$ is not observed (dashed node).}
+  \label{fig:observe-everything}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{Graph:} Figure \ref{fig:observe-everything}.
+\item \textbf{Commentary:} While we may not observe the entire state
+  of the system, we somtimes may assume that we observe the portion of
+  the state space that affects our specific variable of interst. In
+  this case, we can calculate causal effects by blocking backdoor
+  paths with the observed portion of the state space.
+\item \textbf{Identification formula:}
+  \begin{equation*}
+    P(E(t+1) \, | \, do(C(t) = c)) = \int_{o} P(E(t+1) \, | \, C(t) = c,
+    O(t) = o) \, P(O(t)=o) \; d o,
+  \end{equation*}
+\item \textbf{Average causal effect:}
+  \begin{equation*}
+    \mathbb{E}(E(t+1) \, | \, do(C(t) = c)) \approx \frac{1}{n}
+    \sum_{i=1}^n \mathbb{E}(E(t+1) \, | \, C(t)=c, O(t)=o_i),
+  \end{equation*}
+  where $C(t)$ is the cause of interest, $E(t+1)$ is the effect of
+  interest, and $O(t)$ are all observed variables.
+\item \textbf{Check:} There is no way to check this assumption with
+  data. Therefore, this assumption requires strong physical
+  justification well supported by the literature. Care is also
+  required to insure that there are no interactions between $C(t)$ and
+  $O(t)$; e.g., the observations at a given time are truly
+  ``simultaneous'' and cannot causally affect each other.
+\end{itemize}
+
+\newpage
+
+\paragraph{Assumption: We can reconstruct the state at any given time
+  using lagged observations of the system}
+
+\begin{figure} \includegraphics[]{reconstruction.pdf}
+  \caption{A generic graph for the assumption that we can reconstruct
+    the state at any given time using lagged observations of the
+    system (S' is the reconstructed state).}
+  \label{fig:reconstruction}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{Graph:} Figure \ref{fig:reconstruction}.
+\item \textbf{Commentary:} While we may not observe the entire state
+  space, in some cases we may be able to reconstruct the state at any
+  given time using lagged observations of the system \citep[see
+  Takens' theorem,][]{takens1981detecting}. In this case, we can
+  examine the impact of changes in reconstructed state on any future
+  variable of interest, or also use the reconstructed state to block
+  backdoor paths and examine the effect of individual variables on
+  future variables.
+\item \textbf{Identification formula:}
+  \begin{equation*}
+    P(E(t+1) \, | \, do(C(t) = c)) = \int_{s} P(E(t+1) \, | \, C(t) = c,
+    S'(t-1) = s) \, P(S'(t-1)=s) \; d s.
+  \end{equation*}
+\item \textbf{Average causal effect:}
+  \begin{equation*}
+    \mathbb{E}(E(t+1) \, | \, do(C(t) = c)) \approx \frac{1}{n}
+    \sum_{i=1}^n \mathbb{E}(E(t+1) \, | \, C(t)=c, S'(t-1)=s_i),
+  \end{equation*}
+  where $C(t)$ is the cause of interest, $E(t+1)$ is the effect of
+  interest, and $S'(t-1)$ is the reconstructed state using lagged
+  observations.
+\item \textbf{Check:} A good check to determine if we were successful
+  in reconstructign the state space is to test whether the observed
+  variables are conditionally independent, given the reconstructed
+  state variable. This approach bears similarity to the deconfounder
+  approach introduced by \cite{yixin-2019}, which argues that causal
+  effects can be calculated for any problem where we can infer a
+  latent variable that renders the causes conditionally
+  independent.
+\end{itemize}
+
+\newpage
+
+\paragraph{Assumption: the cause of interest may be independent of the
+  systems' state evolution}
+
 \begin{figure} \includegraphics[]{forcing-graph.pdf}
   \caption{A generic graph asserting an assumption that there are
-    forcing external to the evolution of the state-space}
+    forcings external to the evolution of the state-space.}
   \label{fig:forcing}
 \end{figure}
+
+\begin{itemize}
+\item \textbf{Graph:} Figure \ref{fig:forcing}
+\item \textbf{Commentary:} In some cases, we may assume that
+  \textbf{the cause of interest is independent of the systems' state
+    evolution}. While not generally true, in some cases a variable may
+  behave independent of the system's state while still causally
+  affecting that state. For example, some human behavior may be
+  approximated as independent of the climate state (e.g., city
+  planning and land use decisions).
+\item \textbf{Identification formula:}
+  \begin{equation*}
+    P(E(t+1) \, | \, do(C = c)) = P(E(t+1) \, | \, C = c)
+  \end{equation*}
+\item \textbf{Average causal effect:}
+  \begin{equation*}
+    \mathbb{E}(E(t+1) \, | \, do(C = c)) = \mathbb{E}(E(t+1) \, | \, C=c)
+  \end{equation*}
+\item \textbf{Check:} To check this assumption, we can test if the
+  cause/forcing is independent of the past state. If the cause is
+  independent of the past state, we have stronger confidence that the
+  assumption holds.
+\end{itemize}
+
+While this list is certainly not exhaustive,
+it presents some promising approaches that may apply to many
+scenarios. Also while the provided checks present some strategies that
+might indentify when assumptions break down, there is no general way
+to ``validate'' assumptions using data. Phsyical and science-based
+justification and reasoning are ultimately always required.
 
 \section{Conclusions}
 
