@@ -5,11 +5,11 @@ digraph G {
 	advectionTimescale[label="advection\ntimescale", style="dashed"];
 	rainRegime[label="rain regime", shape="invhouse"];
 	orographicEnhancement[label="orographic\nenhancement", shape="house"];
-	stability[label="stability"];
-	wind[label="wind"];
-	aerosols[label="aerosols"];
+	stability[label="stability", style="filled"];
+	wind[label="wind", style="filled"];
+	aerosols[label="aerosols", style="filled"];
 	terrain[label="terrain"];
-	columnWater[label="atmospheric\nmoisture"];
+	columnWater[label="atmospheric\nmoisture", style="filled"];
 
 
 	aerosols -> rainRegime;

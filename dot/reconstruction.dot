@@ -1,5 +1,5 @@
 digraph G {
-	s[label="S'(t-1)"];
+	s[label="S'(t-1)", style="filled"];
         c[label="C(t)"];
         o[label="O(t)"];
 	e[label="E(t+1)"];

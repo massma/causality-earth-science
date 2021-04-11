@@ -1,8 +1,8 @@
 digraph G {
 	sMinus1[label="S(t-1)", style="dashed"];
 
-	o[label="O(t)"];
 	c[label="C(t)"];
+	o[label="O(t)", style="filled"];
 
 	e[label="E(t+1)"];
 
