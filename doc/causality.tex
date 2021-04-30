@@ -184,7 +184,7 @@ graph we can calculate from data, using the \textit{do-}calculus
 (i.e. effects) to \textit{interventions} on any other variables in the
 graph (i.e. causes). When combined with statistical modeling (i.e.,
 regression), one can estimate the functional relationship between
-interventions on causes and effects.
+interventions on causes and effects (\textbf{CITE REGRESSION PAPERS}).
 
 By viewing causal graphs through this pragmatic lens of calculating
 the functional form of relationships that we do not know a priori, we
@@ -290,7 +290,7 @@ that generate each variable in the graph from their parents and
 corresponding $U$.
 
 The presence of the random variables $U$ introduces a third meaning to
-the causal graph: they induce a specific factorization of the joint
+the causal graph: they induce a factorization of the joint
 distribution between variables into conditional and marginal factors:
 \begin{equation}
   P(A, C, S) = P(S \, | \,C, A) \, P(C \, | \, A) \, P(A),
@@ -314,8 +314,8 @@ etc. \citep[e.g.,][]{wallace2006atmospheric}. For radiation, this
 includes variability of top of atmosphere radiation,
 etc. \citep[e.g.,][]{hartmann2015global}. Figure \ref{fig:toy} states
 that all these external, or \textit{exogenous}, sources of variability
-are independent of each other (in very technical terms, this means the
-graph is ``\textit{Markovian}'').
+are independent of each other \citep[in very technical terms, this means the
+graph is ``\textit{Markovian},''][]{pearl2009causality}).
 
 We can now apply causal inference theory
 \citep[e.g.,][]{pearl1995causal,tian2002general,shpitser2006} to the
