@@ -9,7 +9,7 @@
 \title{Causal inference for process understanding in Earth sciences}
 
 \author{Adam Massmann\thanks{Corresponding author:
-    akm2203@columbia.edu}, Pierre Gentine, Jakob Runge, Elias Bareinboim}
+    akm2203@columbia.edu}, Pierre Gentine, Jakob Runge}
 
 \maketitle
 \begin{abstract}
@@ -41,7 +41,7 @@ of causality's role in Earth science research evolves. Comments,
 feedback, and edits are enthusiastically encouraged, and we will add
 acknowledgments and/or coauthors as we receive community
 contributions. To edit the manuscript directly (recommended) you can
-fork and submit a pull request at
+fork the project's repository and submit a pull request at
 \url{https://github.com/massma/causality-earth-science}, or you can
 alternatively email us comments, questions, and suggestions and we
 will try to incorporate them into the manuscript.
@@ -94,7 +94,7 @@ hypothesis testing: generalized functional relationships that were
 inaccessible with traditional tools.
 
 The main contribution of this paper is to demonstrate how causal
-graphs, a fundamental tool of causal inference introduced in Section
+graphs, a fundamental tool of causal inference discussed in Section
 \ref{sec:what-caus-caus}, can be used to communicate assumptions,
 organize analyses and hypotheses, and ultimately improve scientific
 understanding and reproducibility. We want to emphasize that almost
@@ -184,17 +184,18 @@ graph we can calculate from data, using the \textit{do-}calculus
 (i.e. effects) to \textit{interventions} on any other variables in the
 graph (i.e. causes). When combined with statistical modeling (i.e.,
 regression), one can estimate the functional relationship between
-interventions on causes and effects (\textbf{CITE REGRESSION PAPERS}).
+interventions on causes and effects
+\citep{pearl2009,shalizi2013,shi2019adapting,mao2020generative}.
 
 By viewing causal graphs through this pragmatic lens of calculating
 the functional form of relationships that we do not know a priori, we
-simultaneously identify casual graphs' value for Earth scientists
+simultaneously identify causal graphs' value for Earth scientists
 while also side stepping philosophical arguments about the meaning of
 causality. Causal graphs are pragmatic because in the Earth sciences
 we often need to estimate how the system responds to
 \emph{interventions} (prescribed changes to variables of interest, or
-``causes''). For example, for sub-grid physical parameterization in
-Earth system models (e.g., tubulence) we need to estimate the time
+``causes''). For example, sub-grid physical parameterizations in Earth
+system models (e.g., turbulence) require estimates of the time
 tendencies' response to \emph{interventions} on the large scale state
 and environment. We also may desire to calculate experiments: for
 example how changing land cover from forest to grasslands affects (the
@@ -408,7 +409,7 @@ other words, conditional on aerosol, all co-variability between cloud
 and sunlight is only due to the causal effect of cloud on sunlight.
 We can mathematically encode this requirement that we must condition
 on aerosol to isolate the causal effect of cloud on radiation, and
-doing so identifies the causal effect of cloud on sunlight by
+doing so derives the causal effect of cloud on sunlight by
 satisfying the backdoor criterion with \textit{adjustment} on aerosol:
 
 \begin{equation} P(S | do(C = c)) = \int_{a} P(S \, | \, C = c, A=a)
@@ -492,7 +493,8 @@ suitable choice for the regression function
 $\mathbb{E}(S | C=c, A=a_i)$ (Figure \ref{fig:linear}). However, many
 problems in Earth science require non-linear approximation methods
 like neural networks and/or advanced machine learning methods; for
-examples, we refer readers to \citep{bishop2006pattern}.
+examples of such machine learning methods, we refer readers to
+\citep{bishop2006pattern}.
 
 The causal effect of clouds on sunlight as calculated using Equation
 (\ref{eq:6})) (e.g.
@@ -567,16 +569,18 @@ Chapter 8 in][]{pearl2009causality} that do not rely on observing
 variables along the backdoor path, and can be used in some cases where
 observations are not available to satisfy the backdoor criterion (also
 see \citet{tian2002general} for more discussion on sufficient
-conditions for unidentifiability). We focus on the backdoor criterion
-because it is the most fundamental and direct method for adjusting for
-confounding, the most intuitive for an introduction to causality, and
-is the most relevant for the generic temporal systems present in the
-Earth sciences (Figure \ref{fig:generic} in Section
-\ref{sec:necess-cond-caus}). However, causal identification through
-other methods like instrumental variables and the front door criterion
-can also be automated; we refer the reader to
-\citet{pearl2009causality} for further discussion and software tools
-like \url{http://www.dagitty.net/} and
+conditions for unidentifiability). These are examples of how the
+\textit{do-}calculus admits any strategy that frames the response to
+interventions in terms of observed distributions. We focus on the
+backdoor criterion because it is the most fundamental and direct
+method for adjusting for confounding, the most intuitive for an
+introduction to causality, and is the most relevant for the generic
+temporal systems present in the Earth sciences (Figure
+\ref{fig:generic} in Section \ref{sec:necess-cond-caus}). However,
+causal identification through other methods like instrumental
+variables and the front door criterion can also be automated; we refer
+the reader to \citet{pearl2009causality} for further discussion and
+software tools like \url{http://www.dagitty.net/} and
 \url{http://www.causalfusion.net} for interactive exploration.
 
 
@@ -592,15 +596,15 @@ available data. In many cases there are serious challenges due to
 unobserved confounding in generic Earth science problems (Section
 \ref{sec:necess-cond-caus}), and for other cases we may lack enough
 samples, or samples could be too systematically biased, to estimate
-the necessary distributions (or regressions) with sufficient certainty
-(e.g., Equation (\ref{eq:6})). However, we want to emphasize that,
-even if calculating a causal effect might be in some cases impossible,
-drawing a causal graph at the beginning of an analysis still offers
-tremendous benefits in terms of organization and scientific
-communication. Investing time to reason about the functional structure
-of our problem at the outset can save scientists time in the long
-term, forcing us to clarify our thinking early, expose potential
-challenges, and identify intractable approaches.
+the necessary distributions (or regressions; e.g., Equation
+(\ref{eq:6})) with sufficient certainty. However, we want to
+emphasize that even if calculating a causal effect might in some
+cases be impossible, drawing a causal graph at the beginning of an
+analysis still offers tremendous benefits in terms of organization and
+scientific communication. Investing time to reason about the
+functional structure of the problem at the outset can save scientists
+time in the long term, forcing us to clarify our thinking early,
+expose potential challenges, and identify intractable approaches.
 
 Additionally, once the causal graph is drawn, we can use it as a
 communication tool and include it in presentations, papers, and
@@ -645,7 +649,7 @@ conditions clearly communicates our assumptions about the system
     by solid nodes, while unobserved quantities are represented by
     dashed nodes. Variables that must be observed to block all
     backdoor paths are shaded. The effect of rain regime on orographic
-    enhancement is identifiable by.}
+    enhancement is identifiable through adjustment on these shaded variables.}
   \label{fig:ccope}
 \end{figure}
 
@@ -656,11 +660,13 @@ interpretable graphs by limiting the number of details and nodes that
 one must consider. However, if logic needs clarifying, the graph can
 become more explicit (e.g., differentiating wind into speed,
 direction, and spatial distribution, both horizontally and
-vertically). As graphs become more complicated, one can leverage
-interactive visualization software, or use static graph abstractions
-like plates \citep{bishop2006pattern}, which are particularly well
-suited to representing repeated structure common to spatiotemporal
-systems.
+vertically). We also include unobserved variables explicitly in the
+graph, so we can reason about processes' impact on the system even if
+they are not observed. As graphs become more complicated, one can
+leverage interactive visualization software, or use static graph
+abstractions like plates \citep{bishop2006pattern}, which are
+particularly well suited to representing repeated structure common to
+spatiotemporal systems.
 
 While the exact details of the graph and the assumptions it encodes
 are interesting (e.g., ``wind'', ``stability'', and ``atmospheric
@@ -839,7 +845,12 @@ assumption(s) with data.
   Takens' theorem,][]{takens1981detecting}. In this case, we can use
   the reconstructed state to block backdoor paths and examine the
   effect of any observed variable ($C(t)$) on future variables
-  ($E(t+1)$ in Figure \ref{fig:reconstruction}).
+  ($E(t+1)$ in Figure \ref{fig:reconstruction}). Note that
+  additionally controlling for $O(t)$ can also make the effect
+  estimate more reliable. More generally, there may be more than one
+  suitable set of adjustment co-variates and current research is
+  targeted at finding optimal ones that yield the lowest estimation
+  error \citep[e.g.,][]{witte2020efficient}.
 \item \textbf{Identification formula:}
   \begin{equation*}
     P(E(t+1) \, | \, do(C(t) = c)) = \int_{s} P(E(t+1) \, | \, C(t) = c,
@@ -863,9 +874,8 @@ assumption(s) with data.
   independent given the latent variable.
 \end{itemize}
 
-\newpage
 
-\paragraph{Assumption: the cause of interest may be independent of the
+\paragraph{Assumption: the cause of interest is independent of the
   systems' state evolution}
 
 \begin{figure} \includegraphics[]{forcing-graph.pdf}
@@ -931,7 +941,7 @@ aimed at showing that:
   between interventions on causes and effects.  These functional
   relationships \textit{generalize} because they map
   \textit{interventions} onto the response: unlike observed
-  associations (e.g., standard regression), we know the response is
+  associations (e.g., naive regression), we know the response is
   attributable to the function's input, and not to some other process in
   the system (e.g., an unobserved common cause). This causal approach opens
   up a new path to calculate generalized functional relationships when
@@ -939,12 +949,12 @@ aimed at showing that:
   computationally intractable to calculate from models.
 \item Because the Earth system and its constituents are dynamical
   systems evolving through time, we can construct broadly applicable,
-  generic Earth system causal graphs. We can use these to calculate
-  generalized functional relationships between processes of interest,
-  which would not be possible with associations, correlation or simple
-  regressions. However, causal inference in the Earth sciences also presents
-  challenges as we only partially observe the state space of the
-  system.
+  generic Earth system causal graphs. We can use these graphs to
+  calculate generalized functional relationships between processes of
+  interest, which would not be possible with associations, correlations
+  or simple regressions. However, causal inference in the Earth
+  sciences also presents challenges as we only partially observe the
+  state space of the system.
 \item These challenges can be alleviated by applying causal theory to
   generic causal graphs of the Earth system and identifying the
   assumptions that allow for causal inference from data (Section
@@ -985,17 +995,17 @@ scientists to explore how these developments may apply to their
 domains, we recognize that many scientists prefer tools with
 established utility. To that end, we believe that the use of causal
 graphs to organize and structure analyses is mature and directly
-applicable to many applications, and can serve as a gateway to these
-more sophisticated causal methods. We hope that drawing and including
-causal graphs in Earth science research becomes more common in our
-field, and that this manuscript provides some of the necessary
-foundation for readers to attempt using causal graphs in
-their future research.
+applicable to many projects, and can serve as a gateway to applying
+these more recent causal developments. We hope that drawing and
+including causal graphs in Earth science research becomes more common
+in our field, and that this manuscript provides some of the necessary
+foundation for readers to attempt using causal graphs in their future
+research.
 
-\paragraph{Acknowledgments} The authors want to than Beth Tellman,
-James Doss-Gollin, David Farnham, and Masa Haraguchi for thoughtful
-feedback and comments that greatly improved an earlier version of this
-manuscript.
+\paragraph{Acknowledgments} The authors want to thank Elias
+Bareinboim, Beth Tellman, James Doss-Gollin, David Farnham, and Masa
+Haraguchi for thoughtful feedback and comments that greatly improved
+an earlier version of this manuscript.
 
 
 \bibliography{references.bib}
