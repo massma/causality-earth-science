@@ -1,4 +1,4 @@
-* Reposity for the manuscript "Causal inference for process understanding in Earth sciences" by Adam Massmann, Pierre Gentine, and Jakob Runge
+* Repository for the manuscript "Causal inference for process understanding in Earth sciences" by Adam Massmann, Pierre Gentine, and Jakob Runge
 
 * Required software
 
