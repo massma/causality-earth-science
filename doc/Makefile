@@ -1,6 +1,10 @@
 .PHONY = all clean
 
-all : overleaf.zip
+all : causality.tar.gz
+
+causality.tar.gz : references.bib agufull08.bst causality.tex causality.bbl def.tex figs Makefile
+	rm -rf $@
+	tar -czvf $@ $^
 
 overleaf.zip : references.bib agufull08.bst causality.tex def.tex figs Makefile
 	rm -rf $@

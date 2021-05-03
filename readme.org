@@ -1,4 +1,4 @@
-* Reproduce the manuscript "Causal Inference in Earth Science" by Adam Massmann, Pierre Gentine, and Jakob Runge
+* Reposity for the manuscript "Causal inference for process understanding in Earth sciences" by Adam Massmann, Pierre Gentine, and Jakob Runge
 
 * Required software
 
@@ -37,3 +37,14 @@
   ~doc/~ contains the paper, ~dot/~ contains source files Graphviz
   figures, ~gnuplot/~ contains source files for gnuplot figures,
   ~src/~ contains haskell code for generating data and figures.
+
+* Contributions
+
+We will update this manuscript as our understanding of causality's
+role in Earth science research evolves. Comments, feedback, and edits
+are enthusiastically encouraged, and we will add acknowledgments
+and/or coauthors as we receive community contributions. To edit the
+manuscript directly (recommended) you can fork the project's
+repository and submit a pull request, or you can alternatively email
+us comments, questions, and suggestions and we will try to incorporate
+them into the manuscript.

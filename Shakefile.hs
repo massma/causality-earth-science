@@ -70,9 +70,7 @@ main = shakeArgs shakeOptions {shakeFiles = "_build"} $ do
   let texFigs =
         fmap
           figPath
-          [ "cloud-aerosol.tex",
-            "mutilated-cloud-aerosol.tex",
-            "generic-graph.tex"
+          [ "generic-graph.tex"
           ]
 
   want ["doc/causality.pdf"]
