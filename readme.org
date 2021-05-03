@@ -17,7 +17,7 @@
    cabal v2-run build
    #+END_SRC
 
-** GNU/Linux instructions
+** GNU/Linux (and OSX?) instructions
 
    Clone this repository, enter directory, and run:
 
@@ -34,5 +34,6 @@
    This should also probably work on OSX, but I haven't tested it.
 
 * Directory structure
-  ~doc/~ contains the paper, ~src/~ contains haskell code for
-  generating data and figures.
+  ~doc/~ contains the paper, ~dot/~ contains source files Graphviz
+  figures, ~gnuplot/~ contains source files for gnuplot figures,
+  ~src/~ contains haskell code for generating data and figures.
