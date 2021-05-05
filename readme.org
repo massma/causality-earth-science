@@ -1,4 +1,4 @@
-* Repository for the [[https://arxiv.org/abs/2105.00912][manuscript "Causal inference for process understanding in Earth sciences" by Adam Massmann, Pierre Gentine, and Jakob Runge]]
+* Repository for the manuscript "[[https://arxiv.org/abs/2105.00912][Causal inference for process understanding in Earth sciences]]" by Adam Massmann, Pierre Gentine, and Jakob Runge
 
 ** Required software
 
