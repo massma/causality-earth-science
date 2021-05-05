@@ -1,50 +1,50 @@
-* Repository for the manuscript "Causal inference for process understanding in Earth sciences" by Adam Massmann, Pierre Gentine, and Jakob Runge
+* Repository for the [[https://arxiv.org/abs/2105.00912][manuscript "Causal inference for process understanding in Earth sciences" by Adam Massmann, Pierre Gentine, and Jakob Runge]]
 
-* Required software
+** Required software
 
-  - [[https://www.tug.org/texlive/][texlive]] (tested on 2019)
-  - [[https://www.haskell.org/downloads/#minimal][Haskell GHC compiler and Cabal build tool]]
-  - [[https://www.graphviz.org/][Graphviz]]
-  - [[http://www.gnuplot.info/][gnuplot]]
-  - [[https://www.ghostscript.com/][ghostscript]]
+   - [[https://www.tug.org/texlive/][texlive]] (tested on 2019)
+   - [[https://www.haskell.org/downloads/#minimal][Haskell GHC compiler and Cabal build tool]]
+   - [[https://www.graphviz.org/][Graphviz]]
+   - [[http://www.gnuplot.info/][gnuplot]]
+   - [[https://www.ghostscript.com/][ghostscript]]
 
-* Build instructions
-** Windows (untested)
+** Build instructions
+*** Windows (untested)
 
-   Clone this repository, enter directory, and run:
+    Clone this repository, enter directory, and run:
 
-   #+BEGIN_SRC bash
-   cabal v2-run build
-   #+END_SRC
+    #+BEGIN_SRC bash
+    cabal v2-run build
+    #+END_SRC
 
-** GNU/Linux (and OSX?) instructions
+*** GNU/Linux (and OSX?) instructions
 
-   Clone this repository, enter directory, and run:
+    Clone this repository, enter directory, and run:
 
-   #+BEGIN_SRC bash
-   cabal v2-run build
-   #+END_SRC
+    #+BEGIN_SRC bash
+    cabal v2-run build
+    #+END_SRC
 
-   or, with GNU Make:
+    or, with GNU Make:
 
-   #+BEGIN_SRC bash
-   make
-   #+END_SRC
+    #+BEGIN_SRC bash
+    make
+    #+END_SRC
 
-   This should also probably work on OSX, but I haven't tested it.
+    This should also probably work on OSX, but I haven't tested it.
 
-* Directory structure
-  ~doc/~ contains the paper, ~dot/~ contains source files Graphviz
-  figures, ~gnuplot/~ contains source files for gnuplot figures,
-  ~src/~ contains haskell code for generating data and figures.
+** Directory structure
+   ~doc/~ contains the paper, ~dot/~ contains source files Graphviz
+   figures, ~gnuplot/~ contains source files for gnuplot figures,
+   ~src/~ contains haskell code for generating data and figures.
 
-* Contributions
+** Contributions
 
-  We will update this manuscript as our understanding of causality's
-  role in Earth science research evolves. Comments, feedback, and edits
-  are enthusiastically encouraged, and we will add acknowledgments
-  and/or coauthors as we receive community contributions. To edit the
-  manuscript directly (recommended) you can fork the project's
-  repository and submit a pull request, or you can alternatively email
-  us comments, questions, and suggestions and we will try to incorporate
-  them into the manuscript.
+   We will update this manuscript as our understanding of causality's
+   role in Earth science research evolves. Comments, feedback, and edits
+   are enthusiastically encouraged, and we will add acknowledgments
+   and/or coauthors as we receive community contributions. To edit the
+   manuscript directly (recommended) you can fork the project's
+   repository and submit a pull request, or you can alternatively email
+   us comments, questions, and suggestions and we will try to incorporate
+   them into the manuscript.
