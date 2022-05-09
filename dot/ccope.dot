@@ -1,15 +1,15 @@
 digraph G {
-	synopticForcing[label="synoptic forcing", style="dashed"];
-	orographicFlow[label="orographic\nflow", style="dashed"];
-	cloudTimescale[label="cloud\ntimescale", style="dashed"];
-	advectionTimescale[label="advection\ntimescale", style="dashed"];
-	rainRegime[label="rain regime", shape="invhouse"];
-	orographicEnhancement[label="orographic\nenhancement", shape="house"];
-	stability[label="stability", style="filled"];
-	wind[label="wind", style="filled"];
-	aerosols[label="aerosols", style="filled"];
-	terrain[label="terrain"];
-	columnWater[label="atmospheric\nmoisture", style="filled"];
+	synopticForcing[label="synoptic forcing", style="dashed", fontsize=10, fonttype="Times-Roman"];
+	orographicFlow[label="orographic\nflow", style="dashed", fontsize=10, fonttype="Times-Roman"];
+	cloudTimescale[label="cloud\ntimescale", style="dashed", fontsize=10, fonttype="Times-Roman"];
+	advectionTimescale[label="advection\ntimescale", style="dashed", fontsize=10, fonttype="Times-Roman"];
+	rainRegime[label="rain regime", shape="invhouse", fontsize=10, fonttype="Times-Roman"];
+	orographicEnhancement[label="orographic\nenhancement", shape="house", fontsize=10, fonttype="Times-Roman"];
+	stability[label="stability", style="filled", fontsize=10, fonttype="Times-Roman"];
+	wind[label="wind", style="filled", fontsize=10, fonttype="Times-Roman"];
+	aerosols[label="aerosols", style="filled", fontsize=10, fonttype="Times-Roman"];
+	terrain[label="terrain", fontsize=10, fonttype="Times-Roman"];
+	columnWater[label="atmospheric\nmoisture", style="filled", fontsize=10, fonttype="Times-Roman"];
 
 
 	aerosols -> rainRegime;
